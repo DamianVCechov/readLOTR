@@ -342,7 +342,7 @@
   /* ===== Ilustrace kapitoly ===== */
   .illus{margin:6px 0 16px; border:1px solid var(--line-2); border-radius:14px; overflow:hidden;
     background:var(--panel-2); box-shadow:0 10px 24px -16px var(--shadow)}
-  .illus svg{display:block; width:100%; height:auto}
+  .illus svg, .illus img{display:block; width:100%; height:auto}
   .illus figcaption{padding:11px 15px; font-size:.92rem; color:var(--ink); line-height:1.5; background:var(--panel)}
   .illus figcaption b{color:var(--ember); font-family:var(--ui); font-size:.7rem; text-transform:uppercase;
     letter-spacing:.06em; margin-right:4px}
@@ -970,7 +970,16 @@
     21:{build:illus21, cap:'Loďky plují po Velké řece kolem Argonathu — dvou obřích soch dávných králů. A ve vodě je potají sleduje Glum.'},
     22:{build:illus22, cap:'U vodopádů se Společenstvo rozpadá. Frodo se rozhodne jít do Mordoru sám — ale věrný Sam se za ním brodí vodou a nenechá ho odejít.'}
   };
-  function illusFigure(gi){ var il=ILLUS[gi]; if(!il) return ''; return '<figure class="illus">'+il.build()+'<figcaption><b>Klíčový moment:</b> '+esc(il.cap)+'</figcaption></figure>'; }
+  // ===== skutečné malované scény ke kapitolám (vložené při sestavení z Midjourney) =====
+  var SCENES={1:'__SCENE_1__',2:'__SCENE_2__',3:'__SCENE_3__',4:'__SCENE_4__',5:'__SCENE_5__',6:'__SCENE_6__',7:'__SCENE_7__',8:'__SCENE_8__',9:'__SCENE_9__',10:'__SCENE_10__',11:'__SCENE_11__',12:'__SCENE_12__',13:'__SCENE_13__',14:'__SCENE_14__',15:'__SCENE_15__',16:'__SCENE_16__',17:'__SCENE_17__',18:'__SCENE_18__',19:'__SCENE_19__',20:'__SCENE_20__',21:'__SCENE_21__',22:'__SCENE_22__'};
+  function hasScene(n){var u=SCENES[n];return !!(u&&u.slice(0,5)==='data:');}
+  function illusFigure(gi){
+    var il=ILLUS[gi]; var cap=il?il.cap:'';
+    var capHtml=cap?'<figcaption><b>Klíčový moment:</b> '+esc(cap)+'</figcaption>':'';
+    if(hasScene(gi)) return '<figure class="illus"><img class="scene-img" src="'+SCENES[gi]+'" alt="Ilustrace ke kapitole" loading="lazy">'+capHtml+'</figure>';
+    if(!il) return '';
+    return '<figure class="illus">'+il.build()+capHtml+'</figure>';
+  }
 
   // ===== data: místa (pořadí = cesta) =====
   var PLACES = [
