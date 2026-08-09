@@ -475,98 +475,6 @@
   };
   function icon(name,cls){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"'+(cls?' class="'+cls+'"':'')+'>'+(IC[name]||IC.star)+'</svg>';}
 
-  // ===== Pohádkové portréty postav =====
-  var SK={light:'#ecba8d',warm:'#d99a68',fair:'#f0d3ad',glum:'#bcc3a8'};
-  var HR={dark:'#33261a',brown:'#5b3a20',sandy:'#b3773a',ginger:'#a2481f',grey:'#bcb6a8',blond:'#e6c65f',auburn:'#7a3f22'};
-  var BGR={hobit:'#dbe6cd',carodej:'#ece0c6',clovek:'#e6d7c1',elf:'#dbe6ee',trpaslik:'#ecdcc4',zlo:'#ddccc2'};
-  function pShoulders(c){return '<path d="M12 100 Q15 81 33 74 Q42 80 50 80 Q58 80 67 74 Q85 81 88 100 Z" fill="'+c+'"/>';}
-  function pHead(sk){return '<rect x="43.5" y="60" width="13" height="14" rx="6" fill="'+sk+'"/><ellipse cx="50" cy="46" rx="21" ry="24" fill="'+sk+'"/>';}
-  function pEars(sk){return '<ellipse cx="29.5" cy="48" rx="4.2" ry="6" fill="'+sk+'"/><ellipse cx="70.5" cy="48" rx="4.2" ry="6" fill="'+sk+'"/>';}
-  function pElfEars(sk){return '<path d="M31 41 Q22 41 26 55 Q31 51 33 46 Z" fill="'+sk+'"/><path d="M69 41 Q78 41 74 55 Q69 51 67 46 Z" fill="'+sk+'"/>';}
-  function pHairBack(c){return '<path d="M24 44 Q19 74 31 87 L38 82 Q29 60 33 44 Z" fill="'+c+'"/><path d="M76 44 Q81 74 69 87 L62 82 Q71 60 67 44 Z" fill="'+c+'"/>';}
-  var HAIR={
-    hobbit:function(c){return '<path d="M27 47 Q23 22 50 21 Q77 22 73 47 Q70 38 65 36 Q68 30 59 31 Q63 25 51 26 Q40 24 44 29 Q34 29 38 34 Q30 36 29 44 Z" fill="'+c+'"/><g fill="'+c+'"><circle cx="31" cy="43" r="4.2"/><circle cx="38" cy="32" r="4.6"/><circle cx="50" cy="27" r="5"/><circle cx="62" cy="32" r="4.6"/><circle cx="69" cy="43" r="4.2"/></g>';},
-    longt:function(c){return '<path d="M27 46 Q25 20 50 20 Q75 20 73 46 Q66 31 50 31 Q34 31 27 46 Z" fill="'+c+'"/>';},
-    balding:function(c){return '<path d="M28 50 Q26 39 33 35 Q30 45 33 51 Z" fill="'+c+'"/><path d="M72 50 Q74 39 67 35 Q70 45 67 51 Z" fill="'+c+'"/><path d="M31 41 Q36 31 50 31 Q57 31 61 33 Q50 32 41 35 Q35 37 31 41 Z" fill="'+c+'" opacity=".85"/>';},
-    short:function(c){return '<path d="M29 45 Q28 25 50 24 Q72 25 71 45 Q63 33 50 33 Q37 33 29 45 Z" fill="'+c+'"/>';}
-  };
-  var BEARD={
-    long:function(c){return '<path d="M35 51 Q33 93 50 99 Q67 93 65 51 Q59 71 50 71 Q41 71 35 51 Z" fill="'+c+'"/>';},
-    full:function(c){return '<path d="M33 50 Q33 83 50 89 Q67 83 67 50 Q59 68 50 68 Q41 68 33 50 Z" fill="'+c+'"/>';},
-    short:function(c){return '<path d="M37 54 Q37 69 50 73 Q63 69 63 54 Q57 65 50 65 Q43 65 37 54 Z" fill="'+c+'"/>';},
-    stubble:function(c){return '<path d="M34 53 Q37 71 50 73 Q63 71 66 53 Q59 64 50 65 Q41 64 34 53 Z" fill="'+c+'" opacity=".32"/>';}
-  };
-  var HAT={
-    wizard:function(s){return '<path d="M50 3 Q43 22 29 41 Q50 35 71 41 Q57 20 50 3 Z" fill="#8b857a"/><ellipse cx="50" cy="41" rx="27" ry="5.5" fill="#787265"/><path d="M50 6 Q47 22 41 37" stroke="rgba(0,0,0,.12)" stroke-width="2" fill="none"/>';},
-    helmet:function(s){return '<path d="M28 43 Q28 24 50 24 Q72 24 72 43 Q50 37 28 43 Z" fill="#6c7077"/><path d="M28 43 Q50 37 72 43" stroke="#4f535a" stroke-width="1.6" fill="none"/><rect x="47" y="33" width="6" height="19" rx="2" fill="#5c6067"/><circle cx="50" cy="30" r="2.6" fill="#c9a24b"/>';},
-    circlet:function(s){return '<path d="M30 36 Q50 43 70 36" stroke="'+(s.circlet||'#c9a24b')+'" stroke-width="2.4" fill="none"/><path d="M47 39 L50 33.5 L53 39 Z" fill="'+(s.circlet||'#c9a24b')+'"/>';},
-    tomhat:function(s){return '<ellipse cx="50" cy="34" rx="27" ry="5" fill="#3f6fae"/><path d="M35 34 Q37 16 50 15 Q63 16 65 34 Z" fill="#3f6fae"/><path d="M64 30 Q76 19 71 33 Q67 28 64 30 Z" fill="#d8a34a"/>';}
-  };
-  function pFace(s,hang){
-    var eyes=s.eyes==='big'
-      ? '<g><ellipse cx="42" cy="46" rx="5" ry="5.4" fill="#eef0e0"/><ellipse cx="58" cy="46" rx="5" ry="5.4" fill="#eef0e0"/><circle cx="42.8" cy="46.6" r="2.5" fill="#46583f"/><circle cx="57.2" cy="46.6" r="2.5" fill="#46583f"/></g>'
-      : '<g fill="#2c2118"><ellipse cx="42.5" cy="46" rx="2.3" ry="3"/><ellipse cx="57.5" cy="46" rx="2.3" ry="3"/></g><g fill="#fff" opacity=".85"><circle cx="43.3" cy="45.1" r=".8"/><circle cx="58.3" cy="45.1" r=".8"/></g>';
-    var brow=s.brow?'<g stroke="'+s.brow+'" stroke-width="2.1" stroke-linecap="round" fill="none"><path d="M37 40.5 Q42 38 47 40"/><path d="M53 40 Q58 38 63 40.5"/></g>':'';
-    var nose='<path d="M50 47 L47.6 53 Q50 54.8 52.4 53" fill="none" stroke="rgba(80,52,28,.35)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>';
-    var mouth=(hang||s.mouth==='none')?'':(s.frown?'<path d="M45.5 61 Q50 57.5 54.5 61" stroke="#8a3f2c" stroke-width="1.8" fill="none" stroke-linecap="round"/>':'<path d="M45 58 Q50 62.5 55 58" stroke="#8a3f2c" stroke-width="1.8" fill="none" stroke-linecap="round"/>');
-    var cheek=s.cheeks===false?'':'<g fill="#e07a5f" opacity=".26"><circle cx="37" cy="53.5" r="3.3"/><circle cx="63" cy="53.5" r="3.3"/></g>';
-    return brow+eyes+nose+mouth+cheek;
-  }
-  var PSPEC={
-    frodo:{race:'hobit',skin:SK.light,ears:'hobbit',hair:{style:'hobbit',color:HR.dark},brow:HR.dark,clothes:'#6d7a49'},
-    sam:{race:'hobit',skin:SK.warm,ears:'hobbit',hair:{style:'hobbit',color:HR.sandy},brow:HR.sandy,clothes:'#9a7038',beard:{style:'stubble',color:HR.sandy}},
-    merry:{race:'hobit',skin:SK.light,ears:'hobbit',hair:{style:'hobbit',color:HR.brown},brow:HR.brown,clothes:'#5a6b46'},
-    pippin:{race:'hobit',skin:SK.light,ears:'hobbit',hair:{style:'hobbit',color:HR.auburn},brow:HR.auburn,clothes:'#7d5b34'},
-    bilbo:{race:'hobit',skin:SK.light,ears:'hobbit',hair:{style:'balding',color:HR.grey},brow:HR.grey,clothes:'#93803f',beard:{style:'short',color:HR.grey}},
-    gandalf:{race:'carodej',skin:SK.light,ears:'none',hairBack:HR.grey,brow:HR.grey,clothes:'#6b6660',beard:{style:'long',color:HR.grey},hat:'wizard'},
-    aragorn:{race:'clovek',skin:SK.warm,ears:'none',hairBack:HR.dark,hair:{style:'longt',color:HR.dark},brow:HR.dark,clothes:'#4a4038',beard:{style:'stubble',color:HR.dark}},
-    boromir:{race:'clovek',skin:SK.warm,ears:'none',hair:{style:'short',color:HR.brown},brow:HR.brown,clothes:'#7c5b36',beard:{style:'full',color:HR.brown}},
-    legolas:{race:'elf',skin:SK.fair,ears:'elf',hairBack:HR.blond,hair:{style:'longt',color:HR.blond},brow:HR.blond,clothes:'#5f7d57'},
-    gimli:{race:'trpaslik',skin:SK.warm,ears:'none',brow:HR.ginger,clothes:'#8a4a2a',beard:{style:'full',color:HR.ginger},hat:'helmet'},
-    elrond:{race:'elf',skin:SK.fair,ears:'elf',hairBack:HR.dark,hair:{style:'longt',color:HR.dark},brow:HR.dark,clothes:'#5a6a8a',hat:'circlet'},
-    glorfindel:{race:'elf',skin:SK.fair,ears:'elf',hairBack:HR.blond,hair:{style:'longt',color:HR.blond},brow:HR.blond,clothes:'#c9b26a'},
-    galadriel:{race:'elf',skin:SK.fair,ears:'elf',hairBack:HR.blond,hair:{style:'longt',color:HR.blond},brow:HR.blond,clothes:'#e4e4ec',hat:'circlet',circlet:'#e6c65f'},
-    glum:{race:'zlo',skin:SK.glum,ears:'none',eyes:'big',brow:'',clothes:'#6b6656',mouth:'none',cheeks:false,extra:'<path d="M43 60 Q50 58 57 60" stroke="#5a3a34" stroke-width="1.3" fill="none" stroke-linecap="round"/><g stroke="#9a9a80" stroke-width="1.6" stroke-linecap="round"><path d="M42 25 L43 21"/><path d="M50 23 L50 19"/><path d="M58 25 L57 21"/></g>'},
-    bombadil:{race:'carodej',skin:SK.warm,ears:'none',hair:{style:'short',color:HR.auburn},brow:HR.auburn,clothes:'#3f6fae',beard:{style:'full',color:HR.auburn},hat:'tomhat'}
-  };
-  function Pc(bg,inner){return '<svg class="portrait" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/>'+inner+'</svg>';}
-  function conceptPortrait(id){
-    if(id==='sauron') return Pc('#2a1512','<g><path d="M12 50 Q50 28 88 50 Q50 72 12 50 Z" fill="#f0a83a"/><path d="M19 50 Q50 33 81 50 Q50 67 19 50 Z" fill="#e4691f"/><ellipse cx="50" cy="50" rx="6.5" ry="18" fill="#1c0c08"/><ellipse cx="50" cy="50" rx="2.6" ry="12" fill="#ffd76a"/></g>');
-    if(id==='nazgul') return Pc('#22242c','<path d="M50 13 Q29 15 27 46 L27 100 L73 100 L73 46 Q71 15 50 13 Z" fill="#121419"/><path d="M50 19 Q35 21 33 46 Q42 41 50 41 Q58 41 67 46 Q65 21 50 19 Z" fill="#05060a"/><g fill="#c94a2e"><circle cx="43" cy="47" r="2"/><circle cx="57" cy="47" r="2"/></g>');
-    if(id==='balrog') return Pc('#2a0f0a','<path d="M18 100 Q22 60 40 45 L60 45 Q78 60 82 100 Z" fill="#e4691f"/><path d="M33 32 Q25 15 20 8 Q34 21 39 33 Z" fill="#1c0a07"/><path d="M67 32 Q75 15 80 8 Q66 21 61 33 Z" fill="#1c0a07"/><ellipse cx="50" cy="47" rx="20" ry="22" fill="#3a1410"/><g fill="#ffd05a"><ellipse cx="42" cy="47" rx="3" ry="4"/><ellipse cx="58" cy="47" rx="3" ry="4"/></g><path d="M40 59 Q50 67 60 59 Q54 63 50 63 Q46 63 40 59 Z" fill="#ffb03a"/>');
-    if(id==='stara-vrba') return Pc('#ccd0ad','<path d="M30 100 Q28 52 40 32 Q50 26 60 32 Q72 52 70 100 Z" fill="#6b5638"/><path d="M41 32 Q31 19 23 15 M60 32 Q70 19 78 15 M50 28 Q50 16 50 9" stroke="#5a4830" stroke-width="3" fill="none" stroke-linecap="round"/><g fill="#33291b"><ellipse cx="43" cy="53" rx="3" ry="4"/><ellipse cx="57" cy="53" rx="3" ry="4"/></g><path d="M42 65 Q50 61 58 65" stroke="#33291b" stroke-width="2" fill="none" stroke-linecap="round"/><g stroke="#8a9a44" stroke-width="2.2" fill="none" opacity=".75"><path d="M33 40 Q29 62 31 82"/><path d="M67 40 Q71 62 69 82"/><path d="M45 34 Q43 60 44 84"/></g>');
-    return null;
-  }
-  function portraitBody(id){
-    var s=PSPEC[id]; if(!s) return null;
-    var hang=s.beard&&(s.beard.style==='long'||s.beard.style==='full');
-    var g=pShoulders(s.clothes||'#6b5636');
-    if(s.hairBack) g+=pHairBack(s.hairBack);
-    if(hang) g+=BEARD[s.beard.style](s.beard.color);
-    g+=pHead(s.skin);
-    if(s.ears==='elf') g+=pElfEars(s.skin); else if(s.ears!=='none') g+=pEars(s.skin);
-    if(s.hair) g+=HAIR[s.hair.style](s.hair.color);
-    g+=pFace(s,hang);
-    if(s.beard&&!hang) g+=BEARD[s.beard.style](s.beard.color);
-    if(s.hat) g+=HAT[s.hat](s);
-    if(s.extra) g+=s.extra;
-    return g;
-  }
-  function portrait(id){
-    var cc=conceptPortrait(id); if(cc) return cc;
-    var s=PSPEC[id]; if(!s) return null;
-    return '<svg class="portrait" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+(s.bg||BGR[s.race]||'#e6dbc2')+'"/>'+portraitBody(id)+'</svg>';
-  }
-  // postava do scény: použije její portrét (hlava+ramena), ukotvenou spodním středem na [X,Y]
-  function sceneChar(id,X,Y,S,flip){
-    var body=portraitBody(id); if(!body) return '';
-    var inner=flip?'translate(50,-104) scale(-1,1)':'translate(-50,-104)';
-    return '<g transform="translate('+X+','+Y+') scale('+S+')"><g transform="'+inner+'">'+body+'</g></g>';
-  }
-  // Černý jezdec (zahalená postava) do scény
-  function riderFig(X,Y,S){
-    return '<g transform="translate('+X+','+Y+') scale('+S+')"><path d="M-22 0 Q-24 -54 0 -66 Q24 -54 22 0 Z" fill="#141118"/><path d="M0 -66 Q-16 -60 -17 -40 Q-8 -46 0 -46 Q8 -46 17 -40 Q16 -60 0 -66 Z" fill="#05050a"/><path d="M-22 0 Q0 -10 22 0 L18 8 Q0 0 -18 8 Z" fill="#0a0910"/><g fill="#c94a2e"><circle cx="-6" cy="-50" r="1.7"/><circle cx="6" cy="-50" r="1.7"/></g></g>';
-  }
   // ===== skutečné malované portréty (vložené při sestavení z Midjourney) =====
   var PORTRAITS={
     frodo:'__IMG_frodo__',sam:'__IMG_sam__',merry:'__IMG_merry__',pippin:'__IMG_pippin__',bilbo:'__IMG_bilbo__',
@@ -576,409 +484,38 @@
   };
   function hasPortrait(id){var u=PORTRAITS[id];return !!(u&&u.slice(0,5)==='data:');}
   function imgPortrait(id,alt){return hasPortrait(id)?'<img class="pimg" src="'+PORTRAITS[id]+'" alt="'+esc(alt||'')+'" loading="lazy">':null;}
-  function charVisual(ch,unlocked){
-    if(!unlocked) return {h:icon('lock'),pm:false};
-    var p=portrait(ch.id);
-    return p?{h:p,pm:true}:{h:icon(ch.ic),pm:false};
-  }
-
-  // ===== Ilustrace kapitol (klíčový moment) =====
-  function ilBurst(cx,cy,r,n,c1,c2,seed){
-    var s='';
-    for(var i=0;i<n;i++){
-      var a=(i/n)*Math.PI*2+(seed||0);
-      var x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r, xm=cx+Math.cos(a)*r*0.42, ym=cy+Math.sin(a)*r*0.42;
-      s+='<line x1="'+xm.toFixed(1)+'" y1="'+ym.toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="'+c1+'" stroke-width="2.2" stroke-linecap="round" opacity=".9"/>';
-      s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="2.6" fill="'+c2+'"/>';
-    }
-    return s+'<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="'+c2+'"/><circle cx="'+cx+'" cy="'+cy+'" r="9" fill="'+c2+'" opacity=".18"/>';
-  }
-  function ilHole(x,y,s,door){
-    return '<g transform="translate('+x+','+y+') scale('+s+')"><ellipse cx="0" cy="0" rx="34" ry="32" fill="#5c4326"/><ellipse cx="0" cy="0" rx="29" ry="27" fill="'+door+'"/><circle cx="12" cy="2" r="2.4" fill="#e7c65a"/><circle cx="0" cy="0" r="27" fill="none" stroke="rgba(0,0,0,.15)" stroke-width="1.5"/></g>';
-  }
-  function ilLantern(x,y){return '<g transform="translate('+x+','+y+')"><line x1="0" y1="-8" x2="0" y2="-2" stroke="#5c4a2a" stroke-width="1.4"/><ellipse cx="0" cy="4" rx="5" ry="6.5" fill="#ffd35a"/><circle cx="0" cy="4" r="10" fill="#ffd35a" opacity=".18"/></g>';}
-  function ilHobbit(x,y,s,cloak,hair,skin){
-    skin=skin||'#ecba8d';
-    return '<g transform="translate('+x+','+y+') scale('+s+')"><ellipse cx="-5" cy="34" rx="4" ry="3" fill="#4a3620"/><ellipse cx="6" cy="34" rx="4" ry="3" fill="#4a3620"/><path d="M-13 32 Q-15 6 0 4 Q15 6 13 32 Z" fill="'+cloak+'"/><circle cx="0" cy="-6" r="11" fill="'+skin+'"/><path d="M-11 -8 Q-12 -20 0 -19 Q12 -20 11 -8 Q7 -14 0 -13 Q-7 -14 -11 -8 Z" fill="'+hair+'"/><circle cx="-4" cy="-6" r="1.5" fill="#2c2118"/><circle cx="4" cy="-6" r="1.5" fill="#2c2118"/><path d="M-4 -1 Q0 2 4 -1" stroke="#8a3f2c" stroke-width="1.2" fill="none" stroke-linecap="round"/></g>';
-  }
-  function ilGrass(x,y,c){c=c||'#4f7030';return '<g stroke="'+c+'" stroke-width="1.6" stroke-linecap="round"><path d="M'+x+' '+y+' l-2 -7"/><path d="M'+x+' '+y+' l0 -9"/><path d="M'+x+' '+y+' l2 -7"/></g>';}
-  function ilFlower(x,y,c){return '<g><line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-7)+'" stroke="#4f7030" stroke-width="1.4"/><circle cx="'+x+'" cy="'+(y-9)+'" r="2.6" fill="'+c+'"/><circle cx="'+x+'" cy="'+(y-9)+'" r="1" fill="#ffe9a0"/></g>';}
-  function ilFence(x,y,n,w){var s='';for(var i=0;i<n;i++){s+='<rect x="'+(x+i*w)+'" y="'+(y-10)+'" width="2.4" height="12" rx="1" fill="#efe4c8"/>';}s+='<rect x="'+x+'" y="'+(y-6)+'" width="'+(n*w)+'" height="2" fill="#efe4c8"/>';return s;}
-  function illus1(){
-    var s='<defs><linearGradient id="skyc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f2e58"/><stop offset=".42" stop-color="#6a4d6a"/><stop offset=".74" stop-color="#c76f47"/><stop offset="1" stop-color="#efb15a"/></linearGradient><linearGradient id="hillBc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ab06a"/><stop offset="1" stop-color="#84a054"/></linearGradient><linearGradient id="hillFc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e9040"/><stop offset="1" stop-color="#5b7b34"/></linearGradient></defs>';
-    s+='<rect width="800" height="300" fill="url(#skyc1)"/>';
-    var stars=[[40,40],[90,70],[140,30],[210,55],[300,35],[360,70],[470,40],[520,90],[600,35],[660,80],[730,45],[770,95],[180,110],[420,95],[250,120],[640,110]];
-    s+='<g fill="#fff">'; stars.forEach(function(p){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(1+(p[0]%2?0.4:0.9))+'" opacity="'+(0.5+(p[1]%3)*0.15)+'"/>';}); s+='</g>';
-    s+='<circle cx="710" cy="58" r="24" fill="#f3e7b6"/><circle cx="700" cy="52" r="21" fill="#3a3560"/>';
-    s+=ilBurst(235,74,48,14,'#ffd35a','#fff0b0',0)+ilBurst(560,58,34,12,'#e883a6','#ffd6e6',0.2)+ilBurst(400,116,24,10,'#8cc8e8','#e6f5ff',0.5)+ilBurst(120,120,20,8,'#c9a2e8','#f0e0ff',0.3);
-    s+='<path d="M690 58 Q615 54 570 96 Q528 134 470 122" fill="none" stroke="#7ad06a" stroke-width="17" stroke-linecap="round" opacity=".22"/><path d="M690 58 Q615 54 570 96 Q528 134 470 122" fill="none" stroke="#84dd72" stroke-width="8" stroke-linecap="round"/><path d="M470 122 L452 109 L457 130 L442 126 Z" fill="#84dd72"/><circle cx="458" cy="117" r="1.7" fill="#22331c"/><path d="M598 92 Q610 77 623 92 Z" fill="#84dd72" opacity=".85"/><path d="M556 106 Q568 91 581 106 Z" fill="#84dd72" opacity=".85"/>';
-    s+='<g fill="#a6e88f">'; for(var i=0;i<6;i++){s+='<circle cx="'+(700+i*9)+'" cy="'+(60-i*3)+'" r="'+(2.4-i*0.3)+'"/>';} s+='</g>';
-    // kopce
-    s+='<path d="M0 268 Q160 232 340 256 Q520 280 720 242 Q770 236 800 248 L800 300 L0 300 Z" fill="url(#hillBc1)"/>';
-    s+='<path d="M0 302 Q150 250 320 302 L320 460 L0 460 Z" fill="url(#hillFc1)"/><path d="M470 300 Q650 256 800 300 L800 460 L470 460 Z" fill="#6f9247"/><path d="M0 336 Q400 316 800 340 L800 460 L0 460 Z" fill="#688a38"/>';
-    // cestička k norám
-    s+='<path d="M150 460 Q170 380 120 326 Q95 300 70 300" fill="none" stroke="#c9b48a" stroke-width="12" stroke-linecap="round" opacity=".9"/>';
-    // hobití nory + ploty + zahrádka + kouř
-    s+=ilHole(70,298,0.9,'#3f7a4a')+ilFence(44,318,10,6);
-    s+=ilHole(190,320,0.72,'#b0472f')+ilFence(168,338,9,6);
-    s+=ilHole(120,368,0.64,'#c9a24b');
-    s+=ilHole(250,352,0.6,'#4a72a0');
-    s+='<path d="M110 262 q-4 -10 3 -17 q-5 -8 2 -15" fill="none" stroke="#efe4c8" stroke-width="3" stroke-linecap="round" opacity=".5"/>';
-    s+=ilFlower(52,330,'#e07a9a')+ilFlower(60,334,'#e7c65a')+ilFlower(96,392,'#e07a9a')+ilFlower(210,344,'#f0d0e0')+ilFlower(232,376,'#e7c65a');
-    // party strom vpravo + lampiony
-    s+='<g transform="translate(672,300)"><rect x="-8" y="-8" width="16" height="70" rx="4" fill="#5a4126"/><path d="M0 30 q-14 6 -22 20 M0 30 q14 6 22 18" stroke="#5a4126" stroke-width="4" fill="none"/><circle cx="0" cy="-32" r="50" fill="#4e7030"/><circle cx="-34" cy="-14" r="34" fill="#446427"/><circle cx="34" cy="-16" r="33" fill="#547834"/><circle cx="0" cy="-52" r="30" fill="#547834"/><circle cx="6" cy="-70" r="18" fill="#5c8038"/></g>';
-    s+=ilLantern(642,266)+ilLantern(700,258)+ilLantern(670,286)+ilLantern(712,292)+ilLantern(628,290)+ilLantern(690,312);
-    // cedule 111 mezi kůly
-    s+='<line x1="352" y1="300" x2="352" y2="214" stroke="#6a4e2c" stroke-width="4"/><line x1="470" y1="300" x2="470" y2="214" stroke="#6a4e2c" stroke-width="4"/><path d="M348 214 Q411 206 474 214 L474 246 Q411 238 348 246 Z" fill="#efe4c8" stroke="#c0492f" stroke-width="2"/><text x="411" y="238" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="24" fill="#9d2b25">111</text>';
-    // girlandy
-    var bx0=120,by0=252,bx1=560,by1=236;
-    s+='<path d="M'+bx0+' '+by0+' Q340 300 '+bx1+' '+by1+'" fill="none" stroke="#5c4a2a" stroke-width="1.4"/>';
-    var fcol=['#c0492f','#c9a24b','#3c6b57','#5a6a8a','#b0472f','#3f7a4a','#c9a24b','#c0492f','#3c6b57','#5a6a8a','#c9a24b'];
-    for(var f=0;f<=10;f++){var t=f/10, fx=bx0+(bx1-bx0)*t, fy=by0+(by1-by0)*t+Math.sin(t*Math.PI)*50; s+='<path d="M'+(fx-6)+' '+fy+' L'+(fx+6)+' '+fy+' L'+fx+' '+(fy+12)+' Z" fill="'+fcol[f]+'"/>';}
-    // světýlka nad polem
-    s+='<path d="M300 302 Q430 324 560 302" fill="none" stroke="#5c4a2a" stroke-width="1.2"/>';
-    for(var gg=0;gg<=8;gg++){var gt=gg/8, gx=300+260*gt; s+=ilLantern(gx,302+Math.sin(gt*Math.PI)*22);}
-    // stan
-    s+='<g transform="translate(120,362)"><path d="M-72 40 L-72 -6 Q0 -42 72 -6 L72 40 Z" fill="#efe4c8"/><path d="M-72 -6 Q0 -42 72 -6 L58 -6 Q0 -32 -58 -6 Z" fill="#c0492f" opacity=".85"/><g stroke="#c0492f" stroke-width="8" opacity=".45"><line x1="-48" y1="40" x2="-48" y2="2"/><line x1="-16" y1="40" x2="-16" y2="-10"/><line x1="16" y1="40" x2="16" y2="-10"/><line x1="48" y1="40" x2="48" y2="2"/></g><rect x="-72" y="36" width="144" height="6" fill="#b23c28"/><path d="M0 -42 l0 -12 l16 6 l-16 5" fill="#c9a24b"/></g>';
-    // dlouhý stůl s jídlem + lavice
-    s+='<g transform="translate(405,398)"><rect x="-96" y="10" width="192" height="26" fill="#5f4d2c" opacity=".6"/><rect x="-100" y="-5" width="200" height="14" rx="3" fill="#8a6a3a"/><rect x="-100" y="7" width="200" height="30" fill="#6b5636"/><ellipse cx="-72" cy="-9" rx="13" ry="6" fill="#c98a3a"/><path d="M-40 -7 q7 -16 14 0 Z" fill="#c0492f"/><ellipse cx="-6" cy="-9" rx="11" ry="5.5" fill="#e7c65a"/><rect x="20" y="-19" width="9" height="14" rx="2" fill="#b0472f"/><ellipse cx="52" cy="-9" rx="13" ry="6" fill="#7fae5a"/><circle cx="78" cy="-12" r="7" fill="#d98a4a"/><rect x="-90" y="-16" width="5" height="11" rx="2" fill="#7fae5a"/></g>';
-    // sud + Bilbo při proslovu + jiskřičky mizení
-    s+='<g transform="translate(300,398)"><ellipse cx="0" cy="24" rx="22" ry="6" fill="#4a3620" opacity=".5"/><ellipse cx="0" cy="20" rx="20" ry="6" fill="#6a4e2c"/><rect x="-18" y="-4" width="36" height="26" rx="7" fill="#7a5a34"/><path d="M-18 6 h36 M-18 14 h36" stroke="#5a4126" stroke-width="1.6"/><ellipse cx="0" cy="-4" rx="18" ry="5" fill="#8a6a3a"/></g>';
-    s+=sceneChar('bilbo',300,368,0.6);
-    s+='<g fill="#fff0b0">'; [[276,344],[326,346],[286,322],[316,320],[301,312],[268,360],[334,360]].forEach(function(p,ix){s+='<path d="M'+p[0]+' '+(p[1]-5)+' l1.7 3.6 3.8 0.5 -2.8 2.7 0.7 3.8 -3.4 -1.9 -3.4 1.9 0.7 -3.8 -2.8 -2.7 3.8 -0.5 Z" opacity="'+(0.95-ix*0.1)+'"/>';}); s+='</g>';
-    // muzikant hobit + noty
-    s+=ilHobbit(214,430,1.0,'#7a5a3a','#a04a24');
-    s+='<g fill="none" stroke="#4a3620" stroke-width="2"><path d="M232 402 l0 -14 l7 3"/><circle cx="230" cy="402" r="3" fill="#4a3620"/></g><text x="250" y="392" font-family="Georgia" font-size="12" fill="#5c4a34" opacity=".7">♪</text>';
-    // hlavní postavy vepředu (rozpoznatelné portréty)
-    s+=sceneChar('gandalf',150,458,1.08);
-    s+=sceneChar('frodo',372,452,0.82);
-    s+=sceneChar('sam',430,458,0.82,true);
-    s+=sceneChar('merry',486,452,0.74);
-    s+=sceneChar('pippin',530,455,0.72,true);
-    s+=ilHobbit(628,452,1.2,'#3c6b57','#5b3a20')+ilHobbit(690,458,1.25,'#5a6a8a','#33261a');
-    // tráva a květiny vepředu
-    for(var t2=0;t2<=800;t2+=26){ s+=ilGrass(t2,460,'#4f7030'); }
-    s+=ilFlower(340,456,'#e7c65a')+ilFlower(560,458,'#e07a9a')+ilFlower(600,455,'#f0d0e0')+ilFlower(90,458,'#e7c65a');
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  // — další stavební prvky scén —
-  function ilStars(arr,c){c=c||'#fff';var s='<g fill="'+c+'">';arr.forEach(function(p){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(p[2]||1)+'" opacity="'+(p[3]||0.8)+'"/>';});return s+'</g>';}
-  function ilMoon(x,y,r,sky){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#f3e7b6"/><circle cx="'+(x-r*0.4)+'" cy="'+(y-r*0.25)+'" r="'+(r*0.86)+'" fill="'+sky+'"/>';}
-  function ilPine(x,y,s,c){c=c||'#3a5a30';return '<g transform="translate('+x+','+y+') scale('+s+')"><rect x="-3" y="0" width="6" height="14" fill="#5a4126"/><path d="M0 -40 L14 -8 L-14 -8 Z" fill="'+c+'"/><path d="M0 -26 L18 6 L-18 6 Z" fill="'+c+'"/><path d="M0 -12 L22 18 L-22 18 Z" fill="'+c+'"/></g>';}
-  function ilTree(x,y,s,trunk,leaf){trunk=trunk||'#5a4126';leaf=leaf||'#4e7030';return '<g transform="translate('+x+','+y+') scale('+s+')"><rect x="-6" y="-4" width="12" height="46" rx="4" fill="'+trunk+'"/><circle cx="0" cy="-28" r="34" fill="'+leaf+'"/><circle cx="-24" cy="-12" r="24" fill="'+leaf+'"/><circle cx="24" cy="-14" r="23" fill="'+leaf+'"/><circle cx="0" cy="-44" r="22" fill="'+leaf+'"/></g>';}
-  function ilDeadTree(x,y,s,c){c=c||'#4a3826';return '<g transform="translate('+x+','+y+') scale('+s+')" stroke="'+c+'" stroke-width="5" fill="none" stroke-linecap="round"><path d="M0 40 L0 -20"/><path d="M0 -4 Q-14 -14 -22 -34"/><path d="M0 -10 Q14 -20 20 -40"/><path d="M0 -20 Q-8 -30 -6 -46"/><path d="M0 -20 Q8 -30 9 -44"/></g>';}
-  function ilRock(x,y,s,c){c=c||'#7a746a';return '<g transform="translate('+x+','+y+') scale('+s+')"><path d="M-30 20 Q-34 -8 -12 -14 Q4 -22 20 -12 Q36 -4 30 20 Z" fill="'+c+'"/><path d="M-12 -14 Q-4 0 6 -2" stroke="rgba(0,0,0,.15)" stroke-width="2" fill="none"/></g>';}
-  function ilFire(x,y,s){return '<g transform="translate('+x+','+y+') scale('+s+')"><ellipse cx="0" cy="16" rx="18" ry="5" fill="#3a2a1a"/><path d="M-10 16 L10 16 L6 8 L-6 8 Z" fill="#5a4126"/><path d="M0 -18 Q8 -4 6 6 Q3 14 0 14 Q-3 14 -6 6 Q-8 -4 0 -18 Z" fill="#e4691f"/><path d="M0 -8 Q4 0 3 8 Q0 12 -3 8 Q-4 0 0 -8 Z" fill="#ffd35a"/><circle cx="0" cy="0" r="26" fill="#ffb03a" opacity=".14"/></g>';}
-  function ilRingGlow(x,y,r,glow){return '<circle cx="'+x+'" cy="'+y+'" r="'+(r*2.4)+'" fill="'+(glow||'#ffcf6a')+'" opacity=".22"/><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="none" stroke="#e7c65a" stroke-width="'+(r*0.34)+'"/>';}
-  function ilWater(y,c,c2){c=c||'#4a6a8a';c2=c2||'#3a5877';var s='<rect y="'+y+'" width="800" height="'+(460-y)+'" fill="'+c+'"/>';for(var i=0;i<6;i++){var yy=y+14+i*((460-y)/6);s+='<path d="M0 '+yy+' q60 -6 120 0 t120 0 t120 0 t120 0 t120 0 t120 0" stroke="'+c2+'" stroke-width="2" fill="none" opacity=".5"/>';}return s;}
-  function ilBush(x,y,s,c){c=c||'#4e7030';return '<g transform="translate('+x+','+y+') scale('+s+')"><ellipse cx="0" cy="6" rx="22" ry="9" fill="'+c+'"/><ellipse cx="-11" cy="0" rx="14" ry="11" fill="'+c+'"/><ellipse cx="9" cy="-1" rx="16" ry="13" fill="'+c+'"/><ellipse cx="-1" cy="-8" rx="13" ry="11" fill="'+c+'"/></g>';}
-  function ilCloud(x,y,s){return '<g transform="translate('+x+','+y+') scale('+s+')" fill="#fff" opacity=".82"><ellipse cx="0" cy="0" rx="34" ry="14"/><ellipse cx="26" cy="-4" rx="24" ry="12"/><ellipse cx="-24" cy="2" rx="22" ry="10"/></g>';}
-  function ilBirds(arr,c){c=c||'#3a3a3a';var s='<g stroke="'+c+'" stroke-width="1.8" fill="none" stroke-linecap="round">';arr.forEach(function(p){var k=p[2]||6;s+='<path d="M'+(p[0]-k)+' '+p[1]+' q'+k+' -'+(k*0.7).toFixed(1)+' '+k+' 0 q0 -'+(k*0.7).toFixed(1)+' '+k+' 0"/>';});return s+'</g>';}
-  function ilReeds(x,y,n){var s='<g stroke="#6a7a3a" stroke-width="2.2" stroke-linecap="round">';for(var i=0;i<n;i++){var xx=x+i*7-n*3, h=16+(i%3)*5;s+='<line x1="'+xx+'" y1="'+y+'" x2="'+xx+'" y2="'+(y-h)+'"/>';}s+='</g><g fill="#7a5a34">';for(var j=0;j<n;j+=2){var xj=x+j*7-n*3;s+='<ellipse cx="'+xj+'" cy="'+(y-16-(j%3)*5)+'" rx="2.2" ry="5"/>';}return s+'</g>';}
-  function ilPebbles(y,c){c=c||'#7a7060';var s='<g fill="'+c+'" opacity=".5">',xs=[40,120,230,360,470,560,660,740,300,520,180,610];for(var i=0;i<xs.length;i++){s+='<ellipse cx="'+xs[i]+'" cy="'+(y+(i%3)*7)+'" rx="'+(4+i%3)+'" ry="'+(2+i%2)+'"/>';}return s+'</g>';}
-  function ilMushrooms(arr){var s='';arr.forEach(function(p){var sc=p[2]||1;s+='<g transform="translate('+p[0]+','+p[1]+') scale('+sc+')"><rect x="-3" y="-2" width="6" height="10" rx="2" fill="#efe4c8"/><path d="M-9 -2 Q0 -15 9 -2 Z" fill="#c0492f"/><circle cx="-3" cy="-6" r="1.2" fill="#efe4c8"/><circle cx="4" cy="-5" r="1.2" fill="#efe4c8"/></g>';});return s;}
-  function ilTufts(y0,y1,c){c=c||'#4f7030';var s='';for(var x=10;x<800;x+=24){var yy=y0+((x*7)%Math.max(1,(y1-y0)));s+=ilGrass(x,yy,c);}return s;}
-  function ilBoat2(cx,cy,s,ids){
-    var w=62*s, d=20*s, g='<ellipse cx="'+cx+'" cy="'+(cy+3*s)+'" rx="'+(w*1.05)+'" ry="'+(7*s)+'" fill="#3a5a70" opacity=".35"/>';
-    g+='<path d="M'+(cx-w)+' '+cy+' Q'+cx+' '+(cy-7*s)+' '+(cx+w)+' '+cy+'" fill="none" stroke="#6a4e2c" stroke-width="'+(3*s)+'" opacity=".7"/>';
-    var n=(ids||[]).length;
-    (ids||[]).forEach(function(id,i){var px=cx+(n>1?(i-(n-1)/2)*w*0.6:0); g+=sceneChar(id,px,cy+9*s,0.46*s,i%2===1);});
-    g+='<path d="M'+(cx-w)+' '+cy+' Q'+cx+' '+(cy+d)+' '+(cx+w)+' '+cy+' Q'+cx+' '+(cy+d*0.42)+' '+(cx-w)+' '+cy+' Z" fill="#9a7a44" stroke="#5a4126" stroke-width="'+(2*s)+'"/>';
-    g+='<path d="M'+(cx-w+5)+' '+(cy+1)+' Q'+cx+' '+(cy+d*0.62)+' '+(cx+w-5)+' '+(cy+1)+'" fill="none" stroke="#7a5a34" stroke-width="'+(1.4*s)+'"/>';
-    return g;
-  }
-
-  function illus2(){
-    var s='<rect width="800" height="460" fill="#3a2c1e"/><rect width="800" height="356" fill="#4a3826"/><rect y="356" width="800" height="104" fill="#33281c"/><g stroke="#2a2014" stroke-width="1.5" opacity=".5"><line x1="0" y1="388" x2="800" y2="388"/><line x1="0" y1="422" x2="800" y2="422"/></g>';
-    s+='<ellipse cx="430" cy="424" rx="220" ry="30" fill="#7a3f2a" opacity=".55"/><ellipse cx="430" cy="424" rx="176" ry="22" fill="none" stroke="#c9a24b" stroke-width="2" opacity=".45"/>';
-    s+='<circle cx="128" cy="150" r="56" fill="#1b2436"/><circle cx="128" cy="150" r="56" fill="none" stroke="#6a4e2c" stroke-width="8"/><line x1="72" y1="150" x2="184" y2="150" stroke="#6a4e2c" stroke-width="4"/><line x1="128" y1="94" x2="128" y2="206" stroke="#6a4e2c" stroke-width="4"/>';
-    s+=ilStars([[104,128],[150,168],[124,118],[160,140]],'#cfe0ff');
-    s+='<circle cx="158" cy="150" r="12" fill="#2a2a1a"/><path d="M147 160 Q158 151 169 160 Z" fill="#33261a"/>';
-    s+='<g transform="translate(58,252)"><rect x="-30" y="-92" width="60" height="92" fill="#3a2a18"/><g fill="#c9a24b"><rect x="-26" y="-88" width="7" height="26"/><rect x="-17" y="-88" width="7" height="26"/></g><rect x="-8" y="-88" width="8" height="26" fill="#8a5a34"/><rect x="2" y="-88" width="7" height="26" fill="#7fae5a"/><rect x="12" y="-86" width="7" height="24" fill="#b0472f"/><rect x="21" y="-86" width="7" height="24" fill="#5a86a8"/><rect x="-26" y="-58" width="52" height="8" fill="#9a7a44"/><circle cx="0" cy="-30" r="8" fill="#5a86a8"/></g>';
-    s+='<rect x="512" y="150" width="248" height="230" rx="6" fill="#241c14"/><rect x="536" y="176" width="200" height="204" fill="#3a2c1e"/><rect x="498" y="138" width="266" height="20" rx="4" fill="#5a4630"/><rect x="600" y="116" width="54" height="22" rx="3" fill="#4a3826"/><circle cx="712" cy="126" r="8" fill="#c9a24b"/>';
-    s+=ilFire(632,332,2.4);
-    s+='<g fill="#ffb03a">';[[624,300],[640,290],[632,278],[648,268]].forEach(function(p,ix){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(1.6-ix*0.2)+'" opacity="'+(0.8-ix*0.15)+'"/>';});s+='</g>';
-    s+=ilRingGlow(632,244,15,'#ff9a3a')+'<path d="M620 244 q6 -7 12 0 q6 7 12 0" stroke="#ffd76a" stroke-width="1.4" fill="none" opacity=".9"/>';
-    s+='<rect x="320" y="392" width="72" height="56" rx="8" fill="#5a3f28"/><rect x="320" y="358" width="72" height="42" rx="8" fill="#6a4a30"/>';
-    s+=sceneChar('gandalf',356,412,1.16)+sceneChar('frodo',474,442,0.92);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus3(){
-    var s='<defs><linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38496a"/><stop offset=".62" stop-color="#7d6a5a"/><stop offset="1" stop-color="#c0905c"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky3)"/>';
-    s+=ilStars([[60,40],[150,66],[250,48],[600,44],[700,70],[420,58],[520,36]])+ilMoon(690,56,20,'#38496a')+ilBirds([[120,90],[150,84],[180,92]],'#3a3446');
-    s+='<rect y="286" width="800" height="174" fill="#556838"/><path d="M0 340 Q400 322 800 344 L800 460 L0 460 Z" fill="#4a5c30"/>';
-    s+='<path d="M250 286 L360 286 L235 460 L108 460 Z" fill="#b6a06a"/><path d="M250 286 L360 286 L322 320 L268 320 Z" fill="#c4b078"/><g stroke="#9a865a" stroke-width="2" opacity=".5"><path d="M300 300 L250 400"/><path d="M312 300 L300 400"/></g>';
-    s+=ilTree(110,300,1.6,'#3f2f1c','#37522a')+ilPine(742,300,2.2,'#2f4d28')+ilPine(52,326,1.7,'#2f4d28')+ilTree(690,318,1.1,'#3f2f1c','#33471f');
-    s+=ilBush(430,340,1.2,'#3d5626')+ilBush(600,352,1.4,'#3d5626');
-    s+='<circle cx="470" cy="292" r="6" fill="#eaf4ff"/><circle cx="470" cy="292" r="16" fill="#cfe6ff" opacity=".2"/>';
-    s+='<ellipse cx="300" cy="300" rx="30" ry="7" fill="#0a0910"/><path d="M276 297 Q300 286 326 297 L326 303 Q300 297 274 303 Z" fill="#0a0910"/><path d="M322 296 Q334 292 336 300" fill="none" stroke="#0a0910" stroke-width="6" stroke-linecap="round"/>';
-    s+=riderFig(300,296,1.05);
-    s+='<path d="M0 460 L0 350 Q90 330 170 354 L170 460 Z" fill="#3f5828"/>'+ilBush(40,352,1.3,'#35521f')+ilBush(152,360,1.1,'#35521f');
-    s+=sceneChar('frodo',80,452,0.82)+sceneChar('sam',134,458,0.8,true)+sceneChar('pippin',34,460,0.74);
-    s+=ilTufts(452,460,'#3f5826');
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus4(){
-    var s='<defs><linearGradient id="sky4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ec2da"/><stop offset="1" stop-color="#eaddb0"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky4)"/>';
-    s+=ilCloud(180,66,1.0)+ilCloud(610,52,1.2)+ilBirds([[500,44],[530,38],[560,46],[700,60],[724,54]],'#6a6a6a');
-    s+='<path d="M0 258 Q200 238 400 256 Q600 272 800 248 L800 400 L0 400 Z" fill="#8aa54e"/>';
-    s+='<g stroke="#6f8c3a" stroke-width="2" opacity=".45">';for(var i=0;i<6;i++){s+='<path d="M0 '+(300+i*15)+' Q400 '+(290+i*15)+' 800 '+(302+i*15)+'"/>';}s+='</g>';
-    s+=ilBush(60,300,1.3)+ilBush(96,304,1.1)+ilTree(150,296,1.2,'#5a4126','#4e7030')+ilBush(720,300,1.2);
-    s+='<g transform="translate(650,244)"><rect x="-42" y="-20" width="84" height="52" fill="#c9a24b"/><path d="M-50 -20 L0 -52 L50 -20 Z" fill="#8a5a34"/><rect x="-12" y="4" width="22" height="28" fill="#6a4e2c"/><rect x="-36" y="-10" width="14" height="14" fill="#bfe0ef"/><rect x="18" y="-10" width="14" height="14" fill="#bfe0ef"/><rect x="20" y="-42" width="8" height="18" fill="#7a5a34"/></g>';
-    s+='<g stroke="#c9b48a" stroke-width="2.2">';for(var f=560;f<742;f+=16){s+='<line x1="'+f+'" y1="290" x2="'+f+'" y2="276"/>';}s+='<line x1="560" y1="282" x2="740" y2="282"/></g>';
-    s+=ilHobbit(602,296,1.0,'#7a5a3a','#3a2a1a')+'<g transform="translate(638,296)"><ellipse cx="0" cy="-2" rx="10" ry="6" fill="#7a5230"/><circle cx="9" cy="-6" r="4" fill="#7a5230"/><path d="M-8 2 l-3 6 M0 3 l0 6 M8 -2 l4 6" stroke="#7a5230" stroke-width="3" stroke-linecap="round"/></g>';
-    s+='<g transform="translate(300,326)"><line x1="0" y1="0" x2="0" y2="-40" stroke="#6a4e2c" stroke-width="3"/><line x1="-16" y1="-30" x2="16" y2="-30" stroke="#6a4e2c" stroke-width="3"/><circle cx="0" cy="-44" r="7" fill="#c9a24b"/><path d="M-8 -30 l-6 8 M8 -30 l6 8" stroke="#8a6a3a" stroke-width="2"/><path d="M-8 -52 L0 -58 L8 -52 Z" fill="#8a5a34"/></g>';
-    s+=ilMushrooms([[220,352,1],[250,364,1.1],[236,378,0.9],[470,346,1],[498,358,1.1]]);
-    s+='<rect y="400" width="800" height="44" fill="#5a7a9a"/><g stroke="#4a6a8a" stroke-width="2" fill="none" opacity=".5"><path d="M0 412 q60 -5 120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/><path d="M0 430 q60 -5 120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/></g>';
-    s+='<rect y="442" width="800" height="18" fill="#6f8c3a"/><path d="M0 442 Q400 436 800 444 L800 460 L0 460 Z" fill="#66822f"/>';
-    s+=ilReeds(730,442,7)+ilReeds(30,446,6);
-    s+='<g transform="translate(330,420)"><rect x="-52" y="-7" width="104" height="12" rx="3" fill="#7a5a34"/><g stroke="#5a4126" stroke-width="1.4"><line x1="-36" y1="-7" x2="-36" y2="5"/><line x1="-12" y1="-7" x2="-12" y2="5"/><line x1="12" y1="-7" x2="12" y2="5"/><line x1="36" y1="-7" x2="36" y2="5"/></g><line x1="46" y1="-5" x2="70" y2="-34" stroke="#5a4126" stroke-width="3"/></g>';
-    s+=sceneChar('pippin',120,456,0.66)+sceneChar('sam',176,458,0.68,true)+sceneChar('frodo',236,458,0.7);
-    s+=riderFig(556,300,0.5);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus5(){
-    var s='<rect width="800" height="460" fill="#5a4326"/><rect y="330" width="800" height="130" fill="#6a4e2c"/><g stroke="#4a3620" stroke-width="1.5" opacity=".4"><line x1="0" y1="360" x2="800" y2="360"/><line x1="0" y1="410" x2="800" y2="410"/></g>';
-    s+='<circle cx="130" cy="140" r="50" fill="#20304a"/><circle cx="130" cy="140" r="50" fill="none" stroke="#4a3620" stroke-width="8"/><line x1="130" y1="90" x2="130" y2="190" stroke="#4a3620" stroke-width="4"/><line x1="80" y1="140" x2="180" y2="140" stroke="#4a3620" stroke-width="4"/>';
-    s+=ilStars([[112,130],[150,158],[130,116]],'#cfe0ff');
-    s+='<rect y="70" width="800" height="12" fill="#4a3620"/><rect x="240" y="70" width="12" height="260" fill="#4a3620"/><rect x="560" y="70" width="12" height="260" fill="#4a3620"/>';
-    s+='<rect x="600" y="176" width="160" height="154" fill="#3a2c1e"/><rect x="588" y="166" width="184" height="14" fill="#5a4630"/>'+ilFire(680,320,1.8)+'<path d="M665 306 q-12 -6 -20 -20" fill="none" stroke="#efe4c8" stroke-width="3" stroke-linecap="round" opacity=".4"/>';
-    s+='<g transform="translate(150,320)"><ellipse cx="0" cy="14" rx="20" ry="6" fill="#4a3620"/><path d="M-16 12 Q-18 -14 0 -18 Q18 -14 16 12 Z" fill="#7a5a34"/><rect x="-6" y="-10" width="12" height="8" fill="#5a4126"/></g>';
-    s+='<g transform="translate(400,360)"><rect x="-124" y="-6" width="248" height="16" rx="4" fill="#8a6a3a"/><rect x="-124" y="10" width="248" height="42" fill="#6a4e2c"/><ellipse cx="-84" cy="-12" rx="17" ry="7" fill="#c98a3a"/><path d="M-46 -8 q9 -20 18 0 Z" fill="#c0492f"/><circle cx="6" cy="-14" r="10" fill="#e7c65a"/><rect x="34" y="-26" width="11" height="20" rx="2" fill="#b0472f"/><ellipse cx="78" cy="-12" rx="15" ry="7" fill="#7fae5a"/><rect x="-108" y="-24" width="5" height="16" fill="#efe4c8"/><circle cx="-105" cy="-26" r="3" fill="#ffd35a"/><circle cx="-105" cy="-26" r="9" fill="#ffd35a" opacity=".2"/><rect x="102" y="-22" width="8" height="14" rx="2" fill="#c9a24b"/></g>';
-    s+=sceneChar('frodo',248,432,0.95)+sceneChar('merry',332,438,0.9)+sceneChar('pippin',470,438,0.88,true)+sceneChar('sam',560,432,0.92,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus6(){
-    var s='<defs><linearGradient id="sky6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#354534"/><stop offset="1" stop-color="#6c6a48"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky6)"/><rect y="358" width="800" height="102" fill="#3a3a26"/><path d="M0 400 Q400 384 800 402 L800 460 L0 460 Z" fill="#32321f"/>';
-    s+=ilDeadTree(74,360,2.3,'#2c281c')+ilDeadTree(748,360,2.5,'#2c281c')+ilTree(150,360,1.5,'#38301e','#37472a')+ilTree(672,360,1.7,'#38301e','#31401d')+ilDeadTree(250,362,1.4,'#2c281c');
-    s+='<g stroke="#3a3020" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"><path d="M74 400 Q120 410 170 404"/><path d="M748 400 Q700 412 650 406"/></g>';
-    s+='<path d="M0 402 Q400 384 800 404 L800 418 Q400 400 0 418 Z" fill="#48585a"/>';
-    s+='<g transform="translate(430,360)"><path d="M-48 0 Q-62 -82 -20 -122 Q0 -136 20 -122 Q62 -82 48 0 Z" fill="#5a4a30"/><path d="M-30 -30 Q-40 -60 -20 -90 M28 -30 Q40 -60 20 -92" stroke="#4a3c26" stroke-width="3" fill="none"/><g fill="#2e2618"><ellipse cx="-15" cy="-82" rx="5" ry="8"/><ellipse cx="16" cy="-84" rx="5" ry="8"/></g><path d="M-24 -76 q-4 -6 -8 -3 M40 -78 q4 -6 8 -3" stroke="#2e2618" stroke-width="2.5" fill="none"/><path d="M-16 -58 Q0 -47 18 -60" stroke="#2e2618" stroke-width="3" fill="none"/><g stroke="#6a7a3a" stroke-width="2.4" fill="none" opacity=".8"><path d="M-30 -112 Q-72 -82 -82 -20"/><path d="M30 -112 Q72 -82 82 -20"/><path d="M0 -130 Q-24 -92 -20 -30"/><path d="M0 -130 Q24 -92 20 -30"/><path d="M-14 -122 Q-30 -100 -34 -60"/></g></g>';
-    s+=sceneChar('merry',410,344,0.5)+sceneChar('pippin',452,346,0.5,true);
-    s+=ilMushrooms([[110,404,1.1],[130,412,0.9],[700,406,1],[300,412,1.1]]);
-    s+=sceneChar('frodo',150,442,0.82)+sceneChar('sam',210,448,0.8,true)+sceneChar('bombadil',628,448,1.02);
-    s+='<g fill="#8a9a7a" opacity=".2"><ellipse cx="200" cy="430" rx="200" ry="20"/><ellipse cx="600" cy="440" rx="220" ry="22"/></g>';
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus7(){
-    var s='<rect width="800" height="460" fill="#6a4e30"/><rect y="342" width="800" height="118" fill="#7a5a34"/><g stroke="#5a4126" stroke-width="1.4" opacity=".4"><line x1="0" y1="378" x2="800" y2="378"/></g>';
-    s+='<rect y="66" width="800" height="12" fill="#5a4126"/><rect x="360" y="66" width="12" height="276" fill="#5a4126"/>';
-    s+='<rect x="60" y="116" width="128" height="118" rx="8" fill="#a7c8e0"/><rect x="60" y="116" width="128" height="118" rx="8" fill="none" stroke="#8a5a34" stroke-width="8"/><line x1="124" y1="116" x2="124" y2="234" stroke="#8a5a34" stroke-width="5"/><line x1="60" y1="175" x2="188" y2="175" stroke="#8a5a34" stroke-width="4"/>';
-    s+=ilFlower(84,342,'#e07a9a')+ilFlower(104,346,'#e7c65a')+ilFlower(150,344,'#e07a9a')+ilFlower(170,346,'#f0d0e0');
-    s+=ilFire(712,362,1.6);
-    s+='<rect x="470" y="150" width="120" height="8" fill="#8a6a3a"/><g fill="#c9b48a"><circle cx="486" cy="144" r="6"/><circle cx="504" cy="144" r="6"/></g><rect x="524" y="132" width="8" height="16" rx="2" fill="#7fae5a"/>';
-    s+='<g transform="translate(300,362)"><rect x="-96" y="-6" width="192" height="14" rx="4" fill="#8a6a3a"/><rect x="-96" y="8" width="192" height="30" fill="#6a4e2c"/><rect x="-64" y="-24" width="4" height="18" fill="#efe4c8"/><circle cx="-62" cy="-26" r="3" fill="#ffd35a"/><circle cx="-62" cy="-26" r="9" fill="#ffd35a" opacity=".2"/><ellipse cx="0" cy="-10" rx="16" ry="6" fill="#c98a3a"/><circle cx="52" cy="-12" r="8" fill="#e7c65a"/></g>';
-    s+='<g transform="translate(560,442)"><path d="M-18 0 Q-20 -50 0 -56 Q20 -50 18 0 Z" fill="#5a8a6a"/><path d="M-18 0 Q0 -8 18 0 L14 8 Q0 2 -14 8 Z" fill="#4a7a5a"/><circle cx="0" cy="-64" r="11" fill="#f0d3ad"/><path d="M-11 -66 Q-12 -86 0 -86 Q12 -86 11 -66 Q11 -48 6 -42 Q0 -46 -6 -42 Q-11 -48 -11 -66 Z" fill="#e6c65f"/><circle cx="-4" cy="-64" r="1.4" fill="#2c2118"/><circle cx="4" cy="-64" r="1.4" fill="#2c2118"/><path d="M-4 -59 Q0 -56 4 -59" stroke="#8a3f2c" stroke-width="1.2" fill="none"/><circle cx="0" cy="-84" r="3" fill="#e7c65a"/></g>';
-    s+=sceneChar('bombadil',300,342,1.16);
-    s+='<circle cx="352" cy="256" r="4" fill="#f0d3ad"/>'+ilRingGlow(352,250,7,'#ffd76a');
-    s+=sceneChar('frodo',118,452,0.8)+sceneChar('pippin',180,456,0.72,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus8(){
-    var s='<defs><linearGradient id="sky8" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#454f63"/><stop offset="1" stop-color="#8b95a1"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky8)"/>';
-    s+=ilStars([[80,50],[200,40],[520,44],[700,60]],'#cfd6e0')+ilMoon(140,78,22,'#454f63');
-    s+='<path d="M0 300 Q200 258 400 300 Q600 342 800 294 L800 460 L0 460 Z" fill="#6a7060"/><path d="M0 356 Q400 326 800 356 L800 460 L0 460 Z" fill="#5a6052"/><path d="M0 410 Q400 388 800 412 L800 460 L0 460 Z" fill="#4e5448"/>';
-    s+='<g fill="#8a8478">';[[110,300,42,0.9],[180,306,30,0.7],[600,288,46,1.0],[694,300,34,0.8],[520,300,30,0.7]].forEach(function(p){s+='<rect x="'+(p[0]-10*p[3])+'" y="'+(p[1]-p[2])+'" width="'+(20*p[3])+'" height="'+p[2]+'" rx="4"/>';});s+='</g>';
-    s+='<path d="M282 358 Q400 296 518 358 Z" fill="#565c4c"/><path d="M300 356 Q400 306 500 356" fill="none" stroke="#4a4e40" stroke-width="2"/><rect x="386" y="332" width="28" height="26" fill="#1c1e18"/>';
-    s+='<g opacity=".85"><path d="M430 358 Q426 318 442 304 Q452 298 462 304 Q478 318 474 358 Z" fill="#c8d0d8" opacity=".5"/><g fill="#7a8a9a"><circle cx="446" cy="320" r="2"/><circle cx="458" cy="320" r="2"/></g><path d="M448 334 Q452 331 456 334" stroke="#7a8a9a" stroke-width="1.4" fill="none"/></g>';
-    s+='<g fill="#cfd6dd" opacity=".33"><ellipse cx="180" cy="404" rx="190" ry="24"/><ellipse cx="620" cy="414" rx="210" ry="26"/><ellipse cx="420" cy="444" rx="260" ry="30"/></g>';
-    s+=sceneChar('frodo',300,430,0.86)+'<line x1="330" y1="406" x2="352" y2="376" stroke="#dfe6ee" stroke-width="3" stroke-linecap="round"/><path d="M348 380 l6 -2" stroke="#dfe6ee" stroke-width="2"/>';
-    s+=sceneChar('bombadil',644,442,1.0)+'<circle cx="614" cy="360" r="10" fill="#ffe9a0"/><circle cx="614" cy="360" r="26" fill="#ffe9a0" opacity=".2"/>';
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-
-  function illus9(){
-    var s='<rect width="800" height="460" fill="#4a3624"/><rect y="330" width="800" height="130" fill="#5a4228"/><g stroke="#3a2a1a" stroke-width="1.4" opacity=".4"><line x1="0" y1="366" x2="800" y2="366"/></g>';
-    s+='<rect y="58" width="800" height="14" fill="#3a2a1a"/><rect x="196" y="58" width="14" height="272" fill="#3a2a1a"/><rect x="566" y="58" width="14" height="272" fill="#3a2a1a"/>';
-    s+=ilLantern(400,108)+'<g fill="#c9a24b"><rect x="250" y="72" width="8" height="12" rx="2"/><rect x="300" y="72" width="8" height="12" rx="2"/></g>';
-    s+='<rect x="40" y="150" width="150" height="180" fill="#2e2016"/><rect x="30" y="142" width="170" height="12" fill="#4a3620"/>'+ilFire(115,320,1.7);
-    s+='<rect x="300" y="88" width="122" height="46" rx="6" fill="#3a2a1a" stroke="#8a5a34" stroke-width="3"/><text x="361" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="17" fill="#e7c65a">Poník</text>';
-    s+='<g transform="translate(624,320)"><rect x="-16" y="-30" width="32" height="40" rx="8" fill="#6a4e2c"/><path d="M-16 -18 h32 M-16 -6 h32" stroke="#4a3620" stroke-width="2"/></g>';
-    s+='<g transform="translate(300,384)"><rect x="-52" y="-4" width="104" height="10" rx="3" fill="#7a5a34"/><rect x="-52" y="6" width="104" height="26" fill="#5a4228"/><rect x="-32" y="-16" width="8" height="12" rx="2" fill="#c9a24b"/><rect x="16" y="-16" width="8" height="12" rx="2" fill="#c9a24b"/><ellipse cx="-6" cy="-6" rx="10" ry="4" fill="#8a6a3a"/></g>';
-    s+='<rect x="656" y="196" width="98" height="150" fill="#241a10" opacity=".5"/>';
-    s+=sceneChar('aragorn',704,452,1.02)+ilHobbit(560,452,1.4,'#7a5a3a','#8a6a3a')+ilHobbit(150,454,1.3,'#5a6a4a','#a5502a');
-    s+='<g fill="#fff0b0">';[[350,360],[372,362],[358,344],[368,346],[344,352]].forEach(function(p,ix){s+='<path d="M'+p[0]+' '+(p[1]-5)+' l1.6 3.4 3.6 0.5 -2.6 2.6 0.6 3.6 -3.2 -1.8 -3.2 1.8 0.6 -3.6 -2.6 -2.6 3.6 -0.5 Z" opacity="'+(0.9-ix*0.13)+'"/>';});s+='</g><ellipse cx="360" cy="406" rx="14" ry="4" fill="#3a2a1a"/>';
-    s+=sceneChar('sam',258,450,0.82)+sceneChar('pippin',196,454,0.74,true)+sceneChar('merry',454,452,0.76);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus10(){
-    var s='<rect width="800" height="460" fill="#3a2c1e"/><rect y="330" width="800" height="130" fill="#4a3624"/><g stroke="#2e2214" stroke-width="1.4" opacity=".4"><line x1="0" y1="366" x2="800" y2="366"/></g>';
-    s+='<rect x="58" y="118" width="92" height="122" rx="6" fill="#1b2436"/><rect x="58" y="118" width="92" height="122" rx="6" fill="none" stroke="#5a4228" stroke-width="6"/><line x1="104" y1="118" x2="104" y2="240" stroke="#5a4228" stroke-width="4"/>'+ilStars([[80,150],[124,182],[100,140]],'#cfe0ff');
-    s+='<g transform="translate(640,300)"><rect x="-70" y="0" width="140" height="40" rx="6" fill="#5a4228"/><rect x="-70" y="-16" width="140" height="18" rx="4" fill="#8a7a5a"/><path d="M-50 -12 l20 14 M0 -12 l18 14 M40 -12 l16 12" stroke="#3a2a1a" stroke-width="2"/><rect x="-78" y="36" width="10" height="24" fill="#4a3620"/><rect x="68" y="36" width="10" height="24" fill="#4a3620"/></g>';
-    s+='<g transform="translate(150,318)"><path d="M-14 12 Q-16 -12 0 -16 Q16 -12 14 12 Z" fill="#7a5a34"/><ellipse cx="0" cy="14" rx="16" ry="5" fill="#4a3620"/></g><line x1="200" y1="200" x2="210" y2="316" stroke="#8a8478" stroke-width="4" stroke-linecap="round"/><line x1="192" y1="220" x2="218" y2="220" stroke="#6a4e2c" stroke-width="5"/>';
-    s+='<g transform="translate(360,372)"><rect x="-76" y="-6" width="152" height="12" rx="3" fill="#7a5a34"/><rect x="-76" y="6" width="152" height="30" fill="#5a4228"/><rect x="-62" y="-22" width="4" height="16" fill="#efe4c8"/><circle cx="-60" cy="-24" r="3" fill="#ffd35a"/><circle cx="-60" cy="-24" r="12" fill="#ffd35a" opacity=".22"/><g transform="rotate(-6 20 -3)"><rect x="4" y="-14" width="36" height="22" rx="2" fill="#efe4c8"/><path d="M10 -8 h24 M10 -3 h24" stroke="#b0a080" stroke-width="1"/></g><rect x="-46" y="-12" width="26" height="18" rx="1" fill="#d8c69a"/></g>';
-    s+=sceneChar('aragorn',268,452,1.05)+sceneChar('frodo',420,452,0.84)+sceneChar('sam',480,456,0.82,true)+sceneChar('merry',536,452,0.76)+sceneChar('pippin',584,456,0.72,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus11(){
-    var s='<defs><linearGradient id="sky11" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121628"/><stop offset="1" stop-color="#3a3450"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky11)"/>';
-    s+=ilStars([[60,40],[140,70],[300,30],[500,50],[680,40],[760,80],[220,90],[600,90],[400,26]])+ilMoon(120,68,18,'#121628');
-    s+='<path d="M0 340 Q400 300 800 340 L800 460 L0 460 Z" fill="#2a2e24"/><path d="M120 340 Q400 300 680 340 Q560 258 400 256 Q240 258 120 340 Z" fill="#363a2e"/><path d="M120 340 Q400 300 680 340" fill="none" stroke="#2a2e22" stroke-width="2"/>';
-    s+='<g fill="#464a3c"><rect x="296" y="248" width="22" height="74" rx="3"/><rect x="482" y="248" width="22" height="74" rx="3"/><rect x="390" y="234" width="18" height="34" rx="3"/><rect x="290" y="244" width="34" height="10" rx="3"/></g><rect x="360" y="300" width="80" height="22" fill="#3a3e30"/>';
-    s+=ilFire(400,332,1.8)+'<g fill="#ffb03a">';[[392,300],[408,292],[400,282]].forEach(function(p,ix){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(1.8-ix*0.3)+'" opacity="'+(0.8-ix*0.2)+'"/>';});s+='</g>';
-    s+=riderFig(176,332,0.98)+riderFig(654,332,0.98)+riderFig(566,318,0.82)+riderFig(230,320,0.72);
-    s+=sceneChar('aragorn',300,438,1.0)+'<line x1="332" y1="410" x2="362" y2="372" stroke="#6a4e2c" stroke-width="4" stroke-linecap="round"/>'+ilFire(364,362,0.85);
-    s+='<g transform="translate(470,430)">'+sceneChar('frodo',0,0,0.6)+'</g>';
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus12(){
-    var s='<defs><linearGradient id="sky12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8aa6c0"/><stop offset="1" stop-color="#dae2d2"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky12)"/>';
-    s+=ilCloud(160,60,0.9)+ilCloud(640,50,1.0);
-    s+='<path d="M0 260 Q200 238 420 258 L420 300 L0 300 Z" fill="#7a9a5a"/>'+ilPine(70,262,1.7,'#3a5a30')+ilPine(300,262,1.5,'#3a5a30')+ilPine(150,266,1.3,'#3a5a30');
-    s+=ilWater(300,'#5a86a8','#4a7398')+ilReeds(60,306,6);
-    s+='<path d="M400 300 Q470 232 560 300 Q600 254 660 300 Q706 262 770 300 L770 352 Q600 328 400 350 Z" fill="#cfe0ec"/><path d="M400 300 Q470 244 560 300 Q600 258 660 300 Q706 268 770 300" fill="none" stroke="#fff" stroke-width="3" opacity=".85"/><g fill="#fff" opacity=".8"><circle cx="500" cy="286" r="5"/><circle cx="512" cy="278" r="4"/><circle cx="640" cy="290" r="5"/></g>';
-    s+='<g transform="translate(590,336) rotate(24)">'+riderFig(0,0,0.66)+'</g><g transform="translate(686,344) rotate(38)">'+riderFig(0,0,0.56)+'</g>';
-    s+='<g transform="translate(230,392)"><path d="M-52 -6 Q-46 -34 -14 -34 Q6 -36 24 -24 Q46 -26 56 -6 L50 8 Q34 -8 24 -6 Q12 8 -10 6 Q-34 8 -52 -6 Z" fill="#eef0ea"/><path d="M-52 -6 L-64 8 M-30 6 L-36 24 M8 6 L6 24 M50 8 L58 22" stroke="#eef0ea" stroke-width="6" stroke-linecap="round"/><path d="M-50 -26 Q-64 -22 -66 -6" fill="none" stroke="#eef0ea" stroke-width="7" stroke-linecap="round"/><path d="M-58 -22 Q-70 -18 -74 -6 M-56 -16 Q-68 -12 -72 0" stroke="#dfe2da" stroke-width="3" fill="none"/><path d="M-52 -6 Q-72 2 -80 18" fill="none" stroke="#dfe2da" stroke-width="4"/></g>';
-    s+=sceneChar('glorfindel',236,362,0.82)+sceneChar('frodo',272,356,0.52,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus13(){
-    var s='<defs><linearGradient id="sky13" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd0e0"/><stop offset="1" stop-color="#efe0c0"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky13)"/>';
-    s+=ilBirds([[540,60],[566,54],[592,62]],'#8a94a0');
-    s+='<path d="M0 300 Q200 250 380 300 L380 460 L0 460 Z" fill="#7a9a5a"/><path d="M420 300 Q620 250 800 300 L800 460 L420 460 Z" fill="#88a862"/><path d="M360 340 Q400 330 440 340 L440 460 L360 460 Z" fill="#6f8c46"/>';
-    s+='<g fill="#cfe0ec" opacity=".85"><rect x="120" y="110" width="16" height="190" rx="6"/><rect x="148" y="130" width="12" height="170" rx="6"/><rect x="660" y="120" width="14" height="180" rx="6"/></g><g fill="#eef4f8" opacity=".6"><ellipse cx="128" cy="300" rx="26" ry="8"/><ellipse cx="666" cy="300" rx="24" ry="8"/></g>';
-    s+=ilTree(88,300,1.4,'#6a4e2c','#c98a3a')+ilTree(712,300,1.5,'#6a4e2c','#d0a24a')+ilTree(200,306,1.0,'#6a4e2c','#d8a24a');
-    s+='<g fill="#e0b84a">';[[250,180],[300,150],[520,200],[470,130],[600,240],[360,120]].forEach(function(p){s+='<path d="M'+p[0]+' '+p[1]+' q6 -8 0 -14 q-6 6 0 14 Z"/>';});s+='</g>';
-    s+='<g transform="translate(400,300)"><path d="M-92 0 L-92 -72 Q0 -114 92 -72 L92 0" fill="none" stroke="#cdbf9a" stroke-width="8"/><rect x="-98" y="0" width="196" height="10" fill="#cdbf9a"/><path d="M-60 -84 Q0 -120 60 -84" fill="none" stroke="#cdbf9a" stroke-width="4"/></g>'+ilLantern(320,238)+ilLantern(480,238);
-    s+='<g transform="translate(360,400)"><rect x="-72" y="0" width="154" height="30" rx="6" fill="#c8b48a"/><rect x="-72" y="-16" width="36" height="20" rx="6" fill="#e8dcc0"/><rect x="-36" y="-6" width="118" height="12" rx="4" fill="#dcd0aa"/></g><g transform="translate(322,388)">'+sceneChar('frodo',0,0,0.56)+'</g>';
-    s+=sceneChar('gandalf',540,448,1.06)+sceneChar('bilbo',470,452,0.82,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus14(){
-    var s='<defs><linearGradient id="sky14" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdd8e0"/><stop offset="1" stop-color="#efe4c8"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky14)"/>';
-    s+=ilTree(60,300,1.3,'#6a4e2c','#c98a3a')+ilTree(740,300,1.3,'#6a4e2c','#d0a24a');
-    s+='<rect y="300" width="800" height="160" fill="#c8b48a"/><path d="M0 300 Q400 286 800 300 L800 322 L0 322 Z" fill="#b8a478"/><ellipse cx="400" cy="410" rx="300" ry="40" fill="#bda87c" opacity=".6"/>';
-    s+='<g fill="#d8cba6"><rect x="70" y="120" width="20" height="180" rx="4"/><rect x="710" y="120" width="20" height="180" rx="4"/><circle cx="80" cy="116" r="12"/><circle cx="720" cy="116" r="12"/></g>';
-    s+='<path d="M150 120 L150 176 L162 168 L174 176 L174 120 Z" fill="#5a6a8a"/><path d="M626 120 L626 176 L638 168 L650 176 L650 120 Z" fill="#7a3f2a"/>';
-    s+='<g transform="translate(400,322)"><rect x="-24" y="-4" width="48" height="34" rx="4" fill="#b0a078"/><rect x="-17" y="-28" width="34" height="26" rx="4" fill="#c8b98e"/></g>'+ilRingGlow(400,286,9,'#ffd76a');
-    s+='<g fill="#a8956c">';[150,250,332,470,560,642,714].forEach(function(x){s+='<rect x="'+(x-24)+'" y="440" width="48" height="8" rx="2"/>';});s+='</g>';
-    s+=sceneChar('gandalf',150,448,1.0)+sceneChar('elrond',250,450,0.98)+sceneChar('frodo',332,454,0.72)+sceneChar('aragorn',470,450,0.96,true)+sceneChar('boromir',560,450,0.96,true)+sceneChar('legolas',642,450,0.92,true)+sceneChar('gimli',714,454,0.82,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus15(){
-    var s='<defs><linearGradient id="sky15" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8c0d0"/><stop offset="1" stop-color="#e0e4d0"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky15)"/>';
-    s+=ilCloud(120,50,0.9)+ilCloud(680,44,1.0);
-    s+='<path d="M0 300 L160 150 L300 300 Z" fill="#8a94a0"/><path d="M120 300 L300 120 L480 300 Z" fill="#9aa4b0"/><path d="M360 300 L520 160 L700 300 Z" fill="#8a94a0"/><path d="M560 300 L680 180 L800 300 Z" fill="#96a0ac"/>';
-    s+='<path d="M272 158 L300 120 L330 158 L312 166 L300 150 L288 166 Z" fill="#eef2f6"/><path d="M494 190 L520 160 L546 190 L532 196 L520 182 L508 196 Z" fill="#eef2f6"/>';
-    s+='<g stroke="#2a2a2a" stroke-width="2" fill="none" stroke-linecap="round">';[[200,70],[240,60],[280,80],[520,60],[560,74],[600,58]].forEach(function(p){s+='<path d="M'+(p[0]-7)+' '+p[1]+' q7 -6 7 0 q0 -6 7 0"/>';});s+='</g>';
-    s+='<rect y="300" width="800" height="160" fill="#9a9482"/><path d="M0 336 Q400 316 800 340 L800 460 L0 460 Z" fill="#8a846f"/>';
-    s+='<path d="M120 460 Q300 400 400 360 Q520 316 700 320" fill="none" stroke="#b6a884" stroke-width="14" stroke-linecap="round" opacity=".8"/>';
-    s+=ilRock(110,428,1.3)+ilRock(700,436,1.4)+ilRock(400,446,1.0)+ilBush(60,440,1.1,'#5a6a3a')+ilBush(740,446,1.1,'#5a6a3a')+ilPebbles(452,'#8a846f');
-    var order=['gandalf','legolas','gimli','frodo','sam','merry','pippin','boromir','aragorn'],xs=[150,214,272,326,378,430,486,556,650],ys=[440,436,432,430,428,426,424,420,414];
-    for(var i=0;i<9;i++){ s+=sceneChar(order[i], xs[i], ys[i], 0.58+(i<7?0.05-i*0.01:0), i>4); }
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-
-  function illus16(){
-    var s='<rect width="800" height="460" fill="#161a20"/><rect x="340" width="460" height="460" fill="#2a2e34"/><rect x="340" width="18" height="460" fill="#20242a"/>';
-    s+='<g stroke="#20242a" stroke-width="2" opacity=".6"><path d="M420 20 L440 120 L410 220"/><path d="M600 40 L620 160 L590 300"/><path d="M720 60 L700 200"/></g>';
-    s+=ilTree(80,360,1.6,'#3a3020','#2e4a2a')+ilTree(150,368,1.2,'#3a3020','#2e4a2a')+'<g fill="#b0472f"><circle cx="70" cy="352" r="2.2"/><circle cx="92" cy="356" r="2.2"/><circle cx="144" cy="360" r="2.2"/></g>';
-    s+='<g transform="translate(566,250)"><path d="M-72 122 L-72 -22 Q0 -92 72 -22 L72 122 Z" fill="#1c2026" stroke="#9fc0d8" stroke-width="3"/><path d="M0 -72 L0 104 M-42 -12 Q0 -42 42 -12 M-26 42 h52 M-30 70 h60" stroke="#9fc0d8" stroke-width="2" fill="none" opacity=".9"/><circle cx="0" cy="-32" r="11" fill="none" stroke="#cfe6f4" stroke-width="2"/><path d="M-14 -70 L14 -70 M-20 -50 L-32 -30 M20 -50 L32 -30" stroke="#9fc0d8" stroke-width="1.6" opacity=".7"/></g>';
-    s+=ilWater(322,'#1c2630','#141c24')+'<rect x="540" y="322" width="52" height="60" fill="#9fc0d8" opacity=".06"/>';
-    s+='<g fill="none" stroke="#46564e" stroke-width="12" stroke-linecap="round"><path d="M120 460 Q140 316 268 300"/><path d="M56 460 Q34 340 118 300"/><path d="M300 460 Q368 356 344 300"/><path d="M200 460 Q210 380 300 340"/></g><g fill="#5a6a60"><circle cx="268" cy="300" r="6"/><circle cx="118" cy="300" r="6"/><circle cx="344" cy="300" r="6"/></g>';
-    s+=sceneChar('gandalf',476,420,0.82)+sceneChar('aragorn',528,420,0.78,true)+sceneChar('legolas',430,418,0.7);
-    s+='<path d="M300 460 Q392 372 430 392" fill="none" stroke="#46564e" stroke-width="10" stroke-linecap="round"/>'+sceneChar('frodo',416,412,0.56);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus17(){
-    var s='<rect width="800" height="460" fill="#120d0a"/><path d="M0 0 L0 460 L200 460 L262 200 L200 0 Z" fill="#221812"/><path d="M800 0 L800 460 L600 460 L538 200 L600 0 Z" fill="#221812"/>';
-    s+='<g stroke="#e4691f" stroke-width="2" opacity=".5"><path d="M100 460 L130 340 L110 240"/><path d="M700 460 L670 340 L690 250"/></g>';
-    s+='<path d="M240 300 Q400 288 560 300 L560 318 Q400 306 240 318 Z" fill="#3a2c20"/><path d="M300 300 Q400 292 500 300" fill="none" stroke="#2a1e14" stroke-width="2"/><ellipse cx="500" cy="380" rx="240" ry="90" fill="#e4691f" opacity=".2"/>';
-    s+='<g fill="#ffb03a"><circle cx="560" cy="240" r="2" opacity=".7"/><circle cx="600" cy="200" r="1.6" opacity=".7"/><circle cx="520" cy="180" r="1.4" opacity=".7"/><circle cx="640" cy="150" r="1.2" opacity=".7"/><circle cx="480" cy="140" r="1" opacity=".7"/></g>';
-    s+='<g transform="translate(600,300)"><path d="M-42 40 Q-48 -62 -10 -92 Q0 -98 10 -92 Q48 -62 42 40 Z" fill="#2a1008"/><path d="M-30 -72 Q-48 -98 -56 -114 Q-34 -88 -24 -72 Z" fill="#1a0a06"/><path d="M30 -72 Q48 -98 56 -114 Q34 -88 24 -72 Z" fill="#1a0a06"/><g fill="#ffd05a"><ellipse cx="-14" cy="-66" rx="4.4" ry="5.4"/><ellipse cx="14" cy="-66" rx="4.4" ry="5.4"/></g><path d="M-18 -44 Q0 -32 18 -44 Q9 -34 0 -34 Q-9 -34 -18 -44 Z" fill="#ffb03a"/><path d="M-42 -20 Q-84 -42 -100 -8" fill="none" stroke="#e4691f" stroke-width="7"/><path d="M42 -8 Q74 22 62 64" fill="none" stroke="#e4691f" stroke-width="6"/><g fill="#e4691f" opacity=".6"><path d="M-30 24 Q-42 2 -30 -10 Q-24 8 -30 24"/><path d="M30 28 Q42 6 30 -6 Q24 12 30 28"/></g></g>';
-    s+=sceneChar('gandalf',320,318,1.0)+'<line x1="352" y1="292" x2="360" y2="238" stroke="#6a4e2c" stroke-width="4" stroke-linecap="round"/><circle cx="360" cy="234" r="9" fill="#cfe6f4"/><circle cx="360" cy="234" r="20" fill="#cfe6f4" opacity=".28"/>';
-    s+=sceneChar('frodo',150,320,0.5,true)+sceneChar('aragorn',202,322,0.6,true)+sceneChar('sam',110,320,0.46,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus18(){
-    var s='<defs><linearGradient id="sky18" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8c88a"/><stop offset="1" stop-color="#b6cd98"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky18)"/>';
-    s+='<g stroke="#f0e0a0" stroke-width="10" opacity=".2">';for(var i=0;i<6;i++){s+='<line x1="400" y1="-40" x2="'+(i*160)+'" y2="460"/>';}s+='</g>';
-    s+='<rect y="360" width="800" height="100" fill="#7a9a5a"/><path d="M0 400 Q400 384 800 402 L800 460 L0 460 Z" fill="#6f8c46"/>';
-    s+='<path d="M360 460 Q400 400 400 380 Q400 360 460 360" fill="none" stroke="#c9b48a" stroke-width="12" stroke-linecap="round" opacity=".7"/>';
-    s+='<g fill="#b8a578"><rect x="140" y="60" width="30" height="320" rx="8"/><rect x="640" y="60" width="30" height="320" rx="8"/><rect x="380" y="90" width="24" height="290" rx="8"/><rect x="250" y="120" width="18" height="260" rx="6"/><rect x="540" y="120" width="18" height="260" rx="6"/></g>';
-    s+='<g fill="#e8c85a" opacity=".95"><circle cx="400" cy="40" r="130" opacity=".7"/><circle cx="155" cy="70" r="82"/><circle cx="655" cy="70" r="82"/><circle cx="392" cy="90" r="62"/><circle cx="259" cy="110" r="50"/><circle cx="549" cy="110" r="50"/></g>';
-    s+='<rect x="120" y="180" width="90" height="10" fill="#8a6a3a"/><rect x="600" y="180" width="90" height="10" fill="#8a6a3a"/>'+ilLantern(150,172)+ilLantern(650,172)+'<g transform="translate(165,180)">'+sceneChar('legolas',0,0,0.34)+'</g>';
-    s+='<g fill="#fff0b0"><circle cx="300" cy="300" r="1.6"/><circle cx="300" cy="300" r="4" opacity=".3"/><circle cx="500" cy="280" r="1.6"/><circle cx="500" cy="280" r="4" opacity=".3"/><circle cx="350" cy="340" r="1.6"/><circle cx="350" cy="340" r="4" opacity=".3"/></g>';
-    s+='<g fill="#e0b84a">';[[250,200],[300,160],[520,220],[480,140],[600,260]].forEach(function(p){s+='<path d="M'+p[0]+' '+p[1]+' q6 -8 0 -14 q-6 6 0 14 Z"/>';});s+='</g>';
-    s+=sceneChar('legolas',232,452,0.9)+sceneChar('gimli',300,456,0.8,true)+sceneChar('frodo',380,456,0.74)+sceneChar('aragorn',450,452,0.92,true)+sceneChar('sam',512,456,0.8,true)+sceneChar('boromir',568,452,0.9,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus19(){
-    var s='<defs><linearGradient id="sky19" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2240"/><stop offset="1" stop-color="#38446a"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky19)"/>';
-    s+=ilStars([[80,50],[200,40],[360,60],[560,44],[700,66],[440,30],[120,80],[640,90]],'#cfe0ff');
-    s+=ilPine(64,362,2.1,'#243c28')+ilPine(748,362,2.3,'#243c28')+ilPine(150,368,1.5,'#243c28')+ilPine(660,368,1.6,'#243c28');
-    s+='<rect y="360" width="800" height="100" fill="#26361f"/><path d="M0 400 Q400 388 800 402 L800 460 L0 460 Z" fill="#20301b"/>'+ilLantern(120,300)+ilLantern(690,300);
-    s+='<g transform="translate(400,340)"><rect x="-8" y="0" width="16" height="42" fill="#8a94a0"/><ellipse cx="0" cy="42" rx="30" ry="8" fill="#6a7480"/><ellipse cx="0" cy="0" rx="42" ry="14" fill="#9fb0c0"/><ellipse cx="0" cy="0" rx="36" ry="11" fill="#1a2a44"/></g><ellipse cx="400" cy="340" rx="36" ry="11" fill="#8ab0d8" opacity=".45"/><circle cx="400" cy="336" r="54" fill="#9fc0e0" opacity=".12"/>';
-    s+='<g fill="#cfe6ff"><circle cx="300" cy="300" r="1.6"/><circle cx="300" cy="300" r="4" opacity=".3"/><circle cx="500" cy="290" r="1.6"/><circle cx="500" cy="290" r="4" opacity=".3"/><circle cx="260" cy="260" r="1.6"/><circle cx="540" cy="250" r="1.6"/></g>';
-    s+='<circle cx="248" cy="360" r="66" fill="#e8f0ff" opacity=".14"/>'+sceneChar('galadriel',248,452,1.04);
-    s+=sceneChar('frodo',484,452,0.8,true)+sceneChar('sam',544,456,0.78,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus20(){
-    var s='<defs><linearGradient id="sky20" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0e8"/><stop offset="1" stop-color="#dce8c8"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky20)"/>';
-    s+='<g fill="#e8c85a" opacity=".92"><circle cx="110" cy="110" r="76"/><circle cx="700" cy="110" r="76"/><circle cx="400" cy="70" r="60" opacity=".7"/></g><g fill="#b8a578"><rect x="102" y="150" width="18" height="150"/><rect x="692" y="150" width="18" height="150"/></g>';
-    s+='<g fill="#e0b84a">';[[200,160],[260,200],[560,180],[520,150],[360,140]].forEach(function(p){s+='<path d="M'+p[0]+' '+p[1]+' q6 -8 0 -14 q-6 6 0 14 Z"/>';});s+='</g>';
-    s+='<rect y="290" width="800" height="90" fill="#7a9a5a"/><path d="M0 300 Q400 288 800 302 L800 380 L0 380 Z" fill="#6f8c46"/>'+ilBush(60,320,1.2,'#5f7f2f')+ilBush(740,324,1.2,'#5f7f2f')+ilFlower(120,330,'#e07a9a')+ilFlower(680,334,'#f0d0e0');
-    s+='<rect y="380" width="800" height="80" fill="#6a90b0"/><g stroke="#5a80a0" stroke-width="2" fill="none" opacity=".5"><path d="M0 400 q60 -5 120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/><path d="M0 420 q60 -5 120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/></g>';
-    s+=ilReeds(60,382,6)+ilReeds(740,384,6)+ilBoat2(180,404,1.3,['legolas'])+ilBoat2(620,410,1.3,['gimli']);
-    s+=sceneChar('galadriel',330,372,1.0)+sceneChar('frodo',426,376,0.8,true);
-    s+='<circle cx="386" cy="308" r="5" fill="#eaf4ff"/><circle cx="386" cy="308" r="14" fill="#cfe6ff" opacity=".45"/><circle cx="386" cy="308" r="26" fill="#cfe6ff" opacity=".15"/>';
-    s+=sceneChar('sam',250,378,0.74)+sceneChar('aragorn',520,376,0.82,true);
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus21(){
-    var s='<defs><linearGradient id="sky21" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8c0d8"/><stop offset="1" stop-color="#e8e0c8"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky21)"/>'+ilCloud(400,50,1.0);
-    function king(x){return '<g transform="translate('+x+',0)"><rect x="-70" y="120" width="140" height="230" fill="#6a7078"/><rect x="-58" y="60" width="116" height="120" fill="#7a8088"/><rect x="-40" y="70" width="80" height="16" fill="#5a6068"/><rect x="-34" y="20" width="68" height="60" rx="6" fill="#8a9098"/><rect x="-40" y="6" width="80" height="20" rx="4" fill="#9aa0a8"/><path d="M-40 6 L0 -22 L40 6 Z" fill="#9aa0a8"/><g fill="#5a6068"><ellipse cx="-14" cy="46" rx="4" ry="6"/><ellipse cx="14" cy="46" rx="4" ry="6"/></g><path d="M-34 92 L-34 60 M34 92 L34 60" stroke="#5a6068" stroke-width="12"/><rect x="-52" y="120" width="18" height="150" fill="#5a6068"/><rect x="34" y="120" width="18" height="150" fill="#5a6068"/></g>';}
-    s+='<rect y="0" width="150" height="360" fill="#5a6450"/><rect x="650" width="150" height="360" fill="#5a6450"/>'+ilPine(70,300,1.6,'#3a5a30')+ilPine(740,300,1.6,'#3a5a30')+king(118)+king(682);
-    s+=ilWater(300,'#4a6a8a','#3a5a7a')+ilBoat2(360,392,1.25,['aragorn','frodo'])+ilBoat2(300,420,1.2,['legolas','gimli'])+ilBoat2(452,428,1.2,['boromir','sam']);
-    s+='<g fill="#a6e0a0"><circle cx="560" cy="430" r="2.6"/><circle cx="572" cy="430" r="2.6"/></g><path d="M556 436 q8 4 16 0" stroke="#5a7a5a" stroke-width="1.4" fill="none" opacity=".6"/>';
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-  function illus22(){
-    var s='<defs><linearGradient id="sky22" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c0b0c8"/><stop offset="1" stop-color="#e8d8b8"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky22)"/>'+ilBirds([[520,60],[544,54],[568,62]],'#8a94a0');
-    s+='<path d="M0 250 Q200 220 420 248 L420 300 L0 300 Z" fill="#5a7040"/>'+ilPine(90,252,1.6,'#3a5a30')+ilPine(240,252,1.5,'#3a5a30')+ilPine(360,252,1.4,'#3a5a30');
-    s+='<rect x="556" y="150" width="74" height="150" fill="#cfe0ec" opacity=".8"/><path d="M556 150 Q593 128 630 150" fill="#cfe0ec" opacity=".8"/><g fill="#eef4f8" opacity=".6"><ellipse cx="593" cy="300" rx="40" ry="10"/></g>';
-    s+='<path d="M0 300 Q120 292 220 306 L220 360 L0 360 Z" fill="#6f8c46"/>'+ilBush(60,340,1.1,'#5f7f2f')+ilRock(160,346,1.0);
-    s+=ilWater(300,'#5a80a0','#4a7090');
-    s+='<g transform="translate(120,352)">'+sceneChar('boromir',0,0,0.72)+'</g>';
-    s+=sceneChar('sam',400,392,0.66,true)+'<ellipse cx="400" cy="392" rx="30" ry="7" fill="#4a7090" opacity=".55"/><path d="M372 392 q28 6 56 0" stroke="#6a90b0" stroke-width="2" fill="none" opacity=".7"/>';
-    s+=ilBoat2(560,386,1.35,['frodo'])+'<line x1="590" y1="380" x2="620" y2="360" stroke="#7a5a34" stroke-width="3" stroke-linecap="round"/>';
-    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
-  }
-
   var ILLUS={
-    1:{build:illus1, cap:'Bilbův velkolepý dýchánek k 111. narozeninám. Gandalfův ohňostroj září nad Hobitínem — a uprostřed slavnostního proslovu si Bilbo navlékne kouzelný prsten a všem rázem zmizí před očima!'},
-    2:{build:illus2, cap:'Sedmnáct let po oslavě. Gandalf hodí prsten do ohně a na zlatě se rozzáří ohnivé písmo — tak Frodo pozná, že jeho prsten je ten Jeden, nejnebezpečnější na světě.'},
-    3:{build:illus3, cap:'Cestou z Kraje se hobiti musí schovat pod stromem — po silnici čenichá první Černý jezdec, který hledá prsten.'},
-    4:{build:illus4, cap:'Zkratka přes pole plné hub od hodného sedláka. V dálce se ale mihne Černý jezdec, a tak hobiti spěchají k převozu přes řeku.'},
-    5:{build:illus5, cap:'V domku za řekou vyjde najevo „spiknutí" přátel: Sam, Smíšek i Pipin dávno vědí o prstenu a rozhodli se jít s Frodem, ať se děje co se děje.'},
-    6:{build:illus6, cap:'Ve Starém hvozdu polapí zlá Stará vrba dva hobity do svého kmene — a zachrání je až veselý zpívající Tom Bombadil.'},
-    7:{build:illus7, cap:'V Tomově útulném domě se stane div: Tom si navlékne mocný prsten, a přesto nezmizí. Na něj prsten vůbec neplatí.'},
-    8:{build:illus8, cap:'V mlze na Mohylových vrších uvězní hobity mohylový duch. Frodo statečně nezradí kamarády a přivolá Toma, který je vysvobodí.'},
-    9:{build:illus9, cap:'V hostinci U Skákavého poníka v Hůrce Frodo omylem zmizí — a z kouta ho přitom tiše pozoruje záhadný pocestný Chodec.'},
-    10:{build:illus10, cap:'Chodec se prozradí: je to Aragorn, přítel Gandalfa. Jeho dopis to potvrdí a hobiti mu svěří svou cestu do Roklinky.'},
-    11:{build:illus11, cap:'Na kopci Větrov přepadnou v noci Černí jezdci. Jejich vůdce bodne Froda prokletým nožem a Aragorn je odhání ohněm.'},
-    12:{build:illus12, cap:'Útěk o život: elf Glorfindel veze Froda na svém rychlém koni a v Brodu se řeka vzedme v obří vlnu, která Černé jezdce odplaví.'},
-    13:{build:illus13, cap:'Frodo se probudí uzdravený v krásné elfské Roklince — a čeká ho radostné shledání s Gandalfem i starým Bilbem.'},
-    14:{build:illus14, cap:'Na Elrondově radě leží prsten uprostřed na kameni. Padne rozhodnutí zničit ho v Mordoru a vznikne Společenstvo Prstenu — devět společníků.'},
-    15:{build:illus15, cap:'Devět společníků vyráží na jih do neznáma. Nad hlavami jim ale krouží podezřelí černí ptáci, kteří někomu donášejí.'},
-    16:{build:illus16, cap:'U tajné brány do Morie přepadne Společenstvo obludné chapadlo z černé vody. Jen tak tak vklouznou dovnitř a brána za nimi zapadne.'},
-    17:{build:illus17, cap:'Na úzkém mostě v hlubinách Morie se Gandalf postaví ohnivému Balrogovi: „Neprojdeš!" Most se zlomí — a Balrog ho strhne s sebou do hlubiny.'},
-    18:{build:illus18, cap:'Po ztrátě Gandalfa vejde Společenstvo do kouzelného zlatého lesa Lothlórien, kde elfové bydlí vysoko ve stromech.'},
-    19:{build:illus19, cap:'Paní Galadriel ukáže Frodovi a Samovi kouzelné Zrcadlo z vody — a i když by mohla prsten mít, statečně odolá pokušení.'},
-    20:{build:illus20, cap:'Na rozloučenou dostane každý kouzelný dar. Frodo lahvičku se světlem hvězdy — a Společenstvo vyplouvá po Velké řece na elfských loďkách.'},
-    21:{build:illus21, cap:'Loďky plují po Velké řece kolem Argonathu — dvou obřích soch dávných králů. A ve vodě je potají sleduje Glum.'},
-    22:{build:illus22, cap:'U vodopádů se Společenstvo rozpadá. Frodo se rozhodne jít do Mordoru sám — ale věrný Sam se za ním brodí vodou a nenechá ho odejít.'}
+    1:{cap:'Bilbův velkolepý dýchánek k 111. narozeninám. Gandalfův ohňostroj září nad Hobitínem — a uprostřed slavnostního proslovu si Bilbo navlékne kouzelný prsten a všem rázem zmizí před očima!'},
+    2:{cap:'Sedmnáct let po oslavě. Gandalf hodí prsten do ohně a na zlatě se rozzáří ohnivé písmo — tak Frodo pozná, že jeho prsten je ten Jeden, nejnebezpečnější na světě.'},
+    3:{cap:'Cestou z Kraje se hobiti musí schovat pod stromem — po silnici čenichá první Černý jezdec, který hledá prsten.'},
+    4:{cap:'Zkratka přes pole plné hub od hodného sedláka. V dálce se ale mihne Černý jezdec, a tak hobiti spěchají k převozu přes řeku.'},
+    5:{cap:'V domku za řekou vyjde najevo „spiknutí" přátel: Sam, Smíšek i Pipin dávno vědí o prstenu a rozhodli se jít s Frodem, ať se děje co se děje.'},
+    6:{cap:'Ve Starém hvozdu polapí zlá Stará vrba dva hobity do svého kmene — a zachrání je až veselý zpívající Tom Bombadil.'},
+    7:{cap:'V Tomově útulném domě se stane div: Tom si navlékne mocný prsten, a přesto nezmizí. Na něj prsten vůbec neplatí.'},
+    8:{cap:'V mlze na Mohylových vrších uvězní hobity mohylový duch. Frodo statečně nezradí kamarády a přivolá Toma, který je vysvobodí.'},
+    9:{cap:'V hostinci U Skákavého poníka v Hůrce Frodo omylem zmizí — a z kouta ho přitom tiše pozoruje záhadný pocestný Chodec.'},
+    10:{cap:'Chodec se prozradí: je to Aragorn, přítel Gandalfa. Jeho dopis to potvrdí a hobiti mu svěří svou cestu do Roklinky.'},
+    11:{cap:'Na kopci Větrov přepadnou v noci Černí jezdci. Jejich vůdce bodne Froda prokletým nožem a Aragorn je odhání ohněm.'},
+    12:{cap:'Útěk o život: elf Glorfindel veze Froda na svém rychlém koni a v Brodu se řeka vzedme v obří vlnu, která Černé jezdce odplaví.'},
+    13:{cap:'Frodo se probudí uzdravený v krásné elfské Roklince — a čeká ho radostné shledání s Gandalfem i starým Bilbem.'},
+    14:{cap:'Na Elrondově radě leží prsten uprostřed na kameni. Padne rozhodnutí zničit ho v Mordoru a vznikne Společenstvo Prstenu — devět společníků.'},
+    15:{cap:'Devět společníků vyráží na jih do neznáma. Nad hlavami jim ale krouží podezřelí černí ptáci, kteří někomu donášejí.'},
+    16:{cap:'U tajné brány do Morie přepadne Společenstvo obludné chapadlo z černé vody. Jen tak tak vklouznou dovnitř a brána za nimi zapadne.'},
+    17:{cap:'Na úzkém mostě v hlubinách Morie se Gandalf postaví ohnivému Balrogovi: „Neprojdeš!" Most se zlomí — a Balrog ho strhne s sebou do hlubiny.'},
+    18:{cap:'Po ztrátě Gandalfa vejde Společenstvo do kouzelného zlatého lesa Lothlórien, kde elfové bydlí vysoko ve stromech.'},
+    19:{cap:'Paní Galadriel ukáže Frodovi a Samovi kouzelné Zrcadlo z vody — a i když by mohla prsten mít, statečně odolá pokušení.'},
+    20:{cap:'Na rozloučenou dostane každý kouzelný dar. Frodo lahvičku se světlem hvězdy — a Společenstvo vyplouvá po Velké řece na elfských loďkách.'},
+    21:{cap:'Loďky plují po Velké řece kolem Argonathu — dvou obřích soch dávných králů. A ve vodě je potají sleduje Glum.'},
+    22:{cap:'U vodopádů se Společenstvo rozpadá. Frodo se rozhodne jít do Mordoru sám — ale věrný Sam se za ním brodí vodou a nenechá ho odejít.'}
   };
   // ===== skutečné malované scény ke kapitolám (vložené při sestavení z Midjourney) =====
   var SCENES={1:'__SCENE_1__',2:'__SCENE_2__',3:'__SCENE_3__',4:'__SCENE_4__',5:'__SCENE_5__',6:'__SCENE_6__',7:'__SCENE_7__',8:'__SCENE_8__',9:'__SCENE_9__',10:'__SCENE_10__',11:'__SCENE_11__',12:'__SCENE_12__',13:'__SCENE_13__',14:'__SCENE_14__',15:'__SCENE_15__',16:'__SCENE_16__',17:'__SCENE_17__',18:'__SCENE_18__',19:'__SCENE_19__',20:'__SCENE_20__',21:'__SCENE_21__',22:'__SCENE_22__'};
   function hasScene(n){var u=SCENES[n];return !!(u&&u.slice(0,5)==='data:');}
   function illusFigure(gi){
+    if(!hasScene(gi)) return '';
     var il=ILLUS[gi]; var cap=il?il.cap:'';
     var capHtml=cap?'<figcaption><b>Klíčový moment:</b> '+esc(cap)+'</figcaption>':'';
-    if(hasScene(gi)) return '<figure class="illus"><img class="scene-img" src="'+SCENES[gi]+'" alt="Ilustrace ke kapitole" loading="lazy">'+capHtml+'</figure>';
-    if(!il) return '';
-    return '<figure class="illus">'+il.build()+capHtml+'</figure>';
+    return '<figure class="illus"><img class="scene-img" src="'+SCENES[gi]+'" alt="Ilustrace ke kapitole" loading="lazy">'+capHtml+'</figure>';
   }
 
   // ===== data: místa (pořadí = cesta) =====
@@ -1615,7 +1152,7 @@
       if(!unlocked){ frame='<div class="pframe fallback">'+icon('lock')+'</div>'; }
       else { var im=imgPortrait(ch.id,ch.name);
         frame = im ? '<div class="pframe">'+im+'</div>'
-                   : '<div class="pframe fallback">'+(portrait(ch.id)||icon(ch.ic))+'</div>'; }
+                   : '<div class="pframe fallback">'+icon('lock')+'</div>'; }
       card.innerHTML=frame+
         '<h4>'+(unlocked?esc(ch.name):'? ? ?')+'</h4><div class="race">'+esc(ch.rlab)+'</div>';
       if(unlocked){ card.setAttribute('tabindex','0'); card.setAttribute('role','button');
@@ -1646,9 +1183,8 @@
     var d=el('div','char-detail'); d.id='charDetail';
     var txt = state.mode==='kluci'? ch.kid : ch.dad;
     var im=imgPortrait(ch.id,ch.name);
-    var pv=portrait(ch.id);
     var visual = im ? '<div class="cd-pimg">'+im+'</div>'
-                    : '<div class="medallion'+(pv?' pm':'')+'">'+(pv||icon(ch.ic))+'</div>';
+                    : '<div class="medallion">'+icon(ch.ic)+'</div>';
     d.innerHTML='<div class="cd r-'+ch.race+'">'+visual+
       '<div class="cdbody"><h3>'+esc(ch.name)+'</h3><div class="en">'+esc(ch.en)+' · '+esc(ch.rlab)+'</div>'+
       (ch.say&&ch.say!=='—'?'<div class="say">Vyslov: <b>'+esc(ch.say)+'</b></div>':'')+
@@ -1751,9 +1287,8 @@
     if(!unlocked) return '<div class="node locked"><div class="medallion">'+icon('lock')+'</div><small>?</small></div>';
     var nm = isRing?'Jeden prsten':(SHORT[id]||ch.name);
     var im = isRing?null:imgPortrait(id,nm);
-    var pv = isRing?null:portrait(id);
-    var inner = im||pv||icon(isRing?'ring':ch.ic);
-    return '<div class="node '+raceCls+'"><div class="medallion'+((im||pv)?' pm':'')+'">'+inner+'</div><small>'+esc(nm)+(role?'<br>'+esc(role):'')+'</small></div>';
+    var inner = im||icon(isRing?'ring':ch.ic);
+    return '<div class="node '+raceCls+'"><div class="medallion'+(im?' pm':'')+'">'+inner+'</div><small>'+esc(nm)+(role?'<br>'+esc(role):'')+'</small></div>';
   }
   function relArrow(label){
     return '<div class="arrow"><svg viewBox="0 0 28 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h23M19 2l5 4-5 4"/></svg><em>'+esc(label)+'</em></div>';
