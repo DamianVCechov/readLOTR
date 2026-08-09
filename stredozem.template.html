@@ -1,0 +1,1747 @@
+<style>
+  /* ===== Tokens: světlá "pergamenová" a tmavá "táborový oheň" ===== */
+  :root{
+    --paper:#e6d7b3; --paper-2:#efe4c8; --panel:#f4ead2; --panel-2:#ece0c1;
+    --ink:#2b2118; --ink-2:#5c4a34; --ink-3:#8a755a;
+    --line:rgba(43,33,24,.16); --line-2:rgba(43,33,24,.30);
+    --gold:#a9791c; --gold-2:#c9a24b; --ember:#9d2b25; --ember-2:#c0492f;
+    --elven:#3c6b57; --shadow:rgba(43,33,24,.20);
+    --radius:14px;
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Cambria,Georgia,serif;
+    --display:"Trajan Pro","Cinzel","Palatino Linotype","Book Antiqua",Cambria,Georgia,serif;
+    --ui:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#1b1710; --paper-2:#231e15; --panel:#26201a; --panel-2:#2f281f;
+      --ink:#ede1c7; --ink-2:#c4b28e; --ink-3:#8f7d5f;
+      --line:rgba(236,224,198,.14); --line-2:rgba(236,224,198,.26);
+      --gold:#d9b45a; --gold-2:#eccf8a; --ember:#d2553f; --ember-2:#e0745a;
+      --elven:#7cba9e; --shadow:rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#e6d7b3; --paper-2:#efe4c8; --panel:#f4ead2; --panel-2:#ece0c1;
+    --ink:#2b2118; --ink-2:#5c4a34; --ink-3:#8a755a;
+    --line:rgba(43,33,24,.16); --line-2:rgba(43,33,24,.30);
+    --gold:#a9791c; --gold-2:#c9a24b; --ember:#9d2b25; --ember-2:#c0492f;
+    --elven:#3c6b57; --shadow:rgba(43,33,24,.20);
+  }
+  :root[data-theme="dark"]{
+    --paper:#1b1710; --paper-2:#231e15; --panel:#26201a; --panel-2:#2f281f;
+    --ink:#ede1c7; --ink-2:#c4b28e; --ink-3:#8f7d5f;
+    --line:rgba(236,224,198,.14); --line-2:rgba(236,224,198,.26);
+    --gold:#d9b45a; --gold-2:#eccf8a; --ember:#d2553f; --ember-2:#e0745a;
+    --elven:#7cba9e; --shadow:rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0}
+  .app{
+    font-family:var(--serif); color:var(--ink); background:var(--paper);
+    background-image:
+      radial-gradient(120% 80% at 50% -10%, rgba(201,162,75,.10), transparent 60%),
+      radial-gradient(60% 50% at 100% 100%, rgba(157,43,37,.06), transparent 60%);
+    min-height:100vh; line-height:1.55; -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:18px clamp(12px,3vw,26px) 60px}
+
+  /* ===== Header ===== */
+  header.top{
+    position:sticky; top:0; z-index:40; backdrop-filter:blur(6px);
+    background:color-mix(in srgb, var(--paper) 86%, transparent);
+    border-bottom:1px solid var(--line);
+  }
+  .top-in{max-width:1080px; margin:0 auto; padding:10px clamp(12px,3vw,26px);
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+  .brand{display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0}
+  .crest{width:42px; height:42px; flex:none; color:var(--gold)}
+  .brand h1{font-family:var(--display); font-weight:700; letter-spacing:.06em;
+    font-size:clamp(1.05rem,2.4vw,1.5rem); margin:0; text-transform:uppercase; text-wrap:balance}
+  .brand p{margin:0; font-size:.78rem; color:var(--ink-2); font-family:var(--ui); letter-spacing:.02em}
+
+  /* mode toggle = pečetní přepínač */
+  .modeswitch{display:inline-flex; background:var(--panel-2); border:1px solid var(--line-2);
+    border-radius:999px; padding:3px; font-family:var(--ui); font-size:.8rem; box-shadow:inset 0 1px 2px var(--shadow)}
+  .modeswitch button{border:0; background:transparent; color:var(--ink-2); cursor:pointer;
+    padding:7px 14px; border-radius:999px; font-weight:600; letter-spacing:.02em; display:flex; align-items:center; gap:7px}
+  .modeswitch button.on{color:#fff; background:linear-gradient(180deg,var(--ember-2),var(--ember));
+    box-shadow:0 1px 4px var(--shadow)}
+  .modeswitch button.on.kids{background:linear-gradient(180deg,var(--gold-2),var(--gold))}
+  .modeswitch svg{width:16px;height:16px}
+
+  /* progress "cesta" */
+  .road{max-width:1080px; margin:0 auto; padding:0 clamp(12px,3vw,26px) 10px}
+  .road-in{display:flex; align-items:center; gap:12px; font-family:var(--ui); font-size:.78rem; color:var(--ink-2)}
+  .road-track{flex:1; height:9px; border-radius:99px; background:var(--panel-2);
+    border:1px solid var(--line); overflow:hidden; position:relative}
+  .road-fill{height:100%; width:0%; border-radius:99px;
+    background:repeating-linear-gradient(90deg,var(--ember),var(--ember) 7px,var(--ember-2) 7px,var(--ember-2) 14px);
+    transition:width .5s ease}
+  .road b{color:var(--ink); font-variant-numeric:tabular-nums}
+
+  /* ===== Tabs ===== */
+  nav.tabs{display:flex; gap:6px; margin:16px 0 18px; flex-wrap:wrap; font-family:var(--ui)}
+  nav.tabs button{border:1px solid var(--line-2); background:var(--panel); color:var(--ink-2);
+    padding:9px 16px; border-radius:11px; cursor:pointer; font-weight:600; font-size:.9rem;
+    display:flex; align-items:center; gap:8px; transition:.15s}
+  nav.tabs button svg{width:17px;height:17px}
+  nav.tabs button:hover{border-color:var(--gold); color:var(--ink)}
+  nav.tabs button.on{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+  :root[data-theme="dark"] nav.tabs button.on, @media (prefers-color-scheme:dark){}
+  nav.tabs button.on{background:linear-gradient(180deg,#3a2c1e,#2b2118); color:var(--paper-2)}
+
+  .view{display:none; animation:fade .3s ease}
+  .view.on{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+
+  /* ===== Map ===== */
+  .map-viewport{position:relative; height:min(64vh,560px); border:1px solid var(--line-2);
+    border-radius:var(--radius); overflow:hidden; background:var(--paper-2); box-shadow:0 8px 30px -14px var(--shadow);
+    touch-action:none; cursor:grab; user-select:none}
+  .map-viewport.grabbing{cursor:grabbing}
+  .map-stage{position:absolute; top:0; left:0; transform-origin:0 0; will-change:transform}
+  .map-img{display:block; width:100%; height:auto; pointer-events:none;
+    filter:saturate(1.02) contrast(1.02)}
+  :root[data-theme="dark"] .map-img{filter:saturate(.9) brightness(.82) contrast(1.02)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .map-img{filter:saturate(.9) brightness(.82) contrast(1.02)}}
+  .route{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible}
+
+  /* ===== Mapa: cesta + osa ===== */
+  .map-stage.smooth{transition:transform .45s ease}
+  .hereM{position:absolute; z-index:3}
+  .hm-in{position:absolute; left:0; top:0; width:13px; height:13px; margin:-6.5px 0 0 -6.5px; border-radius:50%;
+    background:radial-gradient(circle at 34% 30%, var(--ember-2), var(--ember)); border:2px solid var(--gold-2);
+    box-shadow:0 1px 4px var(--shadow); transform-origin:center center; cursor:pointer}
+  .hm-in::after{content:""; position:absolute; inset:-3px; border-radius:50%;
+    box-shadow:0 0 0 0 rgba(157,43,37,.5); animation:pulseH 1.9s ease-in-out infinite}
+  @keyframes pulseH{0%,100%{box-shadow:0 0 0 0 rgba(157,43,37,.5)}50%{box-shadow:0 0 0 7px rgba(157,43,37,0)}}
+  .mapstrip{display:flex; gap:6px; overflow-x:auto; padding:12px 2px 4px; margin-top:10px; scrollbar-width:thin}
+  .mapstrip::-webkit-scrollbar{height:7px}
+  .mapstrip::-webkit-scrollbar-thumb{background:var(--line-2); border-radius:99px}
+  .strip-empty{font-family:var(--ui); font-size:.85rem; color:var(--ink-3); padding:10px 4px}
+  .mchip{flex:none; width:82px; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 4px;
+    border:1px solid var(--line-2); border-radius:11px; background:var(--panel-2); color:var(--ink); cursor:pointer;
+    font-family:var(--ui); text-align:center; transition:.12s; position:relative}
+  .mchip:hover{border-color:var(--gold)}
+  .mchip .mchip-n{width:22px; height:22px; border-radius:50%; background:var(--ember); color:#fff; font-weight:800; font-size:.72rem; display:flex; align-items:center; justify-content:center}
+  .mchip .mchip-ic{width:16px; height:16px; color:var(--gold)}
+  .mchip small{font-size:.68rem; line-height:1.12; color:var(--ink)}
+  .mchip.future{opacity:.6}
+  .mchip.future .mchip-n{background:var(--ink-3)}
+  .mchip.on{border-color:var(--gold); background:color-mix(in srgb,var(--gold) 16%,var(--panel)); box-shadow:0 2px 8px -4px var(--gold)}
+  .mchip.on .mchip-n{background:var(--gold)}
+  .mchip.sel{outline:2px solid var(--gold-2); outline-offset:1px}
+  .mchip-here{font-size:.58rem; color:var(--elven); font-weight:700}
+
+  .map-ctrls{position:absolute; right:10px; bottom:10px; display:flex; flex-direction:column; gap:6px; z-index:5}
+  .map-ctrls button{width:34px; height:34px; border-radius:9px; border:1px solid var(--line-2);
+    background:color-mix(in srgb,var(--panel) 92%,transparent); color:var(--ink); font-size:1.1rem; cursor:pointer;
+    font-family:var(--ui); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px var(--shadow)}
+  .map-ctrls button:hover{border-color:var(--gold)}
+  .map-hint{font-family:var(--ui); font-size:.82rem; color:var(--ink-2); margin:0 2px 10px;
+    display:flex; align-items:center; gap:8px}
+  .map-hint svg{width:16px;height:16px;color:var(--gold);flex:none}
+  .map-hint b{color:var(--ink)}
+
+  .place-panel{margin-top:14px; border:1px solid var(--line-2); border-radius:var(--radius);
+    background:var(--panel); padding:16px 18px; box-shadow:0 6px 20px -14px var(--shadow)}
+  .place-panel.empty{color:var(--ink-2); font-style:italic}
+  .place-head{display:flex; align-items:center; gap:12px; margin-bottom:6px}
+  .place-ic{width:40px;height:40px; color:var(--gold); flex:none}
+  .place-head h3{margin:0; font-family:var(--display); font-size:1.2rem; letter-spacing:.02em}
+  .place-head .en{font-family:var(--ui); font-size:.76rem; color:var(--ink-3); letter-spacing:.03em}
+
+  /* ===== Chapters ===== */
+  .booktitle{font-family:var(--display); text-transform:uppercase; letter-spacing:.12em; font-size:.95rem;
+    color:var(--gold); margin:22px 2px 12px; display:flex; align-items:center; gap:12px}
+  .booktitle::after{content:""; flex:1; height:1px; background:linear-gradient(90deg,var(--line-2),transparent)}
+  .ch{border:1px solid var(--line-2); border-radius:var(--radius); background:var(--panel); margin-bottom:12px;
+    overflow:hidden; box-shadow:0 4px 16px -14px var(--shadow)}
+  .ch-head{display:flex; align-items:center; gap:14px; padding:14px 16px; cursor:pointer}
+  .ch-num{font-family:var(--display); font-weight:700; font-size:.95rem; color:var(--paper);
+    background:linear-gradient(180deg,#3a2c1e,#2b2118); min-width:44px; height:44px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; flex:none; letter-spacing:.02em}
+  :root[data-theme="dark"] .ch-num{background:linear-gradient(180deg,#4a3a26,#332818); color:var(--gold-2)}
+  .ch-t{flex:1; min-width:0}
+  .ch-t h3{margin:0; font-size:1.06rem; font-family:var(--serif); font-weight:700; text-wrap:balance}
+  .ch-t .en{font-family:var(--ui); font-size:.74rem; color:var(--ink-3); letter-spacing:.02em}
+  .fear{display:flex; align-items:center; gap:3px; margin-top:4px}
+  .fear .lab{font-family:var(--ui); font-size:.68rem; color:var(--ink-3); margin-right:4px; letter-spacing:.02em}
+  .flame{width:13px; height:13px; color:var(--ember)}
+  .flame.off{color:var(--line-2)}
+  .ch-read{flex:none; font-family:var(--ui); font-size:.76rem; font-weight:700; cursor:pointer;
+    border:1px solid var(--line-2); background:var(--panel-2); color:var(--ink-2); border-radius:9px; padding:8px 11px;
+    display:flex; align-items:center; gap:6px; white-space:nowrap}
+  .ch-read.done{background:linear-gradient(180deg,var(--elven),color-mix(in srgb,var(--elven) 70%, #000));
+    color:#fff; border-color:transparent}
+  .ch-read svg{width:15px;height:15px}
+  .ch-body{display:none; padding:2px 16px 18px; border-top:1px solid var(--line)}
+  .ch.open .ch-body{display:block; animation:fade .25s ease}
+  .ch.locked .ch-head{opacity:.62}
+  .caret{width:18px;height:18px;color:var(--ink-3); transition:transform .2s; flex:none}
+  .ch.open .caret{transform:rotate(90deg)}
+
+  .block{margin-top:14px}
+  .block h4{font-family:var(--ui); text-transform:uppercase; letter-spacing:.08em; font-size:.72rem;
+    color:var(--gold); margin:0 0 6px; display:flex; align-items:center; gap:7px}
+  .app h4 svg{width:15px; height:15px; flex:none}
+  .place-ic svg{width:100%; height:100%}
+  .caret svg{width:100%; height:100%}
+  .block p{margin:0}
+  .bullets{margin:0; padding-left:2px; list-style:none}
+  .bullets li{position:relative; padding-left:22px; margin:5px 0}
+  .bullets li::before{content:""; position:absolute; left:4px; top:.55em; width:7px; height:7px; border-radius:2px;
+    background:var(--gold); transform:rotate(45deg)}
+  .q-list li::before{background:var(--elven)}
+  .words{display:flex; flex-wrap:wrap; gap:8px}
+  .word{font-family:var(--ui); font-size:.82rem; background:var(--panel-2); border:1px solid var(--line);
+    border-radius:9px; padding:6px 10px}
+  .word b{color:var(--ink)}
+  .word span{color:var(--ink-2)}
+  .fearnote{background:color-mix(in srgb,var(--ember) 12%, var(--panel)); border:1px solid color-mix(in srgb,var(--ember) 30%, transparent);
+    border-radius:10px; padding:10px 12px; font-size:.92rem}
+
+  .kidbox{background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 10%,var(--panel)),var(--panel));
+    border:1px dashed var(--gold-2); border-radius:12px; padding:14px 16px; margin-top:10px}
+  .kidbox .teaser{font-size:1.05rem}
+  .kidrecap{font-size:1.02rem; line-height:1.62; margin:0 0 .7em}
+  .kidrecap:last-child{margin-bottom:0}
+  .locknote{font-family:var(--ui); font-size:.86rem; color:var(--ink-2); display:flex; align-items:center; gap:8px; padding:6px 0}
+  .locknote svg{width:16px;height:16px;color:var(--gold)}
+
+  /* quiz */
+  .quiz{margin-top:12px}
+  .quiz .qq{margin:12px 0}
+  .quiz .qtext{font-weight:700; margin-bottom:7px}
+  .opts{display:flex; flex-wrap:wrap; gap:8px}
+  .opt{font-family:var(--ui); font-size:.9rem; cursor:pointer; border:1px solid var(--line-2);
+    background:var(--panel-2); color:var(--ink); border-radius:10px; padding:9px 13px; transition:.12s}
+  .opt:hover{border-color:var(--gold)}
+  .opt.correct{background:linear-gradient(180deg,var(--elven),color-mix(in srgb,var(--elven) 70%,#000)); color:#fff; border-color:transparent}
+  .opt.wrong{background:color-mix(in srgb,var(--ember) 22%,var(--panel)); border-color:var(--ember); text-decoration:line-through}
+  .opt:disabled{cursor:default}
+
+  /* ===== Characters ===== */
+  .charhint{font-family:var(--ui); font-size:.82rem; color:var(--ink-2); margin:0 2px 14px}
+  .char-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px}
+  .char{border:1px solid var(--line-2); border-radius:var(--radius); background:var(--panel); padding:14px;
+    text-align:center; cursor:pointer; transition:.15s; box-shadow:0 4px 16px -14px var(--shadow)}
+  .char:hover{border-color:var(--gold); transform:translateY(-2px)}
+  .medallion{width:66px; height:66px; margin:0 auto 9px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%, var(--panel-2), color-mix(in srgb,var(--gold) 22%,var(--panel)));
+    border:2px solid var(--gold-2); color:var(--gold); box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--gold) 12%,transparent)}
+  .medallion svg{width:34px; height:34px}
+  .medallion.pm{overflow:hidden; padding:0}
+  .medallion.pm svg.portrait{width:100%; height:100%; display:block}
+  .cd .medallion{width:104px; height:104px}
+  .cd .medallion.pm svg.portrait{width:100%; height:100%}
+  .char h4{margin:0; font-family:var(--serif); font-size:.98rem; font-weight:700; line-height:1.2}
+  .char .race{font-family:var(--ui); font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); margin-top:3px}
+  .char.locked{cursor:default}
+  .char.locked .medallion{background:var(--panel-2); border-color:var(--line-2); color:var(--ink-3); box-shadow:none}
+  .char.locked h4{color:var(--ink-3)}
+  .char.locked .race{visibility:hidden}
+  .char-detail{grid-column:1/-1}
+  .cd{border:1px solid var(--gold-2); border-radius:var(--radius); background:var(--panel);
+    padding:16px 18px; display:flex; gap:16px; align-items:flex-start; box-shadow:0 8px 24px -16px var(--shadow)}
+  .cd .medallion{margin:0; flex:none}
+  .cd h3{margin:0 0 2px; font-family:var(--display); font-size:1.25rem; letter-spacing:.01em}
+  .cd .en{font-family:var(--ui); font-size:.76rem; color:var(--ink-3)}
+  .cd .say{font-family:var(--ui); font-size:.8rem; color:var(--elven); margin:4px 0 8px}
+  .cd .say b{color:var(--ink-2); font-weight:600}
+  .cd .close{margin-left:auto; cursor:pointer; border:1px solid var(--line-2); background:var(--panel-2);
+    color:var(--ink-2); border-radius:8px; width:30px; height:30px; font-size:1rem; flex:none}
+
+  /* race accents */
+  .r-hobit .medallion{border-color:var(--elven); color:var(--elven)}
+  .r-carodej .medallion{border-color:var(--gold-2); color:var(--gold)}
+  .r-clovek .medallion{border-color:#9c7b4e; color:#9c7b4e}
+  .r-elf .medallion{border-color:#7fa8c9; color:#5f86ad}
+  .r-trpaslik .medallion{border-color:#b08d5a; color:#8a6b3c}
+  .r-zlo .medallion{border-color:var(--ember-2); color:var(--ember)}
+  .r-orc .medallion{border-color:var(--ember-2); color:var(--ember)}
+
+  /* ===== Sub-segment (Galerie / Vztahy) ===== */
+  .subseg{display:inline-flex; background:var(--panel-2); border:1px solid var(--line-2); border-radius:999px;
+    padding:3px; margin-bottom:16px; font-family:var(--ui); font-size:.84rem}
+  .subseg button{border:0; background:transparent; color:var(--ink-2); cursor:pointer; padding:7px 16px; border-radius:999px; font-weight:600}
+  .subseg button.on{background:linear-gradient(180deg,#3a2c1e,#2b2118); color:var(--paper-2)}
+
+  /* ===== Svět (lore) ===== */
+  .lore-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px}
+  .lore{border:1px solid var(--line-2); border-radius:var(--radius); background:var(--panel); padding:16px 18px;
+    box-shadow:0 4px 16px -14px var(--shadow)}
+  .lore.wide{grid-column:1/-1}
+  .lore-head{display:flex; align-items:center; gap:12px; margin-bottom:8px}
+  .lore-ic{width:44px;height:44px;border-radius:12px; display:flex;align-items:center;justify-content:center; flex:none;
+    background:radial-gradient(circle at 35% 30%, var(--panel-2), color-mix(in srgb,var(--gold) 20%,var(--panel)));
+    border:1px solid var(--gold-2); color:var(--gold)}
+  .lore-ic svg{width:26px;height:26px}
+  .lore h3{margin:0; font-family:var(--display); font-size:1.1rem; letter-spacing:.01em}
+  .lore p{margin:0; font-size:.95rem}
+  .race-list{display:flex; flex-direction:column; gap:10px; margin-top:4px}
+  .race-row{display:flex; align-items:center; gap:12px}
+  .race-row .medallion{width:46px;height:46px;margin:0;flex:none}
+  .race-row .medallion svg{width:24px;height:24px}
+  .race-row b{font-family:var(--serif)}
+  .race-row span{color:var(--ink-2); font-size:.9rem}
+  .timeline{margin:6px 0 0; padding:0; list-style:none; position:relative}
+  .timeline::before{content:"";position:absolute; left:7px; top:6px; bottom:10px; width:2px; background:linear-gradient(var(--gold-2),transparent)}
+  .timeline li{position:relative; padding:0 0 14px 30px}
+  .timeline li::before{content:"";position:absolute; left:2px; top:4px; width:12px;height:12px;border-radius:50%; background:var(--ember); border:2px solid var(--gold-2)}
+  .timeline .tage{font-family:var(--ui); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); display:block}
+  .timeline .tt{font-weight:700}
+
+  /* ===== Vztahy ===== */
+  .rel-block{margin-bottom:24px}
+  .rel-block h3{font-family:var(--display); font-size:1.05rem; letter-spacing:.02em; margin:0 0 4px; color:var(--ink)}
+  .rel-block .rsub{font-family:var(--ui); font-size:.82rem; color:var(--ink-2); margin:0 0 12px}
+  .chain{display:flex; flex-wrap:wrap; align-items:flex-start; gap:4px}
+  .node{display:flex; flex-direction:column; align-items:center; width:86px; text-align:center; flex:none}
+  .node .medallion{width:54px;height:54px;margin:0 0 5px}
+  .node .medallion svg{width:27px;height:27px}
+  .node small{font-family:var(--ui); font-size:.72rem; line-height:1.15; color:var(--ink)}
+  .node.locked .medallion{background:var(--panel-2);border-color:var(--line-2);color:var(--ink-3)}
+  .node.locked small{color:var(--ink-3)}
+  .arrow{display:flex; flex-direction:column; align-items:center; justify-content:flex-start; color:var(--gold); flex:none; min-width:52px; padding-top:16px}
+  .arrow svg{width:28px;height:12px}
+  .arrow em{font-style:normal; font-family:var(--ui); font-size:.62rem; color:var(--ink-2); text-align:center; line-height:1.1; margin-top:3px}
+  .nine{display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:12px;
+    border:1px solid var(--line-2); border-radius:var(--radius); background:var(--panel); padding:16px}
+  .nine .node{width:auto}
+  .ninecap{font-family:var(--ui); font-size:.78rem; color:var(--ink-3); margin-top:10px; text-align:center}
+
+  /* ===== Deník postavy (v detailu) ===== */
+  .cd .arc{margin-top:14px}
+  .cd .arc h4{font-family:var(--ui); text-transform:uppercase; letter-spacing:.08em; font-size:.72rem;
+    color:var(--gold); margin:0 0 8px; display:flex; align-items:center; gap:7px}
+  .arc-tl{margin-top:0}
+  .arc-tl li{padding-bottom:11px}
+  .arc-tl .tage{font-size:.67rem}
+  .ahead{margin-top:12px; display:flex; gap:9px; align-items:flex-start; font-size:.92rem;
+    background:color-mix(in srgb,var(--elven) 12%, var(--panel));
+    border:1px solid color-mix(in srgb,var(--elven) 32%, transparent); border-radius:10px; padding:10px 12px}
+  .ahead svg{width:16px; height:16px; color:var(--elven); flex:none; margin-top:2px}
+  .ahead b{color:var(--ink)}
+
+  /* ===== Ilustrace kapitoly ===== */
+  .illus{margin:6px 0 16px; border:1px solid var(--line-2); border-radius:12px; overflow:hidden;
+    background:#2b2542; box-shadow:0 6px 18px -12px var(--shadow)}
+  .illus svg{display:block; width:100%; height:auto}
+  .illus figcaption{padding:11px 15px; font-size:.92rem; color:var(--ink); line-height:1.5; background:var(--panel)}
+  .illus figcaption b{color:var(--ember); font-family:var(--ui); font-size:.7rem; text-transform:uppercase;
+    letter-spacing:.06em; margin-right:4px}
+
+  /* ===== Info ===== */
+  .info{margin-top:26px; border:1px solid var(--line); border-radius:12px; background:var(--panel-2); padding:12px 16px;
+    font-family:var(--ui); font-size:.82rem; color:var(--ink-2)}
+  .info summary{cursor:pointer; font-weight:700; color:var(--ink)}
+  .info a{color:var(--ember)}
+  .foot{text-align:center; font-family:var(--ui); font-size:.72rem; color:var(--ink-3); margin-top:26px}
+
+  @media (max-width:560px){
+    .brand p{display:none}
+    .cd{flex-wrap:wrap}
+    .char-grid{grid-template-columns:repeat(auto-fill,minmax(46%,1fr))}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="top-in">
+      <div class="brand">
+        <svg class="crest" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="4.4"/><path d="M12 3.8v2M12 18.2v2M3.8 12h2M18.2 12h2" stroke-linecap="round"/></svg>
+        <div>
+          <h1>Cesta Prstenu</h1>
+          <p>Průvodce Společenstvem Prstenu — pro tebe i pro kluky</p>
+        </div>
+      </div>
+      <div class="modeswitch" id="modeswitch">
+        <button data-mode="tata" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v18M5 8l7-4 7 4M6 20h12" stroke-linecap="round"/></svg>Táta</button>
+        <button data-mode="kluci" class="kids"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><circle cx="16" cy="9" r="2.4"/><path d="M3.5 20c.4-3 2.8-5 5.5-5s5.1 2 5.5 5M14 20c.3-2.2 1.8-3.7 3.6-3.9" stroke-linecap="round"/></svg>Kluci</button>
+      </div>
+    </div>
+    <div class="road">
+      <div class="road-in">
+        <span>Cesta</span>
+        <div class="road-track"><div class="road-fill" id="roadFill"></div></div>
+        <span><b id="chDone">0</b>/22 kapitol · <b id="miles">0</b> mil</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <nav class="tabs" id="tabs">
+      <button data-view="mapa" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>Mapa</button>
+      <button data-view="kapitoly"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5c2-1 5-1 8 1 3-2 6-2 8-1v14c-2-1-5-1-8 1-3-2-6-2-8-1z"/><path d="M12 7v13"/></svg>Kapitoly</button>
+      <button data-view="postavy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20c.6-3.6 3.2-6 6.5-6s5.9 2.4 6.5 6"/></svg>Postavy</button>
+      <button data-view="svet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>Svět</button>
+    </nav>
+
+    <!-- MAPA -->
+    <section class="view on" id="view-mapa">
+      <p class="map-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21c5-4.5 7-8 7-11a7 7 0 10-14 0c0 3 2 6.5 7 11z"/></svg><span>Na mapě je vyznačená <b>cesta</b> a značka „Tady jsme". Zastávky najdeš na <b>liště pod mapou</b> — klikni a mapa tě k místu zaveze. Mapu můžeš i tahat a přiblížit.</span></p>
+      <div class="map-viewport" id="mapVp">
+        <div class="map-stage" id="mapStage">
+          <img class="map-img" id="mapImg" src="__MAP_DATA_URI__" alt="Mapa Středozemě" draggable="false">
+          <svg class="route" id="routeSvg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <div id="hereLayer"></div>
+        </div>
+        <div class="map-ctrls">
+          <button id="zin" title="Přiblížit">+</button>
+          <button id="zout" title="Oddálit">−</button>
+          <button id="zreset" title="Zaměřit cestu">⤢</button>
+        </div>
+      </div>
+      <div class="mapstrip" id="mapstrip"></div>
+      <div class="place-panel empty" id="placePanel">Klikni na zastávku pod mapou a mapa tě k ní zaveze.</div>
+    </section>
+
+    <!-- KAPITOLY -->
+    <section class="view" id="view-kapitoly"><div id="chapters"></div></section>
+
+    <!-- POSTAVY -->
+    <section class="view" id="view-postavy">
+      <div class="subseg" id="subseg">
+        <button data-sub="galerie" class="on">Galerie</button>
+        <button data-sub="vztahy">Vztahy</button>
+      </div>
+      <div id="sub-galerie">
+        <p class="charhint" id="charHint"></p>
+        <div class="char-grid" id="charGrid"></div>
+      </div>
+      <div id="sub-vztahy" hidden>
+        <p class="charhint" id="relHint"></p>
+        <div id="relations"></div>
+      </div>
+    </section>
+
+    <!-- SVĚT -->
+    <section class="view" id="view-svet">
+      <p class="charhint">Malá encyklopedie světa — hoď kluky do obrazu. (V režimu Kluci ukazujeme jen to, co už nemůže nic prozradit.)</p>
+      <div id="world"></div>
+    </section>
+
+    <details class="info">
+      <summary>Jak to funguje · o jménech</summary>
+      <p><b>Dva režimy.</b> <i>Táta</i> = příprava na čtení (shrnutí, na co se zaměřit, otázky pro kluky, „metr strašidelnosti"). <i>Kluci</i> = bez spoilerů, jen to, co jste už četli, plus kvízy a sbírání postav.</p>
+      <p><b>Odemykání.</b> U každé kapitoly klikni na <i>Přečteno</i> — tím se na mapě posune „Tady jsme", přibudou míle a odemknou se nové postavy a místa. Postup se ukládá v prohlížeči.</p>
+      <p><b>Jména.</b> Držím se překladu <b>Stanislavy Pošustové</b> (Pytlík, Křepelka, Hůrka, Roklinka, Chodec…). Pár jmen si nejsem 100% jistý (sedlák Maggot, Ječmínek Máselník, Zlatěnka) — když se liší od tvého vydání, řekni a sladím to. Mapa má popisky anglicky, české názvy jsou u pečetí.</p>
+    </details>
+    <p class="foot">Postaveno s láskou k předčítání · v1 — ukázka k doladění</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // ===== ikony =====
+  var IC = {
+    town:'<path d="M4 20h16M6 20v-8l6-4 6 4v8M10 20v-4h4v4"/>',
+    forest:'<path d="M12 3l5 8H7zM12 8l6 9H6zM12 17v3"/>',
+    mountain:'<path d="M3 19l6-11 4 6 3-5 5 10z"/>',
+    water:'<path d="M3 8c3-3 6 3 9 0s6 3 9 0M3 13c3-3 6 3 9 0s6 3 9 0M3 18c3-3 6 3 9 0s6 3 9 0"/>',
+    star:'<path d="M12 3l2.4 5.6 6 .5-4.6 4 1.4 5.9L12 16.9 6.8 19l1.4-5.9L3.6 9.1l6-.5z"/>',
+    ring:'<circle cx="12" cy="12" r="7.6"/><circle cx="12" cy="12" r="4"/>',
+    hobit:'<circle cx="12" cy="12" r="8"/><circle cx="15" cy="12" r="1.1" fill="currentColor" stroke="none"/>',
+    carodej:'<path d="M12 3L7 19h10zM5 19h14"/><circle cx="12" cy="12.5" r=".9" fill="currentColor" stroke="none"/>',
+    clovek:'<path d="M12 3v10M9.5 13h5M12 13v6M12 19l-1.4 1M12 19l1.4 1"/>',
+    elf:'<path d="M6 18C6 10 12 5 19 5c0 7-5 13-13 13z"/><path d="M7 17c3-3 6-6 9-8"/>',
+    trpaslik:'<path d="M9 4v16"/><path d="M9 6c4 0 7 2 7 4.5S13 15 9 15"/>',
+    eye:'<path d="M2 12c3-5 7-7 10-7s7 2 10 7c-3 5-7 7-10 7s-7-2-10-7z"/><ellipse cx="12" cy="12" rx="1.5" ry="3.6" fill="currentColor" stroke="none"/>',
+    wraith:'<path d="M12 3c-3.4 0-5.4 3-5.4 7v10h10.8V10c0-4-2-7-5.4-7z"/><path d="M9.4 11.4l1.4 1.2M14.6 11.4l-1.4 1.2"/>',
+    flame:'<path d="M12 3c1 4-3 5-3 9a3 3 0 006 0c0-2-1-3-1.2-4.5C16 9 17 11 17 13a5 5 0 01-10 0c0-5 3-6 5-10z"/>',
+    orc:'<path d="M6 10c0-3 2.7-5 6-5s6 2 6 5c0 4-3 7-6 7s-6-3-6-7z"/><path d="M9.3 10.5h.01M14.7 10.5h.01"/><path d="M10 14l2 1 2-1"/>',
+    scroll:'<path d="M7 4h9a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V6"/><path d="M6 6a2 2 0 002 2h2"/><path d="M10 11h5M10 14h5"/>',
+    lock:'<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/>',
+    check:'<path d="M4 12l5 5L20 6"/>'
+  };
+  function icon(name,cls){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"'+(cls?' class="'+cls+'"':'')+'>'+(IC[name]||IC.star)+'</svg>';}
+
+  // ===== Pohádkové portréty postav =====
+  var SK={light:'#ecba8d',warm:'#d99a68',fair:'#f0d3ad',glum:'#bcc3a8'};
+  var HR={dark:'#33261a',brown:'#5b3a20',sandy:'#b3773a',ginger:'#a2481f',grey:'#bcb6a8',blond:'#e6c65f',auburn:'#7a3f22'};
+  var BGR={hobit:'#dbe6cd',carodej:'#ece0c6',clovek:'#e6d7c1',elf:'#dbe6ee',trpaslik:'#ecdcc4',zlo:'#ddccc2'};
+  function pShoulders(c){return '<path d="M12 100 Q15 81 33 74 Q42 80 50 80 Q58 80 67 74 Q85 81 88 100 Z" fill="'+c+'"/>';}
+  function pHead(sk){return '<rect x="43.5" y="60" width="13" height="14" rx="6" fill="'+sk+'"/><ellipse cx="50" cy="46" rx="21" ry="24" fill="'+sk+'"/>';}
+  function pEars(sk){return '<ellipse cx="29.5" cy="48" rx="4.2" ry="6" fill="'+sk+'"/><ellipse cx="70.5" cy="48" rx="4.2" ry="6" fill="'+sk+'"/>';}
+  function pElfEars(sk){return '<path d="M31 41 Q22 41 26 55 Q31 51 33 46 Z" fill="'+sk+'"/><path d="M69 41 Q78 41 74 55 Q69 51 67 46 Z" fill="'+sk+'"/>';}
+  function pHairBack(c){return '<path d="M24 44 Q19 74 31 87 L38 82 Q29 60 33 44 Z" fill="'+c+'"/><path d="M76 44 Q81 74 69 87 L62 82 Q71 60 67 44 Z" fill="'+c+'"/>';}
+  var HAIR={
+    hobbit:function(c){return '<path d="M27 47 Q23 22 50 21 Q77 22 73 47 Q70 38 65 36 Q68 30 59 31 Q63 25 51 26 Q40 24 44 29 Q34 29 38 34 Q30 36 29 44 Z" fill="'+c+'"/><g fill="'+c+'"><circle cx="31" cy="43" r="4.2"/><circle cx="38" cy="32" r="4.6"/><circle cx="50" cy="27" r="5"/><circle cx="62" cy="32" r="4.6"/><circle cx="69" cy="43" r="4.2"/></g>';},
+    longt:function(c){return '<path d="M27 46 Q25 20 50 20 Q75 20 73 46 Q66 31 50 31 Q34 31 27 46 Z" fill="'+c+'"/>';},
+    balding:function(c){return '<path d="M28 50 Q26 39 33 35 Q30 45 33 51 Z" fill="'+c+'"/><path d="M72 50 Q74 39 67 35 Q70 45 67 51 Z" fill="'+c+'"/><path d="M31 41 Q36 31 50 31 Q57 31 61 33 Q50 32 41 35 Q35 37 31 41 Z" fill="'+c+'" opacity=".85"/>';},
+    short:function(c){return '<path d="M29 45 Q28 25 50 24 Q72 25 71 45 Q63 33 50 33 Q37 33 29 45 Z" fill="'+c+'"/>';}
+  };
+  var BEARD={
+    long:function(c){return '<path d="M35 51 Q33 93 50 99 Q67 93 65 51 Q59 71 50 71 Q41 71 35 51 Z" fill="'+c+'"/>';},
+    full:function(c){return '<path d="M33 50 Q33 83 50 89 Q67 83 67 50 Q59 68 50 68 Q41 68 33 50 Z" fill="'+c+'"/>';},
+    short:function(c){return '<path d="M37 54 Q37 69 50 73 Q63 69 63 54 Q57 65 50 65 Q43 65 37 54 Z" fill="'+c+'"/>';},
+    stubble:function(c){return '<path d="M34 53 Q37 71 50 73 Q63 71 66 53 Q59 64 50 65 Q41 64 34 53 Z" fill="'+c+'" opacity=".32"/>';}
+  };
+  var HAT={
+    wizard:function(s){return '<path d="M50 3 Q43 22 29 41 Q50 35 71 41 Q57 20 50 3 Z" fill="#8b857a"/><ellipse cx="50" cy="41" rx="27" ry="5.5" fill="#787265"/><path d="M50 6 Q47 22 41 37" stroke="rgba(0,0,0,.12)" stroke-width="2" fill="none"/>';},
+    helmet:function(s){return '<path d="M28 43 Q28 24 50 24 Q72 24 72 43 Q50 37 28 43 Z" fill="#6c7077"/><path d="M28 43 Q50 37 72 43" stroke="#4f535a" stroke-width="1.6" fill="none"/><rect x="47" y="33" width="6" height="19" rx="2" fill="#5c6067"/><circle cx="50" cy="30" r="2.6" fill="#c9a24b"/>';},
+    circlet:function(s){return '<path d="M30 36 Q50 43 70 36" stroke="'+(s.circlet||'#c9a24b')+'" stroke-width="2.4" fill="none"/><path d="M47 39 L50 33.5 L53 39 Z" fill="'+(s.circlet||'#c9a24b')+'"/>';},
+    tomhat:function(s){return '<ellipse cx="50" cy="34" rx="27" ry="5" fill="#3f6fae"/><path d="M35 34 Q37 16 50 15 Q63 16 65 34 Z" fill="#3f6fae"/><path d="M64 30 Q76 19 71 33 Q67 28 64 30 Z" fill="#d8a34a"/>';}
+  };
+  function pFace(s,hang){
+    var eyes=s.eyes==='big'
+      ? '<g><ellipse cx="42" cy="46" rx="5" ry="5.4" fill="#eef0e0"/><ellipse cx="58" cy="46" rx="5" ry="5.4" fill="#eef0e0"/><circle cx="42.8" cy="46.6" r="2.5" fill="#46583f"/><circle cx="57.2" cy="46.6" r="2.5" fill="#46583f"/></g>'
+      : '<g fill="#2c2118"><ellipse cx="42.5" cy="46" rx="2.3" ry="3"/><ellipse cx="57.5" cy="46" rx="2.3" ry="3"/></g><g fill="#fff" opacity=".85"><circle cx="43.3" cy="45.1" r=".8"/><circle cx="58.3" cy="45.1" r=".8"/></g>';
+    var brow=s.brow?'<g stroke="'+s.brow+'" stroke-width="2.1" stroke-linecap="round" fill="none"><path d="M37 40.5 Q42 38 47 40"/><path d="M53 40 Q58 38 63 40.5"/></g>':'';
+    var nose='<path d="M50 47 L47.6 53 Q50 54.8 52.4 53" fill="none" stroke="rgba(80,52,28,.35)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>';
+    var mouth=(hang||s.mouth==='none')?'':(s.frown?'<path d="M45.5 61 Q50 57.5 54.5 61" stroke="#8a3f2c" stroke-width="1.8" fill="none" stroke-linecap="round"/>':'<path d="M45 58 Q50 62.5 55 58" stroke="#8a3f2c" stroke-width="1.8" fill="none" stroke-linecap="round"/>');
+    var cheek=s.cheeks===false?'':'<g fill="#e07a5f" opacity=".26"><circle cx="37" cy="53.5" r="3.3"/><circle cx="63" cy="53.5" r="3.3"/></g>';
+    return brow+eyes+nose+mouth+cheek;
+  }
+  var PSPEC={
+    frodo:{race:'hobit',skin:SK.light,ears:'hobbit',hair:{style:'hobbit',color:HR.dark},brow:HR.dark,clothes:'#6d7a49'},
+    sam:{race:'hobit',skin:SK.warm,ears:'hobbit',hair:{style:'hobbit',color:HR.sandy},brow:HR.sandy,clothes:'#9a7038',beard:{style:'stubble',color:HR.sandy}},
+    merry:{race:'hobit',skin:SK.light,ears:'hobbit',hair:{style:'hobbit',color:HR.brown},brow:HR.brown,clothes:'#5a6b46'},
+    pippin:{race:'hobit',skin:SK.light,ears:'hobbit',hair:{style:'hobbit',color:HR.auburn},brow:HR.auburn,clothes:'#7d5b34'},
+    bilbo:{race:'hobit',skin:SK.light,ears:'hobbit',hair:{style:'balding',color:HR.grey},brow:HR.grey,clothes:'#93803f',beard:{style:'short',color:HR.grey}},
+    gandalf:{race:'carodej',skin:SK.light,ears:'none',hairBack:HR.grey,brow:HR.grey,clothes:'#6b6660',beard:{style:'long',color:HR.grey},hat:'wizard'},
+    aragorn:{race:'clovek',skin:SK.warm,ears:'none',hairBack:HR.dark,hair:{style:'longt',color:HR.dark},brow:HR.dark,clothes:'#4a4038',beard:{style:'stubble',color:HR.dark}},
+    boromir:{race:'clovek',skin:SK.warm,ears:'none',hair:{style:'short',color:HR.brown},brow:HR.brown,clothes:'#7c5b36',beard:{style:'full',color:HR.brown}},
+    legolas:{race:'elf',skin:SK.fair,ears:'elf',hairBack:HR.blond,hair:{style:'longt',color:HR.blond},brow:HR.blond,clothes:'#5f7d57'},
+    gimli:{race:'trpaslik',skin:SK.warm,ears:'none',brow:HR.ginger,clothes:'#8a4a2a',beard:{style:'full',color:HR.ginger},hat:'helmet'},
+    elrond:{race:'elf',skin:SK.fair,ears:'elf',hairBack:HR.dark,hair:{style:'longt',color:HR.dark},brow:HR.dark,clothes:'#5a6a8a',hat:'circlet'},
+    glorfindel:{race:'elf',skin:SK.fair,ears:'elf',hairBack:HR.blond,hair:{style:'longt',color:HR.blond},brow:HR.blond,clothes:'#c9b26a'},
+    galadriel:{race:'elf',skin:SK.fair,ears:'elf',hairBack:HR.blond,hair:{style:'longt',color:HR.blond},brow:HR.blond,clothes:'#e4e4ec',hat:'circlet',circlet:'#e6c65f'},
+    glum:{race:'zlo',skin:SK.glum,ears:'none',eyes:'big',brow:'',clothes:'#6b6656',mouth:'none',cheeks:false,extra:'<path d="M43 60 Q50 58 57 60" stroke="#5a3a34" stroke-width="1.3" fill="none" stroke-linecap="round"/><g stroke="#9a9a80" stroke-width="1.6" stroke-linecap="round"><path d="M42 25 L43 21"/><path d="M50 23 L50 19"/><path d="M58 25 L57 21"/></g>'},
+    bombadil:{race:'carodej',skin:SK.warm,ears:'none',hair:{style:'short',color:HR.auburn},brow:HR.auburn,clothes:'#3f6fae',beard:{style:'full',color:HR.auburn},hat:'tomhat'}
+  };
+  function Pc(bg,inner){return '<svg class="portrait" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+bg+'"/>'+inner+'</svg>';}
+  function conceptPortrait(id){
+    if(id==='sauron') return Pc('#2a1512','<g><path d="M12 50 Q50 28 88 50 Q50 72 12 50 Z" fill="#f0a83a"/><path d="M19 50 Q50 33 81 50 Q50 67 19 50 Z" fill="#e4691f"/><ellipse cx="50" cy="50" rx="6.5" ry="18" fill="#1c0c08"/><ellipse cx="50" cy="50" rx="2.6" ry="12" fill="#ffd76a"/></g>');
+    if(id==='nazgul') return Pc('#22242c','<path d="M50 13 Q29 15 27 46 L27 100 L73 100 L73 46 Q71 15 50 13 Z" fill="#121419"/><path d="M50 19 Q35 21 33 46 Q42 41 50 41 Q58 41 67 46 Q65 21 50 19 Z" fill="#05060a"/><g fill="#c94a2e"><circle cx="43" cy="47" r="2"/><circle cx="57" cy="47" r="2"/></g>');
+    if(id==='balrog') return Pc('#2a0f0a','<path d="M18 100 Q22 60 40 45 L60 45 Q78 60 82 100 Z" fill="#e4691f"/><path d="M33 32 Q25 15 20 8 Q34 21 39 33 Z" fill="#1c0a07"/><path d="M67 32 Q75 15 80 8 Q66 21 61 33 Z" fill="#1c0a07"/><ellipse cx="50" cy="47" rx="20" ry="22" fill="#3a1410"/><g fill="#ffd05a"><ellipse cx="42" cy="47" rx="3" ry="4"/><ellipse cx="58" cy="47" rx="3" ry="4"/></g><path d="M40 59 Q50 67 60 59 Q54 63 50 63 Q46 63 40 59 Z" fill="#ffb03a"/>');
+    if(id==='stara-vrba') return Pc('#ccd0ad','<path d="M30 100 Q28 52 40 32 Q50 26 60 32 Q72 52 70 100 Z" fill="#6b5638"/><path d="M41 32 Q31 19 23 15 M60 32 Q70 19 78 15 M50 28 Q50 16 50 9" stroke="#5a4830" stroke-width="3" fill="none" stroke-linecap="round"/><g fill="#33291b"><ellipse cx="43" cy="53" rx="3" ry="4"/><ellipse cx="57" cy="53" rx="3" ry="4"/></g><path d="M42 65 Q50 61 58 65" stroke="#33291b" stroke-width="2" fill="none" stroke-linecap="round"/><g stroke="#8a9a44" stroke-width="2.2" fill="none" opacity=".75"><path d="M33 40 Q29 62 31 82"/><path d="M67 40 Q71 62 69 82"/><path d="M45 34 Q43 60 44 84"/></g>');
+    return null;
+  }
+  function portraitBody(id){
+    var s=PSPEC[id]; if(!s) return null;
+    var hang=s.beard&&(s.beard.style==='long'||s.beard.style==='full');
+    var g=pShoulders(s.clothes||'#6b5636');
+    if(s.hairBack) g+=pHairBack(s.hairBack);
+    if(hang) g+=BEARD[s.beard.style](s.beard.color);
+    g+=pHead(s.skin);
+    if(s.ears==='elf') g+=pElfEars(s.skin); else if(s.ears!=='none') g+=pEars(s.skin);
+    if(s.hair) g+=HAIR[s.hair.style](s.hair.color);
+    g+=pFace(s,hang);
+    if(s.beard&&!hang) g+=BEARD[s.beard.style](s.beard.color);
+    if(s.hat) g+=HAT[s.hat](s);
+    if(s.extra) g+=s.extra;
+    return g;
+  }
+  function portrait(id){
+    var cc=conceptPortrait(id); if(cc) return cc;
+    var s=PSPEC[id]; if(!s) return null;
+    return '<svg class="portrait" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="'+(s.bg||BGR[s.race]||'#e6dbc2')+'"/>'+portraitBody(id)+'</svg>';
+  }
+  // postava do scény: použije její portrét (hlava+ramena), ukotvenou spodním středem na [X,Y]
+  function sceneChar(id,X,Y,S,flip){
+    var body=portraitBody(id); if(!body) return '';
+    var inner=flip?'translate(50,-104) scale(-1,1)':'translate(-50,-104)';
+    return '<g transform="translate('+X+','+Y+') scale('+S+')"><g transform="'+inner+'">'+body+'</g></g>';
+  }
+  // Černý jezdec (zahalená postava) do scény
+  function riderFig(X,Y,S){
+    return '<g transform="translate('+X+','+Y+') scale('+S+')"><path d="M-22 0 Q-24 -54 0 -66 Q24 -54 22 0 Z" fill="#141118"/><path d="M0 -66 Q-16 -60 -17 -40 Q-8 -46 0 -46 Q8 -46 17 -40 Q16 -60 0 -66 Z" fill="#05050a"/><path d="M-22 0 Q0 -10 22 0 L18 8 Q0 0 -18 8 Z" fill="#0a0910"/><g fill="#c94a2e"><circle cx="-6" cy="-50" r="1.7"/><circle cx="6" cy="-50" r="1.7"/></g></g>';
+  }
+  function charVisual(ch,unlocked){
+    if(!unlocked) return {h:icon('lock'),pm:false};
+    var p=portrait(ch.id);
+    return p?{h:p,pm:true}:{h:icon(ch.ic),pm:false};
+  }
+
+  // ===== Ilustrace kapitol (klíčový moment) =====
+  function ilBurst(cx,cy,r,n,c1,c2,seed){
+    var s='';
+    for(var i=0;i<n;i++){
+      var a=(i/n)*Math.PI*2+(seed||0);
+      var x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r, xm=cx+Math.cos(a)*r*0.42, ym=cy+Math.sin(a)*r*0.42;
+      s+='<line x1="'+xm.toFixed(1)+'" y1="'+ym.toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="'+c1+'" stroke-width="2.2" stroke-linecap="round" opacity=".9"/>';
+      s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="2.6" fill="'+c2+'"/>';
+    }
+    return s+'<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="'+c2+'"/><circle cx="'+cx+'" cy="'+cy+'" r="9" fill="'+c2+'" opacity=".18"/>';
+  }
+  function ilHole(x,y,s,door){
+    return '<g transform="translate('+x+','+y+') scale('+s+')"><ellipse cx="0" cy="0" rx="34" ry="32" fill="#5c4326"/><ellipse cx="0" cy="0" rx="29" ry="27" fill="'+door+'"/><circle cx="12" cy="2" r="2.4" fill="#e7c65a"/><circle cx="0" cy="0" r="27" fill="none" stroke="rgba(0,0,0,.15)" stroke-width="1.5"/></g>';
+  }
+  function ilLantern(x,y){return '<g transform="translate('+x+','+y+')"><line x1="0" y1="-8" x2="0" y2="-2" stroke="#5c4a2a" stroke-width="1.4"/><ellipse cx="0" cy="4" rx="5" ry="6.5" fill="#ffd35a"/><circle cx="0" cy="4" r="10" fill="#ffd35a" opacity=".18"/></g>';}
+  function ilHobbit(x,y,s,cloak,hair,skin){
+    skin=skin||'#ecba8d';
+    return '<g transform="translate('+x+','+y+') scale('+s+')"><ellipse cx="-5" cy="34" rx="4" ry="3" fill="#4a3620"/><ellipse cx="6" cy="34" rx="4" ry="3" fill="#4a3620"/><path d="M-13 32 Q-15 6 0 4 Q15 6 13 32 Z" fill="'+cloak+'"/><circle cx="0" cy="-6" r="11" fill="'+skin+'"/><path d="M-11 -8 Q-12 -20 0 -19 Q12 -20 11 -8 Q7 -14 0 -13 Q-7 -14 -11 -8 Z" fill="'+hair+'"/><circle cx="-4" cy="-6" r="1.5" fill="#2c2118"/><circle cx="4" cy="-6" r="1.5" fill="#2c2118"/><path d="M-4 -1 Q0 2 4 -1" stroke="#8a3f2c" stroke-width="1.2" fill="none" stroke-linecap="round"/></g>';
+  }
+  function ilGrass(x,y,c){c=c||'#4f7030';return '<g stroke="'+c+'" stroke-width="1.6" stroke-linecap="round"><path d="M'+x+' '+y+' l-2 -7"/><path d="M'+x+' '+y+' l0 -9"/><path d="M'+x+' '+y+' l2 -7"/></g>';}
+  function ilFlower(x,y,c){return '<g><line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-7)+'" stroke="#4f7030" stroke-width="1.4"/><circle cx="'+x+'" cy="'+(y-9)+'" r="2.6" fill="'+c+'"/><circle cx="'+x+'" cy="'+(y-9)+'" r="1" fill="#ffe9a0"/></g>';}
+  function ilFence(x,y,n,w){var s='';for(var i=0;i<n;i++){s+='<rect x="'+(x+i*w)+'" y="'+(y-10)+'" width="2.4" height="12" rx="1" fill="#efe4c8"/>';}s+='<rect x="'+x+'" y="'+(y-6)+'" width="'+(n*w)+'" height="2" fill="#efe4c8"/>';return s;}
+  function illus1(){
+    var s='<defs><linearGradient id="skyc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f2e58"/><stop offset=".42" stop-color="#6a4d6a"/><stop offset=".74" stop-color="#c76f47"/><stop offset="1" stop-color="#efb15a"/></linearGradient><linearGradient id="hillBc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ab06a"/><stop offset="1" stop-color="#84a054"/></linearGradient><linearGradient id="hillFc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e9040"/><stop offset="1" stop-color="#5b7b34"/></linearGradient></defs>';
+    s+='<rect width="800" height="300" fill="url(#skyc1)"/>';
+    var stars=[[40,40],[90,70],[140,30],[210,55],[300,35],[360,70],[470,40],[520,90],[600,35],[660,80],[730,45],[770,95],[180,110],[420,95],[250,120],[640,110]];
+    s+='<g fill="#fff">'; stars.forEach(function(p){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(1+(p[0]%2?0.4:0.9))+'" opacity="'+(0.5+(p[1]%3)*0.15)+'"/>';}); s+='</g>';
+    s+='<circle cx="710" cy="58" r="24" fill="#f3e7b6"/><circle cx="700" cy="52" r="21" fill="#3a3560"/>';
+    s+=ilBurst(235,74,48,14,'#ffd35a','#fff0b0',0)+ilBurst(560,58,34,12,'#e883a6','#ffd6e6',0.2)+ilBurst(400,116,24,10,'#8cc8e8','#e6f5ff',0.5)+ilBurst(120,120,20,8,'#c9a2e8','#f0e0ff',0.3);
+    s+='<path d="M690 58 Q615 54 570 96 Q528 134 470 122" fill="none" stroke="#7ad06a" stroke-width="17" stroke-linecap="round" opacity=".22"/><path d="M690 58 Q615 54 570 96 Q528 134 470 122" fill="none" stroke="#84dd72" stroke-width="8" stroke-linecap="round"/><path d="M470 122 L452 109 L457 130 L442 126 Z" fill="#84dd72"/><circle cx="458" cy="117" r="1.7" fill="#22331c"/><path d="M598 92 Q610 77 623 92 Z" fill="#84dd72" opacity=".85"/><path d="M556 106 Q568 91 581 106 Z" fill="#84dd72" opacity=".85"/>';
+    s+='<g fill="#a6e88f">'; for(var i=0;i<6;i++){s+='<circle cx="'+(700+i*9)+'" cy="'+(60-i*3)+'" r="'+(2.4-i*0.3)+'"/>';} s+='</g>';
+    // kopce
+    s+='<path d="M0 268 Q160 232 340 256 Q520 280 720 242 Q770 236 800 248 L800 300 L0 300 Z" fill="url(#hillBc1)"/>';
+    s+='<path d="M0 302 Q150 250 320 302 L320 460 L0 460 Z" fill="url(#hillFc1)"/><path d="M470 300 Q650 256 800 300 L800 460 L470 460 Z" fill="#6f9247"/><path d="M0 336 Q400 316 800 340 L800 460 L0 460 Z" fill="#688a38"/>';
+    // cestička k norám
+    s+='<path d="M150 460 Q170 380 120 326 Q95 300 70 300" fill="none" stroke="#c9b48a" stroke-width="12" stroke-linecap="round" opacity=".9"/>';
+    // hobití nory + ploty + zahrádka + kouř
+    s+=ilHole(70,298,0.9,'#3f7a4a')+ilFence(44,318,10,6);
+    s+=ilHole(190,320,0.72,'#b0472f')+ilFence(168,338,9,6);
+    s+=ilHole(120,368,0.64,'#c9a24b');
+    s+=ilHole(250,352,0.6,'#4a72a0');
+    s+='<path d="M110 262 q-4 -10 3 -17 q-5 -8 2 -15" fill="none" stroke="#efe4c8" stroke-width="3" stroke-linecap="round" opacity=".5"/>';
+    s+=ilFlower(52,330,'#e07a9a')+ilFlower(60,334,'#e7c65a')+ilFlower(96,392,'#e07a9a')+ilFlower(210,344,'#f0d0e0')+ilFlower(232,376,'#e7c65a');
+    // party strom vpravo + lampiony
+    s+='<g transform="translate(672,300)"><rect x="-8" y="-8" width="16" height="70" rx="4" fill="#5a4126"/><path d="M0 30 q-14 6 -22 20 M0 30 q14 6 22 18" stroke="#5a4126" stroke-width="4" fill="none"/><circle cx="0" cy="-32" r="50" fill="#4e7030"/><circle cx="-34" cy="-14" r="34" fill="#446427"/><circle cx="34" cy="-16" r="33" fill="#547834"/><circle cx="0" cy="-52" r="30" fill="#547834"/><circle cx="6" cy="-70" r="18" fill="#5c8038"/></g>';
+    s+=ilLantern(642,266)+ilLantern(700,258)+ilLantern(670,286)+ilLantern(712,292)+ilLantern(628,290)+ilLantern(690,312);
+    // cedule 111 mezi kůly
+    s+='<line x1="352" y1="300" x2="352" y2="214" stroke="#6a4e2c" stroke-width="4"/><line x1="470" y1="300" x2="470" y2="214" stroke="#6a4e2c" stroke-width="4"/><path d="M348 214 Q411 206 474 214 L474 246 Q411 238 348 246 Z" fill="#efe4c8" stroke="#c0492f" stroke-width="2"/><text x="411" y="238" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="24" fill="#9d2b25">111</text>';
+    // girlandy
+    var bx0=120,by0=252,bx1=560,by1=236;
+    s+='<path d="M'+bx0+' '+by0+' Q340 300 '+bx1+' '+by1+'" fill="none" stroke="#5c4a2a" stroke-width="1.4"/>';
+    var fcol=['#c0492f','#c9a24b','#3c6b57','#5a6a8a','#b0472f','#3f7a4a','#c9a24b','#c0492f','#3c6b57','#5a6a8a','#c9a24b'];
+    for(var f=0;f<=10;f++){var t=f/10, fx=bx0+(bx1-bx0)*t, fy=by0+(by1-by0)*t+Math.sin(t*Math.PI)*50; s+='<path d="M'+(fx-6)+' '+fy+' L'+(fx+6)+' '+fy+' L'+fx+' '+(fy+12)+' Z" fill="'+fcol[f]+'"/>';}
+    // světýlka nad polem
+    s+='<path d="M300 302 Q430 324 560 302" fill="none" stroke="#5c4a2a" stroke-width="1.2"/>';
+    for(var gg=0;gg<=8;gg++){var gt=gg/8, gx=300+260*gt; s+=ilLantern(gx,302+Math.sin(gt*Math.PI)*22);}
+    // stan
+    s+='<g transform="translate(120,362)"><path d="M-72 40 L-72 -6 Q0 -42 72 -6 L72 40 Z" fill="#efe4c8"/><path d="M-72 -6 Q0 -42 72 -6 L58 -6 Q0 -32 -58 -6 Z" fill="#c0492f" opacity=".85"/><g stroke="#c0492f" stroke-width="8" opacity=".45"><line x1="-48" y1="40" x2="-48" y2="2"/><line x1="-16" y1="40" x2="-16" y2="-10"/><line x1="16" y1="40" x2="16" y2="-10"/><line x1="48" y1="40" x2="48" y2="2"/></g><rect x="-72" y="36" width="144" height="6" fill="#b23c28"/><path d="M0 -42 l0 -12 l16 6 l-16 5" fill="#c9a24b"/></g>';
+    // dlouhý stůl s jídlem + lavice
+    s+='<g transform="translate(405,398)"><rect x="-96" y="10" width="192" height="26" fill="#5f4d2c" opacity=".6"/><rect x="-100" y="-5" width="200" height="14" rx="3" fill="#8a6a3a"/><rect x="-100" y="7" width="200" height="30" fill="#6b5636"/><ellipse cx="-72" cy="-9" rx="13" ry="6" fill="#c98a3a"/><path d="M-40 -7 q7 -16 14 0 Z" fill="#c0492f"/><ellipse cx="-6" cy="-9" rx="11" ry="5.5" fill="#e7c65a"/><rect x="20" y="-19" width="9" height="14" rx="2" fill="#b0472f"/><ellipse cx="52" cy="-9" rx="13" ry="6" fill="#7fae5a"/><circle cx="78" cy="-12" r="7" fill="#d98a4a"/><rect x="-90" y="-16" width="5" height="11" rx="2" fill="#7fae5a"/></g>';
+    // sud + Bilbo při proslovu + jiskřičky mizení
+    s+='<g transform="translate(300,398)"><ellipse cx="0" cy="24" rx="22" ry="6" fill="#4a3620" opacity=".5"/><ellipse cx="0" cy="20" rx="20" ry="6" fill="#6a4e2c"/><rect x="-18" y="-4" width="36" height="26" rx="7" fill="#7a5a34"/><path d="M-18 6 h36 M-18 14 h36" stroke="#5a4126" stroke-width="1.6"/><ellipse cx="0" cy="-4" rx="18" ry="5" fill="#8a6a3a"/></g>';
+    s+=sceneChar('bilbo',300,368,0.6);
+    s+='<g fill="#fff0b0">'; [[276,344],[326,346],[286,322],[316,320],[301,312],[268,360],[334,360]].forEach(function(p,ix){s+='<path d="M'+p[0]+' '+(p[1]-5)+' l1.7 3.6 3.8 0.5 -2.8 2.7 0.7 3.8 -3.4 -1.9 -3.4 1.9 0.7 -3.8 -2.8 -2.7 3.8 -0.5 Z" opacity="'+(0.95-ix*0.1)+'"/>';}); s+='</g>';
+    // muzikant hobit + noty
+    s+=ilHobbit(214,430,1.0,'#7a5a3a','#a04a24');
+    s+='<g fill="none" stroke="#4a3620" stroke-width="2"><path d="M232 402 l0 -14 l7 3"/><circle cx="230" cy="402" r="3" fill="#4a3620"/></g><text x="250" y="392" font-family="Georgia" font-size="12" fill="#5c4a34" opacity=".7">♪</text>';
+    // hlavní postavy vepředu (rozpoznatelné portréty)
+    s+=sceneChar('gandalf',150,458,1.08);
+    s+=sceneChar('frodo',372,452,0.82);
+    s+=sceneChar('sam',430,458,0.82,true);
+    s+=sceneChar('merry',486,452,0.74);
+    s+=sceneChar('pippin',530,455,0.72,true);
+    s+=ilHobbit(628,452,1.2,'#3c6b57','#5b3a20')+ilHobbit(690,458,1.25,'#5a6a8a','#33261a');
+    // tráva a květiny vepředu
+    for(var t2=0;t2<=800;t2+=26){ s+=ilGrass(t2,460,'#4f7030'); }
+    s+=ilFlower(340,456,'#e7c65a')+ilFlower(560,458,'#e07a9a')+ilFlower(600,455,'#f0d0e0')+ilFlower(90,458,'#e7c65a');
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  // — další stavební prvky scén —
+  function ilStars(arr,c){c=c||'#fff';var s='<g fill="'+c+'">';arr.forEach(function(p){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(p[2]||1)+'" opacity="'+(p[3]||0.8)+'"/>';});return s+'</g>';}
+  function ilMoon(x,y,r,sky){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#f3e7b6"/><circle cx="'+(x-r*0.4)+'" cy="'+(y-r*0.25)+'" r="'+(r*0.86)+'" fill="'+sky+'"/>';}
+  function ilPine(x,y,s,c){c=c||'#3a5a30';return '<g transform="translate('+x+','+y+') scale('+s+')"><rect x="-3" y="0" width="6" height="14" fill="#5a4126"/><path d="M0 -40 L14 -8 L-14 -8 Z" fill="'+c+'"/><path d="M0 -26 L18 6 L-18 6 Z" fill="'+c+'"/><path d="M0 -12 L22 18 L-22 18 Z" fill="'+c+'"/></g>';}
+  function ilTree(x,y,s,trunk,leaf){trunk=trunk||'#5a4126';leaf=leaf||'#4e7030';return '<g transform="translate('+x+','+y+') scale('+s+')"><rect x="-6" y="-4" width="12" height="46" rx="4" fill="'+trunk+'"/><circle cx="0" cy="-28" r="34" fill="'+leaf+'"/><circle cx="-24" cy="-12" r="24" fill="'+leaf+'"/><circle cx="24" cy="-14" r="23" fill="'+leaf+'"/><circle cx="0" cy="-44" r="22" fill="'+leaf+'"/></g>';}
+  function ilDeadTree(x,y,s,c){c=c||'#4a3826';return '<g transform="translate('+x+','+y+') scale('+s+')" stroke="'+c+'" stroke-width="5" fill="none" stroke-linecap="round"><path d="M0 40 L0 -20"/><path d="M0 -4 Q-14 -14 -22 -34"/><path d="M0 -10 Q14 -20 20 -40"/><path d="M0 -20 Q-8 -30 -6 -46"/><path d="M0 -20 Q8 -30 9 -44"/></g>';}
+  function ilRock(x,y,s,c){c=c||'#7a746a';return '<g transform="translate('+x+','+y+') scale('+s+')"><path d="M-30 20 Q-34 -8 -12 -14 Q4 -22 20 -12 Q36 -4 30 20 Z" fill="'+c+'"/><path d="M-12 -14 Q-4 0 6 -2" stroke="rgba(0,0,0,.15)" stroke-width="2" fill="none"/></g>';}
+  function ilFire(x,y,s){return '<g transform="translate('+x+','+y+') scale('+s+')"><ellipse cx="0" cy="16" rx="18" ry="5" fill="#3a2a1a"/><path d="M-10 16 L10 16 L6 8 L-6 8 Z" fill="#5a4126"/><path d="M0 -18 Q8 -4 6 6 Q3 14 0 14 Q-3 14 -6 6 Q-8 -4 0 -18 Z" fill="#e4691f"/><path d="M0 -8 Q4 0 3 8 Q0 12 -3 8 Q-4 0 0 -8 Z" fill="#ffd35a"/><circle cx="0" cy="0" r="26" fill="#ffb03a" opacity=".14"/></g>';}
+  function ilRingGlow(x,y,r,glow){return '<circle cx="'+x+'" cy="'+y+'" r="'+(r*2.4)+'" fill="'+(glow||'#ffcf6a')+'" opacity=".22"/><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="none" stroke="#e7c65a" stroke-width="'+(r*0.34)+'"/>';}
+  function ilWater(y,c,c2){c=c||'#4a6a8a';c2=c2||'#3a5877';var s='<rect y="'+y+'" width="800" height="'+(460-y)+'" fill="'+c+'"/>';for(var i=0;i<6;i++){var yy=y+14+i*((460-y)/6);s+='<path d="M0 '+yy+' q60 -6 120 0 t120 0 t120 0 t120 0 t120 0 t120 0" stroke="'+c2+'" stroke-width="2" fill="none" opacity=".5"/>';}return s;}
+  function ilBush(x,y,s,c){c=c||'#4e7030';return '<g transform="translate('+x+','+y+') scale('+s+')"><ellipse cx="0" cy="6" rx="22" ry="9" fill="'+c+'"/><ellipse cx="-11" cy="0" rx="14" ry="11" fill="'+c+'"/><ellipse cx="9" cy="-1" rx="16" ry="13" fill="'+c+'"/><ellipse cx="-1" cy="-8" rx="13" ry="11" fill="'+c+'"/></g>';}
+  function ilCloud(x,y,s){return '<g transform="translate('+x+','+y+') scale('+s+')" fill="#fff" opacity=".82"><ellipse cx="0" cy="0" rx="34" ry="14"/><ellipse cx="26" cy="-4" rx="24" ry="12"/><ellipse cx="-24" cy="2" rx="22" ry="10"/></g>';}
+  function ilBirds(arr,c){c=c||'#3a3a3a';var s='<g stroke="'+c+'" stroke-width="1.8" fill="none" stroke-linecap="round">';arr.forEach(function(p){var k=p[2]||6;s+='<path d="M'+(p[0]-k)+' '+p[1]+' q'+k+' -'+(k*0.7).toFixed(1)+' '+k+' 0 q0 -'+(k*0.7).toFixed(1)+' '+k+' 0"/>';});return s+'</g>';}
+  function ilReeds(x,y,n){var s='<g stroke="#6a7a3a" stroke-width="2.2" stroke-linecap="round">';for(var i=0;i<n;i++){var xx=x+i*7-n*3, h=16+(i%3)*5;s+='<line x1="'+xx+'" y1="'+y+'" x2="'+xx+'" y2="'+(y-h)+'"/>';}s+='</g><g fill="#7a5a34">';for(var j=0;j<n;j+=2){var xj=x+j*7-n*3;s+='<ellipse cx="'+xj+'" cy="'+(y-16-(j%3)*5)+'" rx="2.2" ry="5"/>';}return s+'</g>';}
+  function ilPebbles(y,c){c=c||'#7a7060';var s='<g fill="'+c+'" opacity=".5">',xs=[40,120,230,360,470,560,660,740,300,520,180,610];for(var i=0;i<xs.length;i++){s+='<ellipse cx="'+xs[i]+'" cy="'+(y+(i%3)*7)+'" rx="'+(4+i%3)+'" ry="'+(2+i%2)+'"/>';}return s+'</g>';}
+  function ilMushrooms(arr){var s='';arr.forEach(function(p){var sc=p[2]||1;s+='<g transform="translate('+p[0]+','+p[1]+') scale('+sc+')"><rect x="-3" y="-2" width="6" height="10" rx="2" fill="#efe4c8"/><path d="M-9 -2 Q0 -15 9 -2 Z" fill="#c0492f"/><circle cx="-3" cy="-6" r="1.2" fill="#efe4c8"/><circle cx="4" cy="-5" r="1.2" fill="#efe4c8"/></g>';});return s;}
+  function ilTufts(y0,y1,c){c=c||'#4f7030';var s='';for(var x=10;x<800;x+=24){var yy=y0+((x*7)%Math.max(1,(y1-y0)));s+=ilGrass(x,yy,c);}return s;}
+  function ilBoat2(cx,cy,s,ids){
+    var w=62*s, d=20*s, g='<ellipse cx="'+cx+'" cy="'+(cy+3*s)+'" rx="'+(w*1.05)+'" ry="'+(7*s)+'" fill="#3a5a70" opacity=".35"/>';
+    g+='<path d="M'+(cx-w)+' '+cy+' Q'+cx+' '+(cy-7*s)+' '+(cx+w)+' '+cy+'" fill="none" stroke="#6a4e2c" stroke-width="'+(3*s)+'" opacity=".7"/>';
+    var n=(ids||[]).length;
+    (ids||[]).forEach(function(id,i){var px=cx+(n>1?(i-(n-1)/2)*w*0.6:0); g+=sceneChar(id,px,cy+9*s,0.46*s,i%2===1);});
+    g+='<path d="M'+(cx-w)+' '+cy+' Q'+cx+' '+(cy+d)+' '+(cx+w)+' '+cy+' Q'+cx+' '+(cy+d*0.42)+' '+(cx-w)+' '+cy+' Z" fill="#9a7a44" stroke="#5a4126" stroke-width="'+(2*s)+'"/>';
+    g+='<path d="M'+(cx-w+5)+' '+(cy+1)+' Q'+cx+' '+(cy+d*0.62)+' '+(cx+w-5)+' '+(cy+1)+'" fill="none" stroke="#7a5a34" stroke-width="'+(1.4*s)+'"/>';
+    return g;
+  }
+
+  function illus2(){
+    var s='<rect width="800" height="460" fill="#3a2c1e"/><rect width="800" height="356" fill="#4a3826"/><rect y="356" width="800" height="104" fill="#33281c"/><g stroke="#2a2014" stroke-width="1.5" opacity=".5"><line x1="0" y1="388" x2="800" y2="388"/><line x1="0" y1="422" x2="800" y2="422"/></g>';
+    s+='<ellipse cx="430" cy="424" rx="220" ry="30" fill="#7a3f2a" opacity=".55"/><ellipse cx="430" cy="424" rx="176" ry="22" fill="none" stroke="#c9a24b" stroke-width="2" opacity=".45"/>';
+    s+='<circle cx="128" cy="150" r="56" fill="#1b2436"/><circle cx="128" cy="150" r="56" fill="none" stroke="#6a4e2c" stroke-width="8"/><line x1="72" y1="150" x2="184" y2="150" stroke="#6a4e2c" stroke-width="4"/><line x1="128" y1="94" x2="128" y2="206" stroke="#6a4e2c" stroke-width="4"/>';
+    s+=ilStars([[104,128],[150,168],[124,118],[160,140]],'#cfe0ff');
+    s+='<circle cx="158" cy="150" r="12" fill="#2a2a1a"/><path d="M147 160 Q158 151 169 160 Z" fill="#33261a"/>';
+    s+='<g transform="translate(58,252)"><rect x="-30" y="-92" width="60" height="92" fill="#3a2a18"/><g fill="#c9a24b"><rect x="-26" y="-88" width="7" height="26"/><rect x="-17" y="-88" width="7" height="26"/></g><rect x="-8" y="-88" width="8" height="26" fill="#8a5a34"/><rect x="2" y="-88" width="7" height="26" fill="#7fae5a"/><rect x="12" y="-86" width="7" height="24" fill="#b0472f"/><rect x="21" y="-86" width="7" height="24" fill="#5a86a8"/><rect x="-26" y="-58" width="52" height="8" fill="#9a7a44"/><circle cx="0" cy="-30" r="8" fill="#5a86a8"/></g>';
+    s+='<rect x="512" y="150" width="248" height="230" rx="6" fill="#241c14"/><rect x="536" y="176" width="200" height="204" fill="#3a2c1e"/><rect x="498" y="138" width="266" height="20" rx="4" fill="#5a4630"/><rect x="600" y="116" width="54" height="22" rx="3" fill="#4a3826"/><circle cx="712" cy="126" r="8" fill="#c9a24b"/>';
+    s+=ilFire(632,332,2.4);
+    s+='<g fill="#ffb03a">';[[624,300],[640,290],[632,278],[648,268]].forEach(function(p,ix){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(1.6-ix*0.2)+'" opacity="'+(0.8-ix*0.15)+'"/>';});s+='</g>';
+    s+=ilRingGlow(632,244,15,'#ff9a3a')+'<path d="M620 244 q6 -7 12 0 q6 7 12 0" stroke="#ffd76a" stroke-width="1.4" fill="none" opacity=".9"/>';
+    s+='<rect x="320" y="392" width="72" height="56" rx="8" fill="#5a3f28"/><rect x="320" y="358" width="72" height="42" rx="8" fill="#6a4a30"/>';
+    s+=sceneChar('gandalf',356,412,1.16)+sceneChar('frodo',474,442,0.92);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus3(){
+    var s='<defs><linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38496a"/><stop offset=".62" stop-color="#7d6a5a"/><stop offset="1" stop-color="#c0905c"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky3)"/>';
+    s+=ilStars([[60,40],[150,66],[250,48],[600,44],[700,70],[420,58],[520,36]])+ilMoon(690,56,20,'#38496a')+ilBirds([[120,90],[150,84],[180,92]],'#3a3446');
+    s+='<rect y="286" width="800" height="174" fill="#556838"/><path d="M0 340 Q400 322 800 344 L800 460 L0 460 Z" fill="#4a5c30"/>';
+    s+='<path d="M250 286 L360 286 L235 460 L108 460 Z" fill="#b6a06a"/><path d="M250 286 L360 286 L322 320 L268 320 Z" fill="#c4b078"/><g stroke="#9a865a" stroke-width="2" opacity=".5"><path d="M300 300 L250 400"/><path d="M312 300 L300 400"/></g>';
+    s+=ilTree(110,300,1.6,'#3f2f1c','#37522a')+ilPine(742,300,2.2,'#2f4d28')+ilPine(52,326,1.7,'#2f4d28')+ilTree(690,318,1.1,'#3f2f1c','#33471f');
+    s+=ilBush(430,340,1.2,'#3d5626')+ilBush(600,352,1.4,'#3d5626');
+    s+='<circle cx="470" cy="292" r="6" fill="#eaf4ff"/><circle cx="470" cy="292" r="16" fill="#cfe6ff" opacity=".2"/>';
+    s+='<ellipse cx="300" cy="300" rx="30" ry="7" fill="#0a0910"/><path d="M276 297 Q300 286 326 297 L326 303 Q300 297 274 303 Z" fill="#0a0910"/><path d="M322 296 Q334 292 336 300" fill="none" stroke="#0a0910" stroke-width="6" stroke-linecap="round"/>';
+    s+=riderFig(300,296,1.05);
+    s+='<path d="M0 460 L0 350 Q90 330 170 354 L170 460 Z" fill="#3f5828"/>'+ilBush(40,352,1.3,'#35521f')+ilBush(152,360,1.1,'#35521f');
+    s+=sceneChar('frodo',80,452,0.82)+sceneChar('sam',134,458,0.8,true)+sceneChar('pippin',34,460,0.74);
+    s+=ilTufts(452,460,'#3f5826');
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus4(){
+    var s='<defs><linearGradient id="sky4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ec2da"/><stop offset="1" stop-color="#eaddb0"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky4)"/>';
+    s+=ilCloud(180,66,1.0)+ilCloud(610,52,1.2)+ilBirds([[500,44],[530,38],[560,46],[700,60],[724,54]],'#6a6a6a');
+    s+='<path d="M0 258 Q200 238 400 256 Q600 272 800 248 L800 400 L0 400 Z" fill="#8aa54e"/>';
+    s+='<g stroke="#6f8c3a" stroke-width="2" opacity=".45">';for(var i=0;i<6;i++){s+='<path d="M0 '+(300+i*15)+' Q400 '+(290+i*15)+' 800 '+(302+i*15)+'"/>';}s+='</g>';
+    s+=ilBush(60,300,1.3)+ilBush(96,304,1.1)+ilTree(150,296,1.2,'#5a4126','#4e7030')+ilBush(720,300,1.2);
+    s+='<g transform="translate(650,244)"><rect x="-42" y="-20" width="84" height="52" fill="#c9a24b"/><path d="M-50 -20 L0 -52 L50 -20 Z" fill="#8a5a34"/><rect x="-12" y="4" width="22" height="28" fill="#6a4e2c"/><rect x="-36" y="-10" width="14" height="14" fill="#bfe0ef"/><rect x="18" y="-10" width="14" height="14" fill="#bfe0ef"/><rect x="20" y="-42" width="8" height="18" fill="#7a5a34"/></g>';
+    s+='<g stroke="#c9b48a" stroke-width="2.2">';for(var f=560;f<742;f+=16){s+='<line x1="'+f+'" y1="290" x2="'+f+'" y2="276"/>';}s+='<line x1="560" y1="282" x2="740" y2="282"/></g>';
+    s+=ilHobbit(602,296,1.0,'#7a5a3a','#3a2a1a')+'<g transform="translate(638,296)"><ellipse cx="0" cy="-2" rx="10" ry="6" fill="#7a5230"/><circle cx="9" cy="-6" r="4" fill="#7a5230"/><path d="M-8 2 l-3 6 M0 3 l0 6 M8 -2 l4 6" stroke="#7a5230" stroke-width="3" stroke-linecap="round"/></g>';
+    s+='<g transform="translate(300,326)"><line x1="0" y1="0" x2="0" y2="-40" stroke="#6a4e2c" stroke-width="3"/><line x1="-16" y1="-30" x2="16" y2="-30" stroke="#6a4e2c" stroke-width="3"/><circle cx="0" cy="-44" r="7" fill="#c9a24b"/><path d="M-8 -30 l-6 8 M8 -30 l6 8" stroke="#8a6a3a" stroke-width="2"/><path d="M-8 -52 L0 -58 L8 -52 Z" fill="#8a5a34"/></g>';
+    s+=ilMushrooms([[220,352,1],[250,364,1.1],[236,378,0.9],[470,346,1],[498,358,1.1]]);
+    s+='<rect y="400" width="800" height="44" fill="#5a7a9a"/><g stroke="#4a6a8a" stroke-width="2" fill="none" opacity=".5"><path d="M0 412 q60 -5 120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/><path d="M0 430 q60 -5 120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/></g>';
+    s+='<rect y="442" width="800" height="18" fill="#6f8c3a"/><path d="M0 442 Q400 436 800 444 L800 460 L0 460 Z" fill="#66822f"/>';
+    s+=ilReeds(730,442,7)+ilReeds(30,446,6);
+    s+='<g transform="translate(330,420)"><rect x="-52" y="-7" width="104" height="12" rx="3" fill="#7a5a34"/><g stroke="#5a4126" stroke-width="1.4"><line x1="-36" y1="-7" x2="-36" y2="5"/><line x1="-12" y1="-7" x2="-12" y2="5"/><line x1="12" y1="-7" x2="12" y2="5"/><line x1="36" y1="-7" x2="36" y2="5"/></g><line x1="46" y1="-5" x2="70" y2="-34" stroke="#5a4126" stroke-width="3"/></g>';
+    s+=sceneChar('pippin',120,456,0.66)+sceneChar('sam',176,458,0.68,true)+sceneChar('frodo',236,458,0.7);
+    s+=riderFig(556,300,0.5);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus5(){
+    var s='<rect width="800" height="460" fill="#5a4326"/><rect y="330" width="800" height="130" fill="#6a4e2c"/><g stroke="#4a3620" stroke-width="1.5" opacity=".4"><line x1="0" y1="360" x2="800" y2="360"/><line x1="0" y1="410" x2="800" y2="410"/></g>';
+    s+='<circle cx="130" cy="140" r="50" fill="#20304a"/><circle cx="130" cy="140" r="50" fill="none" stroke="#4a3620" stroke-width="8"/><line x1="130" y1="90" x2="130" y2="190" stroke="#4a3620" stroke-width="4"/><line x1="80" y1="140" x2="180" y2="140" stroke="#4a3620" stroke-width="4"/>';
+    s+=ilStars([[112,130],[150,158],[130,116]],'#cfe0ff');
+    s+='<rect y="70" width="800" height="12" fill="#4a3620"/><rect x="240" y="70" width="12" height="260" fill="#4a3620"/><rect x="560" y="70" width="12" height="260" fill="#4a3620"/>';
+    s+='<rect x="600" y="176" width="160" height="154" fill="#3a2c1e"/><rect x="588" y="166" width="184" height="14" fill="#5a4630"/>'+ilFire(680,320,1.8)+'<path d="M665 306 q-12 -6 -20 -20" fill="none" stroke="#efe4c8" stroke-width="3" stroke-linecap="round" opacity=".4"/>';
+    s+='<g transform="translate(150,320)"><ellipse cx="0" cy="14" rx="20" ry="6" fill="#4a3620"/><path d="M-16 12 Q-18 -14 0 -18 Q18 -14 16 12 Z" fill="#7a5a34"/><rect x="-6" y="-10" width="12" height="8" fill="#5a4126"/></g>';
+    s+='<g transform="translate(400,360)"><rect x="-124" y="-6" width="248" height="16" rx="4" fill="#8a6a3a"/><rect x="-124" y="10" width="248" height="42" fill="#6a4e2c"/><ellipse cx="-84" cy="-12" rx="17" ry="7" fill="#c98a3a"/><path d="M-46 -8 q9 -20 18 0 Z" fill="#c0492f"/><circle cx="6" cy="-14" r="10" fill="#e7c65a"/><rect x="34" y="-26" width="11" height="20" rx="2" fill="#b0472f"/><ellipse cx="78" cy="-12" rx="15" ry="7" fill="#7fae5a"/><rect x="-108" y="-24" width="5" height="16" fill="#efe4c8"/><circle cx="-105" cy="-26" r="3" fill="#ffd35a"/><circle cx="-105" cy="-26" r="9" fill="#ffd35a" opacity=".2"/><rect x="102" y="-22" width="8" height="14" rx="2" fill="#c9a24b"/></g>';
+    s+=sceneChar('frodo',248,432,0.95)+sceneChar('merry',332,438,0.9)+sceneChar('pippin',470,438,0.88,true)+sceneChar('sam',560,432,0.92,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus6(){
+    var s='<defs><linearGradient id="sky6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#354534"/><stop offset="1" stop-color="#6c6a48"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky6)"/><rect y="358" width="800" height="102" fill="#3a3a26"/><path d="M0 400 Q400 384 800 402 L800 460 L0 460 Z" fill="#32321f"/>';
+    s+=ilDeadTree(74,360,2.3,'#2c281c')+ilDeadTree(748,360,2.5,'#2c281c')+ilTree(150,360,1.5,'#38301e','#37472a')+ilTree(672,360,1.7,'#38301e','#31401d')+ilDeadTree(250,362,1.4,'#2c281c');
+    s+='<g stroke="#3a3020" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"><path d="M74 400 Q120 410 170 404"/><path d="M748 400 Q700 412 650 406"/></g>';
+    s+='<path d="M0 402 Q400 384 800 404 L800 418 Q400 400 0 418 Z" fill="#48585a"/>';
+    s+='<g transform="translate(430,360)"><path d="M-48 0 Q-62 -82 -20 -122 Q0 -136 20 -122 Q62 -82 48 0 Z" fill="#5a4a30"/><path d="M-30 -30 Q-40 -60 -20 -90 M28 -30 Q40 -60 20 -92" stroke="#4a3c26" stroke-width="3" fill="none"/><g fill="#2e2618"><ellipse cx="-15" cy="-82" rx="5" ry="8"/><ellipse cx="16" cy="-84" rx="5" ry="8"/></g><path d="M-24 -76 q-4 -6 -8 -3 M40 -78 q4 -6 8 -3" stroke="#2e2618" stroke-width="2.5" fill="none"/><path d="M-16 -58 Q0 -47 18 -60" stroke="#2e2618" stroke-width="3" fill="none"/><g stroke="#6a7a3a" stroke-width="2.4" fill="none" opacity=".8"><path d="M-30 -112 Q-72 -82 -82 -20"/><path d="M30 -112 Q72 -82 82 -20"/><path d="M0 -130 Q-24 -92 -20 -30"/><path d="M0 -130 Q24 -92 20 -30"/><path d="M-14 -122 Q-30 -100 -34 -60"/></g></g>';
+    s+=sceneChar('merry',410,344,0.5)+sceneChar('pippin',452,346,0.5,true);
+    s+=ilMushrooms([[110,404,1.1],[130,412,0.9],[700,406,1],[300,412,1.1]]);
+    s+=sceneChar('frodo',150,442,0.82)+sceneChar('sam',210,448,0.8,true)+sceneChar('bombadil',628,448,1.02);
+    s+='<g fill="#8a9a7a" opacity=".2"><ellipse cx="200" cy="430" rx="200" ry="20"/><ellipse cx="600" cy="440" rx="220" ry="22"/></g>';
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus7(){
+    var s='<rect width="800" height="460" fill="#6a4e30"/><rect y="342" width="800" height="118" fill="#7a5a34"/><g stroke="#5a4126" stroke-width="1.4" opacity=".4"><line x1="0" y1="378" x2="800" y2="378"/></g>';
+    s+='<rect y="66" width="800" height="12" fill="#5a4126"/><rect x="360" y="66" width="12" height="276" fill="#5a4126"/>';
+    s+='<rect x="60" y="116" width="128" height="118" rx="8" fill="#a7c8e0"/><rect x="60" y="116" width="128" height="118" rx="8" fill="none" stroke="#8a5a34" stroke-width="8"/><line x1="124" y1="116" x2="124" y2="234" stroke="#8a5a34" stroke-width="5"/><line x1="60" y1="175" x2="188" y2="175" stroke="#8a5a34" stroke-width="4"/>';
+    s+=ilFlower(84,342,'#e07a9a')+ilFlower(104,346,'#e7c65a')+ilFlower(150,344,'#e07a9a')+ilFlower(170,346,'#f0d0e0');
+    s+=ilFire(712,362,1.6);
+    s+='<rect x="470" y="150" width="120" height="8" fill="#8a6a3a"/><g fill="#c9b48a"><circle cx="486" cy="144" r="6"/><circle cx="504" cy="144" r="6"/></g><rect x="524" y="132" width="8" height="16" rx="2" fill="#7fae5a"/>';
+    s+='<g transform="translate(300,362)"><rect x="-96" y="-6" width="192" height="14" rx="4" fill="#8a6a3a"/><rect x="-96" y="8" width="192" height="30" fill="#6a4e2c"/><rect x="-64" y="-24" width="4" height="18" fill="#efe4c8"/><circle cx="-62" cy="-26" r="3" fill="#ffd35a"/><circle cx="-62" cy="-26" r="9" fill="#ffd35a" opacity=".2"/><ellipse cx="0" cy="-10" rx="16" ry="6" fill="#c98a3a"/><circle cx="52" cy="-12" r="8" fill="#e7c65a"/></g>';
+    s+='<g transform="translate(560,442)"><path d="M-18 0 Q-20 -50 0 -56 Q20 -50 18 0 Z" fill="#5a8a6a"/><path d="M-18 0 Q0 -8 18 0 L14 8 Q0 2 -14 8 Z" fill="#4a7a5a"/><circle cx="0" cy="-64" r="11" fill="#f0d3ad"/><path d="M-11 -66 Q-12 -86 0 -86 Q12 -86 11 -66 Q11 -48 6 -42 Q0 -46 -6 -42 Q-11 -48 -11 -66 Z" fill="#e6c65f"/><circle cx="-4" cy="-64" r="1.4" fill="#2c2118"/><circle cx="4" cy="-64" r="1.4" fill="#2c2118"/><path d="M-4 -59 Q0 -56 4 -59" stroke="#8a3f2c" stroke-width="1.2" fill="none"/><circle cx="0" cy="-84" r="3" fill="#e7c65a"/></g>';
+    s+=sceneChar('bombadil',300,342,1.16);
+    s+='<circle cx="352" cy="256" r="4" fill="#f0d3ad"/>'+ilRingGlow(352,250,7,'#ffd76a');
+    s+=sceneChar('frodo',118,452,0.8)+sceneChar('pippin',180,456,0.72,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus8(){
+    var s='<defs><linearGradient id="sky8" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#454f63"/><stop offset="1" stop-color="#8b95a1"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky8)"/>';
+    s+=ilStars([[80,50],[200,40],[520,44],[700,60]],'#cfd6e0')+ilMoon(140,78,22,'#454f63');
+    s+='<path d="M0 300 Q200 258 400 300 Q600 342 800 294 L800 460 L0 460 Z" fill="#6a7060"/><path d="M0 356 Q400 326 800 356 L800 460 L0 460 Z" fill="#5a6052"/><path d="M0 410 Q400 388 800 412 L800 460 L0 460 Z" fill="#4e5448"/>';
+    s+='<g fill="#8a8478">';[[110,300,42,0.9],[180,306,30,0.7],[600,288,46,1.0],[694,300,34,0.8],[520,300,30,0.7]].forEach(function(p){s+='<rect x="'+(p[0]-10*p[3])+'" y="'+(p[1]-p[2])+'" width="'+(20*p[3])+'" height="'+p[2]+'" rx="4"/>';});s+='</g>';
+    s+='<path d="M282 358 Q400 296 518 358 Z" fill="#565c4c"/><path d="M300 356 Q400 306 500 356" fill="none" stroke="#4a4e40" stroke-width="2"/><rect x="386" y="332" width="28" height="26" fill="#1c1e18"/>';
+    s+='<g opacity=".85"><path d="M430 358 Q426 318 442 304 Q452 298 462 304 Q478 318 474 358 Z" fill="#c8d0d8" opacity=".5"/><g fill="#7a8a9a"><circle cx="446" cy="320" r="2"/><circle cx="458" cy="320" r="2"/></g><path d="M448 334 Q452 331 456 334" stroke="#7a8a9a" stroke-width="1.4" fill="none"/></g>';
+    s+='<g fill="#cfd6dd" opacity=".33"><ellipse cx="180" cy="404" rx="190" ry="24"/><ellipse cx="620" cy="414" rx="210" ry="26"/><ellipse cx="420" cy="444" rx="260" ry="30"/></g>';
+    s+=sceneChar('frodo',300,430,0.86)+'<line x1="330" y1="406" x2="352" y2="376" stroke="#dfe6ee" stroke-width="3" stroke-linecap="round"/><path d="M348 380 l6 -2" stroke="#dfe6ee" stroke-width="2"/>';
+    s+=sceneChar('bombadil',644,442,1.0)+'<circle cx="614" cy="360" r="10" fill="#ffe9a0"/><circle cx="614" cy="360" r="26" fill="#ffe9a0" opacity=".2"/>';
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+
+  function illus9(){
+    var s='<rect width="800" height="460" fill="#4a3624"/><rect y="330" width="800" height="130" fill="#5a4228"/><g stroke="#3a2a1a" stroke-width="1.4" opacity=".4"><line x1="0" y1="366" x2="800" y2="366"/></g>';
+    s+='<rect y="58" width="800" height="14" fill="#3a2a1a"/><rect x="196" y="58" width="14" height="272" fill="#3a2a1a"/><rect x="566" y="58" width="14" height="272" fill="#3a2a1a"/>';
+    s+=ilLantern(400,108)+'<g fill="#c9a24b"><rect x="250" y="72" width="8" height="12" rx="2"/><rect x="300" y="72" width="8" height="12" rx="2"/></g>';
+    s+='<rect x="40" y="150" width="150" height="180" fill="#2e2016"/><rect x="30" y="142" width="170" height="12" fill="#4a3620"/>'+ilFire(115,320,1.7);
+    s+='<rect x="300" y="88" width="122" height="46" rx="6" fill="#3a2a1a" stroke="#8a5a34" stroke-width="3"/><text x="361" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="17" fill="#e7c65a">Poník</text>';
+    s+='<g transform="translate(624,320)"><rect x="-16" y="-30" width="32" height="40" rx="8" fill="#6a4e2c"/><path d="M-16 -18 h32 M-16 -6 h32" stroke="#4a3620" stroke-width="2"/></g>';
+    s+='<g transform="translate(300,384)"><rect x="-52" y="-4" width="104" height="10" rx="3" fill="#7a5a34"/><rect x="-52" y="6" width="104" height="26" fill="#5a4228"/><rect x="-32" y="-16" width="8" height="12" rx="2" fill="#c9a24b"/><rect x="16" y="-16" width="8" height="12" rx="2" fill="#c9a24b"/><ellipse cx="-6" cy="-6" rx="10" ry="4" fill="#8a6a3a"/></g>';
+    s+='<rect x="656" y="196" width="98" height="150" fill="#241a10" opacity=".5"/>';
+    s+=sceneChar('aragorn',704,452,1.02)+ilHobbit(560,452,1.4,'#7a5a3a','#8a6a3a')+ilHobbit(150,454,1.3,'#5a6a4a','#a5502a');
+    s+='<g fill="#fff0b0">';[[350,360],[372,362],[358,344],[368,346],[344,352]].forEach(function(p,ix){s+='<path d="M'+p[0]+' '+(p[1]-5)+' l1.6 3.4 3.6 0.5 -2.6 2.6 0.6 3.6 -3.2 -1.8 -3.2 1.8 0.6 -3.6 -2.6 -2.6 3.6 -0.5 Z" opacity="'+(0.9-ix*0.13)+'"/>';});s+='</g><ellipse cx="360" cy="406" rx="14" ry="4" fill="#3a2a1a"/>';
+    s+=sceneChar('sam',258,450,0.82)+sceneChar('pippin',196,454,0.74,true)+sceneChar('merry',454,452,0.76);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus10(){
+    var s='<rect width="800" height="460" fill="#3a2c1e"/><rect y="330" width="800" height="130" fill="#4a3624"/><g stroke="#2e2214" stroke-width="1.4" opacity=".4"><line x1="0" y1="366" x2="800" y2="366"/></g>';
+    s+='<rect x="58" y="118" width="92" height="122" rx="6" fill="#1b2436"/><rect x="58" y="118" width="92" height="122" rx="6" fill="none" stroke="#5a4228" stroke-width="6"/><line x1="104" y1="118" x2="104" y2="240" stroke="#5a4228" stroke-width="4"/>'+ilStars([[80,150],[124,182],[100,140]],'#cfe0ff');
+    s+='<g transform="translate(640,300)"><rect x="-70" y="0" width="140" height="40" rx="6" fill="#5a4228"/><rect x="-70" y="-16" width="140" height="18" rx="4" fill="#8a7a5a"/><path d="M-50 -12 l20 14 M0 -12 l18 14 M40 -12 l16 12" stroke="#3a2a1a" stroke-width="2"/><rect x="-78" y="36" width="10" height="24" fill="#4a3620"/><rect x="68" y="36" width="10" height="24" fill="#4a3620"/></g>';
+    s+='<g transform="translate(150,318)"><path d="M-14 12 Q-16 -12 0 -16 Q16 -12 14 12 Z" fill="#7a5a34"/><ellipse cx="0" cy="14" rx="16" ry="5" fill="#4a3620"/></g><line x1="200" y1="200" x2="210" y2="316" stroke="#8a8478" stroke-width="4" stroke-linecap="round"/><line x1="192" y1="220" x2="218" y2="220" stroke="#6a4e2c" stroke-width="5"/>';
+    s+='<g transform="translate(360,372)"><rect x="-76" y="-6" width="152" height="12" rx="3" fill="#7a5a34"/><rect x="-76" y="6" width="152" height="30" fill="#5a4228"/><rect x="-62" y="-22" width="4" height="16" fill="#efe4c8"/><circle cx="-60" cy="-24" r="3" fill="#ffd35a"/><circle cx="-60" cy="-24" r="12" fill="#ffd35a" opacity=".22"/><g transform="rotate(-6 20 -3)"><rect x="4" y="-14" width="36" height="22" rx="2" fill="#efe4c8"/><path d="M10 -8 h24 M10 -3 h24" stroke="#b0a080" stroke-width="1"/></g><rect x="-46" y="-12" width="26" height="18" rx="1" fill="#d8c69a"/></g>';
+    s+=sceneChar('aragorn',268,452,1.05)+sceneChar('frodo',420,452,0.84)+sceneChar('sam',480,456,0.82,true)+sceneChar('merry',536,452,0.76)+sceneChar('pippin',584,456,0.72,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus11(){
+    var s='<defs><linearGradient id="sky11" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121628"/><stop offset="1" stop-color="#3a3450"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky11)"/>';
+    s+=ilStars([[60,40],[140,70],[300,30],[500,50],[680,40],[760,80],[220,90],[600,90],[400,26]])+ilMoon(120,68,18,'#121628');
+    s+='<path d="M0 340 Q400 300 800 340 L800 460 L0 460 Z" fill="#2a2e24"/><path d="M120 340 Q400 300 680 340 Q560 258 400 256 Q240 258 120 340 Z" fill="#363a2e"/><path d="M120 340 Q400 300 680 340" fill="none" stroke="#2a2e22" stroke-width="2"/>';
+    s+='<g fill="#464a3c"><rect x="296" y="248" width="22" height="74" rx="3"/><rect x="482" y="248" width="22" height="74" rx="3"/><rect x="390" y="234" width="18" height="34" rx="3"/><rect x="290" y="244" width="34" height="10" rx="3"/></g><rect x="360" y="300" width="80" height="22" fill="#3a3e30"/>';
+    s+=ilFire(400,332,1.8)+'<g fill="#ffb03a">';[[392,300],[408,292],[400,282]].forEach(function(p,ix){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(1.8-ix*0.3)+'" opacity="'+(0.8-ix*0.2)+'"/>';});s+='</g>';
+    s+=riderFig(176,332,0.98)+riderFig(654,332,0.98)+riderFig(566,318,0.82)+riderFig(230,320,0.72);
+    s+=sceneChar('aragorn',300,438,1.0)+'<line x1="332" y1="410" x2="362" y2="372" stroke="#6a4e2c" stroke-width="4" stroke-linecap="round"/>'+ilFire(364,362,0.85);
+    s+='<g transform="translate(470,430)">'+sceneChar('frodo',0,0,0.6)+'</g>';
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus12(){
+    var s='<defs><linearGradient id="sky12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8aa6c0"/><stop offset="1" stop-color="#dae2d2"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky12)"/>';
+    s+=ilCloud(160,60,0.9)+ilCloud(640,50,1.0);
+    s+='<path d="M0 260 Q200 238 420 258 L420 300 L0 300 Z" fill="#7a9a5a"/>'+ilPine(70,262,1.7,'#3a5a30')+ilPine(300,262,1.5,'#3a5a30')+ilPine(150,266,1.3,'#3a5a30');
+    s+=ilWater(300,'#5a86a8','#4a7398')+ilReeds(60,306,6);
+    s+='<path d="M400 300 Q470 232 560 300 Q600 254 660 300 Q706 262 770 300 L770 352 Q600 328 400 350 Z" fill="#cfe0ec"/><path d="M400 300 Q470 244 560 300 Q600 258 660 300 Q706 268 770 300" fill="none" stroke="#fff" stroke-width="3" opacity=".85"/><g fill="#fff" opacity=".8"><circle cx="500" cy="286" r="5"/><circle cx="512" cy="278" r="4"/><circle cx="640" cy="290" r="5"/></g>';
+    s+='<g transform="translate(590,336) rotate(24)">'+riderFig(0,0,0.66)+'</g><g transform="translate(686,344) rotate(38)">'+riderFig(0,0,0.56)+'</g>';
+    s+='<g transform="translate(230,392)"><path d="M-52 -6 Q-46 -34 -14 -34 Q6 -36 24 -24 Q46 -26 56 -6 L50 8 Q34 -8 24 -6 Q12 8 -10 6 Q-34 8 -52 -6 Z" fill="#eef0ea"/><path d="M-52 -6 L-64 8 M-30 6 L-36 24 M8 6 L6 24 M50 8 L58 22" stroke="#eef0ea" stroke-width="6" stroke-linecap="round"/><path d="M-50 -26 Q-64 -22 -66 -6" fill="none" stroke="#eef0ea" stroke-width="7" stroke-linecap="round"/><path d="M-58 -22 Q-70 -18 -74 -6 M-56 -16 Q-68 -12 -72 0" stroke="#dfe2da" stroke-width="3" fill="none"/><path d="M-52 -6 Q-72 2 -80 18" fill="none" stroke="#dfe2da" stroke-width="4"/></g>';
+    s+=sceneChar('glorfindel',236,362,0.82)+sceneChar('frodo',272,356,0.52,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus13(){
+    var s='<defs><linearGradient id="sky13" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd0e0"/><stop offset="1" stop-color="#efe0c0"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky13)"/>';
+    s+=ilBirds([[540,60],[566,54],[592,62]],'#8a94a0');
+    s+='<path d="M0 300 Q200 250 380 300 L380 460 L0 460 Z" fill="#7a9a5a"/><path d="M420 300 Q620 250 800 300 L800 460 L420 460 Z" fill="#88a862"/><path d="M360 340 Q400 330 440 340 L440 460 L360 460 Z" fill="#6f8c46"/>';
+    s+='<g fill="#cfe0ec" opacity=".85"><rect x="120" y="110" width="16" height="190" rx="6"/><rect x="148" y="130" width="12" height="170" rx="6"/><rect x="660" y="120" width="14" height="180" rx="6"/></g><g fill="#eef4f8" opacity=".6"><ellipse cx="128" cy="300" rx="26" ry="8"/><ellipse cx="666" cy="300" rx="24" ry="8"/></g>';
+    s+=ilTree(88,300,1.4,'#6a4e2c','#c98a3a')+ilTree(712,300,1.5,'#6a4e2c','#d0a24a')+ilTree(200,306,1.0,'#6a4e2c','#d8a24a');
+    s+='<g fill="#e0b84a">';[[250,180],[300,150],[520,200],[470,130],[600,240],[360,120]].forEach(function(p){s+='<path d="M'+p[0]+' '+p[1]+' q6 -8 0 -14 q-6 6 0 14 Z"/>';});s+='</g>';
+    s+='<g transform="translate(400,300)"><path d="M-92 0 L-92 -72 Q0 -114 92 -72 L92 0" fill="none" stroke="#cdbf9a" stroke-width="8"/><rect x="-98" y="0" width="196" height="10" fill="#cdbf9a"/><path d="M-60 -84 Q0 -120 60 -84" fill="none" stroke="#cdbf9a" stroke-width="4"/></g>'+ilLantern(320,238)+ilLantern(480,238);
+    s+='<g transform="translate(360,400)"><rect x="-72" y="0" width="154" height="30" rx="6" fill="#c8b48a"/><rect x="-72" y="-16" width="36" height="20" rx="6" fill="#e8dcc0"/><rect x="-36" y="-6" width="118" height="12" rx="4" fill="#dcd0aa"/></g><g transform="translate(322,388)">'+sceneChar('frodo',0,0,0.56)+'</g>';
+    s+=sceneChar('gandalf',540,448,1.06)+sceneChar('bilbo',470,452,0.82,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus14(){
+    var s='<defs><linearGradient id="sky14" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdd8e0"/><stop offset="1" stop-color="#efe4c8"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky14)"/>';
+    s+=ilTree(60,300,1.3,'#6a4e2c','#c98a3a')+ilTree(740,300,1.3,'#6a4e2c','#d0a24a');
+    s+='<rect y="300" width="800" height="160" fill="#c8b48a"/><path d="M0 300 Q400 286 800 300 L800 322 L0 322 Z" fill="#b8a478"/><ellipse cx="400" cy="410" rx="300" ry="40" fill="#bda87c" opacity=".6"/>';
+    s+='<g fill="#d8cba6"><rect x="70" y="120" width="20" height="180" rx="4"/><rect x="710" y="120" width="20" height="180" rx="4"/><circle cx="80" cy="116" r="12"/><circle cx="720" cy="116" r="12"/></g>';
+    s+='<path d="M150 120 L150 176 L162 168 L174 176 L174 120 Z" fill="#5a6a8a"/><path d="M626 120 L626 176 L638 168 L650 176 L650 120 Z" fill="#7a3f2a"/>';
+    s+='<g transform="translate(400,322)"><rect x="-24" y="-4" width="48" height="34" rx="4" fill="#b0a078"/><rect x="-17" y="-28" width="34" height="26" rx="4" fill="#c8b98e"/></g>'+ilRingGlow(400,286,9,'#ffd76a');
+    s+='<g fill="#a8956c">';[150,250,332,470,560,642,714].forEach(function(x){s+='<rect x="'+(x-24)+'" y="440" width="48" height="8" rx="2"/>';});s+='</g>';
+    s+=sceneChar('gandalf',150,448,1.0)+sceneChar('elrond',250,450,0.98)+sceneChar('frodo',332,454,0.72)+sceneChar('aragorn',470,450,0.96,true)+sceneChar('boromir',560,450,0.96,true)+sceneChar('legolas',642,450,0.92,true)+sceneChar('gimli',714,454,0.82,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus15(){
+    var s='<defs><linearGradient id="sky15" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8c0d0"/><stop offset="1" stop-color="#e0e4d0"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky15)"/>';
+    s+=ilCloud(120,50,0.9)+ilCloud(680,44,1.0);
+    s+='<path d="M0 300 L160 150 L300 300 Z" fill="#8a94a0"/><path d="M120 300 L300 120 L480 300 Z" fill="#9aa4b0"/><path d="M360 300 L520 160 L700 300 Z" fill="#8a94a0"/><path d="M560 300 L680 180 L800 300 Z" fill="#96a0ac"/>';
+    s+='<path d="M272 158 L300 120 L330 158 L312 166 L300 150 L288 166 Z" fill="#eef2f6"/><path d="M494 190 L520 160 L546 190 L532 196 L520 182 L508 196 Z" fill="#eef2f6"/>';
+    s+='<g stroke="#2a2a2a" stroke-width="2" fill="none" stroke-linecap="round">';[[200,70],[240,60],[280,80],[520,60],[560,74],[600,58]].forEach(function(p){s+='<path d="M'+(p[0]-7)+' '+p[1]+' q7 -6 7 0 q0 -6 7 0"/>';});s+='</g>';
+    s+='<rect y="300" width="800" height="160" fill="#9a9482"/><path d="M0 336 Q400 316 800 340 L800 460 L0 460 Z" fill="#8a846f"/>';
+    s+='<path d="M120 460 Q300 400 400 360 Q520 316 700 320" fill="none" stroke="#b6a884" stroke-width="14" stroke-linecap="round" opacity=".8"/>';
+    s+=ilRock(110,428,1.3)+ilRock(700,436,1.4)+ilRock(400,446,1.0)+ilBush(60,440,1.1,'#5a6a3a')+ilBush(740,446,1.1,'#5a6a3a')+ilPebbles(452,'#8a846f');
+    var order=['gandalf','legolas','gimli','frodo','sam','merry','pippin','boromir','aragorn'],xs=[150,214,272,326,378,430,486,556,650],ys=[440,436,432,430,428,426,424,420,414];
+    for(var i=0;i<9;i++){ s+=sceneChar(order[i], xs[i], ys[i], 0.58+(i<7?0.05-i*0.01:0), i>4); }
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+
+  function illus16(){
+    var s='<rect width="800" height="460" fill="#161a20"/><rect x="340" width="460" height="460" fill="#2a2e34"/><rect x="340" width="18" height="460" fill="#20242a"/>';
+    s+='<g stroke="#20242a" stroke-width="2" opacity=".6"><path d="M420 20 L440 120 L410 220"/><path d="M600 40 L620 160 L590 300"/><path d="M720 60 L700 200"/></g>';
+    s+=ilTree(80,360,1.6,'#3a3020','#2e4a2a')+ilTree(150,368,1.2,'#3a3020','#2e4a2a')+'<g fill="#b0472f"><circle cx="70" cy="352" r="2.2"/><circle cx="92" cy="356" r="2.2"/><circle cx="144" cy="360" r="2.2"/></g>';
+    s+='<g transform="translate(566,250)"><path d="M-72 122 L-72 -22 Q0 -92 72 -22 L72 122 Z" fill="#1c2026" stroke="#9fc0d8" stroke-width="3"/><path d="M0 -72 L0 104 M-42 -12 Q0 -42 42 -12 M-26 42 h52 M-30 70 h60" stroke="#9fc0d8" stroke-width="2" fill="none" opacity=".9"/><circle cx="0" cy="-32" r="11" fill="none" stroke="#cfe6f4" stroke-width="2"/><path d="M-14 -70 L14 -70 M-20 -50 L-32 -30 M20 -50 L32 -30" stroke="#9fc0d8" stroke-width="1.6" opacity=".7"/></g>';
+    s+=ilWater(322,'#1c2630','#141c24')+'<rect x="540" y="322" width="52" height="60" fill="#9fc0d8" opacity=".06"/>';
+    s+='<g fill="none" stroke="#46564e" stroke-width="12" stroke-linecap="round"><path d="M120 460 Q140 316 268 300"/><path d="M56 460 Q34 340 118 300"/><path d="M300 460 Q368 356 344 300"/><path d="M200 460 Q210 380 300 340"/></g><g fill="#5a6a60"><circle cx="268" cy="300" r="6"/><circle cx="118" cy="300" r="6"/><circle cx="344" cy="300" r="6"/></g>';
+    s+=sceneChar('gandalf',476,420,0.82)+sceneChar('aragorn',528,420,0.78,true)+sceneChar('legolas',430,418,0.7);
+    s+='<path d="M300 460 Q392 372 430 392" fill="none" stroke="#46564e" stroke-width="10" stroke-linecap="round"/>'+sceneChar('frodo',416,412,0.56);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus17(){
+    var s='<rect width="800" height="460" fill="#120d0a"/><path d="M0 0 L0 460 L200 460 L262 200 L200 0 Z" fill="#221812"/><path d="M800 0 L800 460 L600 460 L538 200 L600 0 Z" fill="#221812"/>';
+    s+='<g stroke="#e4691f" stroke-width="2" opacity=".5"><path d="M100 460 L130 340 L110 240"/><path d="M700 460 L670 340 L690 250"/></g>';
+    s+='<path d="M240 300 Q400 288 560 300 L560 318 Q400 306 240 318 Z" fill="#3a2c20"/><path d="M300 300 Q400 292 500 300" fill="none" stroke="#2a1e14" stroke-width="2"/><ellipse cx="500" cy="380" rx="240" ry="90" fill="#e4691f" opacity=".2"/>';
+    s+='<g fill="#ffb03a"><circle cx="560" cy="240" r="2" opacity=".7"/><circle cx="600" cy="200" r="1.6" opacity=".7"/><circle cx="520" cy="180" r="1.4" opacity=".7"/><circle cx="640" cy="150" r="1.2" opacity=".7"/><circle cx="480" cy="140" r="1" opacity=".7"/></g>';
+    s+='<g transform="translate(600,300)"><path d="M-42 40 Q-48 -62 -10 -92 Q0 -98 10 -92 Q48 -62 42 40 Z" fill="#2a1008"/><path d="M-30 -72 Q-48 -98 -56 -114 Q-34 -88 -24 -72 Z" fill="#1a0a06"/><path d="M30 -72 Q48 -98 56 -114 Q34 -88 24 -72 Z" fill="#1a0a06"/><g fill="#ffd05a"><ellipse cx="-14" cy="-66" rx="4.4" ry="5.4"/><ellipse cx="14" cy="-66" rx="4.4" ry="5.4"/></g><path d="M-18 -44 Q0 -32 18 -44 Q9 -34 0 -34 Q-9 -34 -18 -44 Z" fill="#ffb03a"/><path d="M-42 -20 Q-84 -42 -100 -8" fill="none" stroke="#e4691f" stroke-width="7"/><path d="M42 -8 Q74 22 62 64" fill="none" stroke="#e4691f" stroke-width="6"/><g fill="#e4691f" opacity=".6"><path d="M-30 24 Q-42 2 -30 -10 Q-24 8 -30 24"/><path d="M30 28 Q42 6 30 -6 Q24 12 30 28"/></g></g>';
+    s+=sceneChar('gandalf',320,318,1.0)+'<line x1="352" y1="292" x2="360" y2="238" stroke="#6a4e2c" stroke-width="4" stroke-linecap="round"/><circle cx="360" cy="234" r="9" fill="#cfe6f4"/><circle cx="360" cy="234" r="20" fill="#cfe6f4" opacity=".28"/>';
+    s+=sceneChar('frodo',150,320,0.5,true)+sceneChar('aragorn',202,322,0.6,true)+sceneChar('sam',110,320,0.46,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus18(){
+    var s='<defs><linearGradient id="sky18" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8c88a"/><stop offset="1" stop-color="#b6cd98"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky18)"/>';
+    s+='<g stroke="#f0e0a0" stroke-width="10" opacity=".2">';for(var i=0;i<6;i++){s+='<line x1="400" y1="-40" x2="'+(i*160)+'" y2="460"/>';}s+='</g>';
+    s+='<rect y="360" width="800" height="100" fill="#7a9a5a"/><path d="M0 400 Q400 384 800 402 L800 460 L0 460 Z" fill="#6f8c46"/>';
+    s+='<path d="M360 460 Q400 400 400 380 Q400 360 460 360" fill="none" stroke="#c9b48a" stroke-width="12" stroke-linecap="round" opacity=".7"/>';
+    s+='<g fill="#b8a578"><rect x="140" y="60" width="30" height="320" rx="8"/><rect x="640" y="60" width="30" height="320" rx="8"/><rect x="380" y="90" width="24" height="290" rx="8"/><rect x="250" y="120" width="18" height="260" rx="6"/><rect x="540" y="120" width="18" height="260" rx="6"/></g>';
+    s+='<g fill="#e8c85a" opacity=".95"><circle cx="400" cy="40" r="130" opacity=".7"/><circle cx="155" cy="70" r="82"/><circle cx="655" cy="70" r="82"/><circle cx="392" cy="90" r="62"/><circle cx="259" cy="110" r="50"/><circle cx="549" cy="110" r="50"/></g>';
+    s+='<rect x="120" y="180" width="90" height="10" fill="#8a6a3a"/><rect x="600" y="180" width="90" height="10" fill="#8a6a3a"/>'+ilLantern(150,172)+ilLantern(650,172)+'<g transform="translate(165,180)">'+sceneChar('legolas',0,0,0.34)+'</g>';
+    s+='<g fill="#fff0b0"><circle cx="300" cy="300" r="1.6"/><circle cx="300" cy="300" r="4" opacity=".3"/><circle cx="500" cy="280" r="1.6"/><circle cx="500" cy="280" r="4" opacity=".3"/><circle cx="350" cy="340" r="1.6"/><circle cx="350" cy="340" r="4" opacity=".3"/></g>';
+    s+='<g fill="#e0b84a">';[[250,200],[300,160],[520,220],[480,140],[600,260]].forEach(function(p){s+='<path d="M'+p[0]+' '+p[1]+' q6 -8 0 -14 q-6 6 0 14 Z"/>';});s+='</g>';
+    s+=sceneChar('legolas',232,452,0.9)+sceneChar('gimli',300,456,0.8,true)+sceneChar('frodo',380,456,0.74)+sceneChar('aragorn',450,452,0.92,true)+sceneChar('sam',512,456,0.8,true)+sceneChar('boromir',568,452,0.9,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus19(){
+    var s='<defs><linearGradient id="sky19" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2240"/><stop offset="1" stop-color="#38446a"/></linearGradient></defs><rect width="800" height="460" fill="url(#sky19)"/>';
+    s+=ilStars([[80,50],[200,40],[360,60],[560,44],[700,66],[440,30],[120,80],[640,90]],'#cfe0ff');
+    s+=ilPine(64,362,2.1,'#243c28')+ilPine(748,362,2.3,'#243c28')+ilPine(150,368,1.5,'#243c28')+ilPine(660,368,1.6,'#243c28');
+    s+='<rect y="360" width="800" height="100" fill="#26361f"/><path d="M0 400 Q400 388 800 402 L800 460 L0 460 Z" fill="#20301b"/>'+ilLantern(120,300)+ilLantern(690,300);
+    s+='<g transform="translate(400,340)"><rect x="-8" y="0" width="16" height="42" fill="#8a94a0"/><ellipse cx="0" cy="42" rx="30" ry="8" fill="#6a7480"/><ellipse cx="0" cy="0" rx="42" ry="14" fill="#9fb0c0"/><ellipse cx="0" cy="0" rx="36" ry="11" fill="#1a2a44"/></g><ellipse cx="400" cy="340" rx="36" ry="11" fill="#8ab0d8" opacity=".45"/><circle cx="400" cy="336" r="54" fill="#9fc0e0" opacity=".12"/>';
+    s+='<g fill="#cfe6ff"><circle cx="300" cy="300" r="1.6"/><circle cx="300" cy="300" r="4" opacity=".3"/><circle cx="500" cy="290" r="1.6"/><circle cx="500" cy="290" r="4" opacity=".3"/><circle cx="260" cy="260" r="1.6"/><circle cx="540" cy="250" r="1.6"/></g>';
+    s+='<circle cx="248" cy="360" r="66" fill="#e8f0ff" opacity=".14"/>'+sceneChar('galadriel',248,452,1.04);
+    s+=sceneChar('frodo',484,452,0.8,true)+sceneChar('sam',544,456,0.78,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus20(){
+    var s='<defs><linearGradient id="sky20" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0e8"/><stop offset="1" stop-color="#dce8c8"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky20)"/>';
+    s+='<g fill="#e8c85a" opacity=".92"><circle cx="110" cy="110" r="76"/><circle cx="700" cy="110" r="76"/><circle cx="400" cy="70" r="60" opacity=".7"/></g><g fill="#b8a578"><rect x="102" y="150" width="18" height="150"/><rect x="692" y="150" width="18" height="150"/></g>';
+    s+='<g fill="#e0b84a">';[[200,160],[260,200],[560,180],[520,150],[360,140]].forEach(function(p){s+='<path d="M'+p[0]+' '+p[1]+' q6 -8 0 -14 q-6 6 0 14 Z"/>';});s+='</g>';
+    s+='<rect y="290" width="800" height="90" fill="#7a9a5a"/><path d="M0 300 Q400 288 800 302 L800 380 L0 380 Z" fill="#6f8c46"/>'+ilBush(60,320,1.2,'#5f7f2f')+ilBush(740,324,1.2,'#5f7f2f')+ilFlower(120,330,'#e07a9a')+ilFlower(680,334,'#f0d0e0');
+    s+='<rect y="380" width="800" height="80" fill="#6a90b0"/><g stroke="#5a80a0" stroke-width="2" fill="none" opacity=".5"><path d="M0 400 q60 -5 120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/><path d="M0 420 q60 -5 120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/></g>';
+    s+=ilReeds(60,382,6)+ilReeds(740,384,6)+ilBoat2(180,404,1.3,['legolas'])+ilBoat2(620,410,1.3,['gimli']);
+    s+=sceneChar('galadriel',330,372,1.0)+sceneChar('frodo',426,376,0.8,true);
+    s+='<circle cx="386" cy="308" r="5" fill="#eaf4ff"/><circle cx="386" cy="308" r="14" fill="#cfe6ff" opacity=".45"/><circle cx="386" cy="308" r="26" fill="#cfe6ff" opacity=".15"/>';
+    s+=sceneChar('sam',250,378,0.74)+sceneChar('aragorn',520,376,0.82,true);
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus21(){
+    var s='<defs><linearGradient id="sky21" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8c0d8"/><stop offset="1" stop-color="#e8e0c8"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky21)"/>'+ilCloud(400,50,1.0);
+    function king(x){return '<g transform="translate('+x+',0)"><rect x="-70" y="120" width="140" height="230" fill="#6a7078"/><rect x="-58" y="60" width="116" height="120" fill="#7a8088"/><rect x="-40" y="70" width="80" height="16" fill="#5a6068"/><rect x="-34" y="20" width="68" height="60" rx="6" fill="#8a9098"/><rect x="-40" y="6" width="80" height="20" rx="4" fill="#9aa0a8"/><path d="M-40 6 L0 -22 L40 6 Z" fill="#9aa0a8"/><g fill="#5a6068"><ellipse cx="-14" cy="46" rx="4" ry="6"/><ellipse cx="14" cy="46" rx="4" ry="6"/></g><path d="M-34 92 L-34 60 M34 92 L34 60" stroke="#5a6068" stroke-width="12"/><rect x="-52" y="120" width="18" height="150" fill="#5a6068"/><rect x="34" y="120" width="18" height="150" fill="#5a6068"/></g>';}
+    s+='<rect y="0" width="150" height="360" fill="#5a6450"/><rect x="650" width="150" height="360" fill="#5a6450"/>'+ilPine(70,300,1.6,'#3a5a30')+ilPine(740,300,1.6,'#3a5a30')+king(118)+king(682);
+    s+=ilWater(300,'#4a6a8a','#3a5a7a')+ilBoat2(360,392,1.25,['aragorn','frodo'])+ilBoat2(300,420,1.2,['legolas','gimli'])+ilBoat2(452,428,1.2,['boromir','sam']);
+    s+='<g fill="#a6e0a0"><circle cx="560" cy="430" r="2.6"/><circle cx="572" cy="430" r="2.6"/></g><path d="M556 436 q8 4 16 0" stroke="#5a7a5a" stroke-width="1.4" fill="none" opacity=".6"/>';
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+  function illus22(){
+    var s='<defs><linearGradient id="sky22" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c0b0c8"/><stop offset="1" stop-color="#e8d8b8"/></linearGradient></defs><rect width="800" height="300" fill="url(#sky22)"/>'+ilBirds([[520,60],[544,54],[568,62]],'#8a94a0');
+    s+='<path d="M0 250 Q200 220 420 248 L420 300 L0 300 Z" fill="#5a7040"/>'+ilPine(90,252,1.6,'#3a5a30')+ilPine(240,252,1.5,'#3a5a30')+ilPine(360,252,1.4,'#3a5a30');
+    s+='<rect x="556" y="150" width="74" height="150" fill="#cfe0ec" opacity=".8"/><path d="M556 150 Q593 128 630 150" fill="#cfe0ec" opacity=".8"/><g fill="#eef4f8" opacity=".6"><ellipse cx="593" cy="300" rx="40" ry="10"/></g>';
+    s+='<path d="M0 300 Q120 292 220 306 L220 360 L0 360 Z" fill="#6f8c46"/>'+ilBush(60,340,1.1,'#5f7f2f')+ilRock(160,346,1.0);
+    s+=ilWater(300,'#5a80a0','#4a7090');
+    s+='<g transform="translate(120,352)">'+sceneChar('boromir',0,0,0.72)+'</g>';
+    s+=sceneChar('sam',400,392,0.66,true)+'<ellipse cx="400" cy="392" rx="30" ry="7" fill="#4a7090" opacity=".55"/><path d="M372 392 q28 6 56 0" stroke="#6a90b0" stroke-width="2" fill="none" opacity=".7"/>';
+    s+=ilBoat2(560,386,1.35,['frodo'])+'<line x1="590" y1="380" x2="620" y2="360" stroke="#7a5a34" stroke-width="3" stroke-linecap="round"/>';
+    return '<svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">'+s+'</svg>';
+  }
+
+  var ILLUS={
+    1:{build:illus1, cap:'Bilbův velkolepý dýchánek k 111. narozeninám. Gandalfův ohňostroj září nad Hobitínem — a uprostřed slavnostního proslovu si Bilbo navlékne kouzelný prsten a všem rázem zmizí před očima!'},
+    2:{build:illus2, cap:'Sedmnáct let po oslavě. Gandalf hodí prsten do ohně a na zlatě se rozzáří ohnivé písmo — tak Frodo pozná, že jeho prsten je ten Jeden, nejnebezpečnější na světě.'},
+    3:{build:illus3, cap:'Cestou z Kraje se hobiti musí schovat pod stromem — po silnici čenichá první Černý jezdec, který hledá prsten.'},
+    4:{build:illus4, cap:'Zkratka přes pole plné hub od hodného sedláka. V dálce se ale mihne Černý jezdec, a tak hobiti spěchají k převozu přes řeku.'},
+    5:{build:illus5, cap:'V domku za řekou vyjde najevo „spiknutí" přátel: Sam, Smíšek i Pipin dávno vědí o prstenu a rozhodli se jít s Frodem, ať se děje co se děje.'},
+    6:{build:illus6, cap:'Ve Starém hvozdu polapí zlá Stará vrba dva hobity do svého kmene — a zachrání je až veselý zpívající Tom Bombadil.'},
+    7:{build:illus7, cap:'V Tomově útulném domě se stane div: Tom si navlékne mocný prsten, a přesto nezmizí. Na něj prsten vůbec neplatí.'},
+    8:{build:illus8, cap:'V mlze na Mohylových vrších uvězní hobity mohylový duch. Frodo statečně nezradí kamarády a přivolá Toma, který je vysvobodí.'},
+    9:{build:illus9, cap:'V hostinci U Skákavého poníka v Hůrce Frodo omylem zmizí — a z kouta ho přitom tiše pozoruje záhadný pocestný Chodec.'},
+    10:{build:illus10, cap:'Chodec se prozradí: je to Aragorn, přítel Gandalfa. Jeho dopis to potvrdí a hobiti mu svěří svou cestu do Roklinky.'},
+    11:{build:illus11, cap:'Na kopci Větrov přepadnou v noci Černí jezdci. Jejich vůdce bodne Froda prokletým nožem a Aragorn je odhání ohněm.'},
+    12:{build:illus12, cap:'Útěk o život: elf Glorfindel veze Froda na svém rychlém koni a v Brodu se řeka vzedme v obří vlnu, která Černé jezdce odplaví.'},
+    13:{build:illus13, cap:'Frodo se probudí uzdravený v krásné elfské Roklince — a čeká ho radostné shledání s Gandalfem i starým Bilbem.'},
+    14:{build:illus14, cap:'Na Elrondově radě leží prsten uprostřed na kameni. Padne rozhodnutí zničit ho v Mordoru a vznikne Společenstvo Prstenu — devět společníků.'},
+    15:{build:illus15, cap:'Devět společníků vyráží na jih do neznáma. Nad hlavami jim ale krouží podezřelí černí ptáci, kteří někomu donášejí.'},
+    16:{build:illus16, cap:'U tajné brány do Morie přepadne Společenstvo obludné chapadlo z černé vody. Jen tak tak vklouznou dovnitř a brána za nimi zapadne.'},
+    17:{build:illus17, cap:'Na úzkém mostě v hlubinách Morie se Gandalf postaví ohnivému Balrogovi: „Neprojdeš!" Most se zlomí — a Balrog ho strhne s sebou do hlubiny.'},
+    18:{build:illus18, cap:'Po ztrátě Gandalfa vejde Společenstvo do kouzelného zlatého lesa Lothlórien, kde elfové bydlí vysoko ve stromech.'},
+    19:{build:illus19, cap:'Paní Galadriel ukáže Frodovi a Samovi kouzelné Zrcadlo z vody — a i když by mohla prsten mít, statečně odolá pokušení.'},
+    20:{build:illus20, cap:'Na rozloučenou dostane každý kouzelný dar. Frodo lahvičku se světlem hvězdy — a Společenstvo vyplouvá po Velké řece na elfských loďkách.'},
+    21:{build:illus21, cap:'Loďky plují po Velké řece kolem Argonathu — dvou obřích soch dávných králů. A ve vodě je potají sleduje Glum.'},
+    22:{build:illus22, cap:'U vodopádů se Společenstvo rozpadá. Frodo se rozhodne jít do Mordoru sám — ale věrný Sam se za ním brodí vodou a nenechá ho odejít.'}
+  };
+  function illusFigure(gi){ var il=ILLUS[gi]; if(!il) return ''; return '<figure class="illus">'+il.build()+'<figcaption><b>Klíčový moment:</b> '+esc(il.cap)+'</figcaption></figure>'; }
+
+  // ===== data: místa (pořadí = cesta) =====
+  var PLACES = [
+    {id:'hobitin',name:'Hobitín',en:'Hobbiton / Bag End',x:31.5,y:31,ic:'town',gi:1,mile:0,
+      dad:'Start cesty. Dno pytle (Bag End) je Bilbův a pak Frodův domov v Kraji.',
+      kid:'Domov hobitů — zelené kopečky, kulaté dveře a spousta jídla. Odsud vyráží Frodo s prstenem na cestu.'},
+    {id:'radovsko',name:'Rádovsko',en:'Buckland',x:34,y:32,ic:'town',gi:4,mile:40,
+      dad:'Kraj za řekou Brandyvínou. V tajném domku vyjde najevo, že kamarádi o všem vědí a jdou s Frodem.',
+      kid:'Kout Kraje za velkou řekou. V tajném domku se sejdou kamarádi, než se vydají do Starého hvozdu.'},
+    {id:'starahvozd',name:'Starý hvozd',en:'The Old Forest',x:35,y:29,ic:'forest',gi:6,mile:90,
+      dad:'Živý, nepřátelský les za hranicí Kraje. Tady číhá Stará vrba; zachrání je Tom Bombadil.',
+      kid:'Kouzelný les, který je živý a schválně vás ztratí. Bydlí tu veselý Tom Bombadil.'},
+    {id:'mohyly',name:'Mohylové vrchy',en:'The Barrow-downs',x:36.5,y:34.5,ic:'mountain',gi:8,mile:110,
+      dad:'Staré hroby na kopcích. Hobity uvězní mohylový duch; Tom je vysvobodí a dá jim dýky.',
+      kid:'Mlžné kopce se starými hroby. Napínavé místo — ale hobiti odsud odejdou s kouzelnými dýkami.'},
+    {id:'hurka',name:'Hůrka',en:'Bree',x:39,y:27,ic:'town',gi:9,mile:150,
+      dad:'Lidské městečko a hostinec U Skákavého poníka. Tady potkají Chodce (Aragorna).',
+      kid:'První lidské městečko a útulný hostinec. V koutě sedí záhadný pocestný Chodec.'},
+    {id:'vetrov',name:'Větrov',en:'Weathertop',x:43,y:24.5,ic:'mountain',gi:11,mile:270,
+      dad:'Osamělý kopec se zbytky věže. V noci tu Černí jezdci zraní Froda prokletým nožem.',
+      kid:'Osamělý kopec se starou věží. Za tmy se tu stane něco moc napínavého…'},
+    {id:'roklinka',name:'Roklinka',en:'Rivendell',x:50,y:26,ic:'star',gi:12,mile:460,
+      dad:'Skryté údolí elfů (pán Elrond). Frodo se tu uzdraví, koná se Rada, vzniká Společenstvo.',
+      kid:'Kouzelné údolí elfů, kde se dá odpočinout. Tady se Frodo uzdraví a najde nové přátele.'},
+    {id:'eregion',name:'Eregion',en:'Hollin / Cesmír',x:48,y:33,ic:'forest',gi:15,mile:500,
+      dad:'Kraj Eregion (Cesmír) na úpatí Mlžných hor. Devítka tudy táhne na jih — a špehují ji černí ptáci.',
+      kid:'Cestou na jih pod horami. Nad hlavami krouží podezřelí černí ptáci, co někomu donášejí.'},
+    {id:'caradhras',name:'Caradhras',en:'Redhorn Pass',x:47.5,y:36.5,ic:'mountain',gi:16,mile:520,
+      dad:'Vysoká hora, kterou se pokusí přejít. Sněhová bouře je zažene — musí jít pod horu, do Morie.',
+      kid:'Obrovská zasněžená hora. Je tak zlá, že se přes ni nedá přejít.'},
+    {id:'moria',name:'Doly morijské',en:'Moria / Khazad-dûm',x:51,y:40.5,ic:'mountain',gi:16,mile:560,
+      dad:'Temné podzemní město trpaslíků. U brány číhá chapadlo; uvnitř skřeti, troll a Balrog.',
+      kid:'Obrovské temné podzemí. Tajemné, trochu strašidelné — a je tu úzký most nad propastí.'},
+    {id:'lorien',name:'Lothlórien',en:'Lórien',x:52,y:44.5,ic:'forest',gi:18,mile:620,
+      dad:'Kouzelný zlatý les paní Galadriel. Bezpečné útočiště po ztrátě v Morii; dary na cestu.',
+      kid:'Kouzelný zlatý les, kde elfové bydlí vysoko ve stromech. Vládne tu moudrá paní Galadriel.'},
+    {id:'velkareka',name:'Velká řeka',en:'Anduin',x:55.5,y:50,ic:'water',gi:21,mile:720,
+      dad:'Plavba po Anduině na elfských lodích. Míjejí sochy králů (Argonath); Glum je sleduje.',
+      kid:'Široká řeka, po které plují na loďkách kolem obřích soch dávných králů.'},
+    {id:'amonhen',name:'Amon Hen',en:'Rauros / Parth Galen',x:56.5,y:60,ic:'water',gi:22,mile:860,
+      dad:'Vodopády Rauros. Boromir podlehne prstenu; Frodo odchází sám se Samem — Společenstvo se rozpadá.',
+      kid:'Kopec u velkých vodopádů. Tady se cesta rozdělí — a věrný Sam nenechá Froda jít samotného.'}
+  ];
+  PLACES.forEach(function(p,i){ p.seq=i+1; }); // čísla zastávek podle pořadí v poli
+
+  // ===== data: postavy =====
+  var CHARS = [
+    {id:'bilbo',gi:1,name:'Bilbo Pytlík',en:'Bilbo Baggins',race:'hobit',rlab:'Hobit',ic:'hobit',say:'BIL-bo',
+      kid:'Starý dobrodruh a Frodův strýček. Kdysi ten kouzelný prsten našel. Miluje příběhy, básničky a klid.',
+      dad:'Původní nálezce Prstenu, Frodův příbuzný. Po oslavě odchází do Roklinky.'},
+    {id:'frodo',gi:1,name:'Frodo Pytlík',en:'Frodo Baggins',race:'hobit',rlab:'Hobit',ic:'hobit',say:'FRO-do',
+      kid:'Hlavní hrdina. Mladý hobit, který se uvolí odnést nebezpečný prsten. Malý, ale statečný a hodný.',
+      dad:'Nositel Prstenu.'},
+    {id:'gandalf',gi:1,name:'Gandalf Šedý',en:'Gandalf the Grey',race:'carodej',rlab:'Čaroděj',ic:'carodej',say:'GEN-dalf',
+      kid:'Moudrý čaroděj s dlouhým vousem, kloboukem a holí. Umí ohňostroje i mocná kouzla. Přítel hobitů.',
+      dad:'Šedý čaroděj, průvodce a ochránce. V Morii padá s Balrogem do hlubiny.'},
+    {id:'sam',gi:2,name:'Samvěd „Sam" Křepelka',en:'Samwise Gamgee',race:'hobit',rlab:'Hobit',ic:'hobit',say:'SAM-věd',
+      kid:'Frodův zahradník a nejvěrnější kamarád. Statečné srdce, které Froda nikdy neopustí.',
+      dad:'Frodův věrný společník; zahradník. Klíčová postava celého příběhu.'},
+    {id:'glum',gi:2,name:'Glum',en:'Gollum',race:'zlo',rlab:'Tvor',ic:'wraith',say:'GLUM',
+      kid:'Vyzáblý tvoreček, kterého prsten úplně ovládl. Šeptá si „miláššku" a touží prsten získat zpátky.',
+      dad:'Sméagol — dřívější nositel Prstenu. Zpovzdálí sleduje výpravu.'},
+    {id:'sauron',gi:2,name:'Sauron',en:'Sauron',race:'zlo',rlab:'Temný pán',ic:'eye',say:'SAU-ron',
+      kid:'Zlý temný pán, který kdysi vyrobil Jeden prsten. Hledá ho, aby ovládl celou zem. Vídáme ho jako velké ohnivé oko.',
+      dad:'Nepřítel, tvůrce Jednoho prstenu. Přímo se neobjeví, ale jeho stín leží nad vším.'},
+    {id:'pippin',gi:3,name:'Peregrin „Pipin" Bral',en:'Pippin Took',race:'hobit',rlab:'Hobit',ic:'hobit',say:'PI-pin',
+      kid:'Nejmladší a nejzvědavější z hobitů. Rád jí a občas provede nějakou lumpárnu.',
+      dad:'Nejmladší člen výpravy.'},
+    {id:'nazgul',gi:3,name:'Černí jezdci (Nazgûl)',en:'Ringwraiths',race:'zlo',rlab:'Přízraky',ic:'wraith',say:'NAZ-gúl',
+      kid:'Devět zahalených jezdců na černých koních. Nemají tvář, čenichají prsten a nahánějí hrůzu.',
+      dad:'Prstenové přízraky, Sauronovi služebníci. Honí Froda za Prstenem.'},
+    {id:'merry',gi:5,name:'Smíšek Brandorád',en:'Merry Brandybuck',race:'hobit',rlab:'Hobit',ic:'hobit',say:'SMÍ-šek',
+      kid:'Chytrý a spolehlivý hobit, Pipinův nejlepší kamarád. Umí dobře plánovat.',
+      dad:'Meriadok Brandorád; člen výpravy.'},
+    {id:'bombadil',gi:6,name:'Tom Bombadil',en:'Tom Bombadil',race:'carodej',rlab:'Záhada',ic:'star',say:'TOM',
+      kid:'Veselý pán lesa, co pořád zpívá. Je moc starý a mocný — a prsten na něj vůbec nefunguje!',
+      dad:'Nejstarší a nejzáhadnější. Prsten nad ním nemá moc. Zachrání hobity od Staré vrby i z mohyly.'},
+    {id:'stara-vrba',gi:6,name:'Stará vrba',en:'Old Man Willow',race:'zlo',rlab:'Nebezpečí',ic:'forest',say:'—',
+      kid:'Zlá stará vrba ve Starém hvozdu, co uspává a polyká hobity do svého kmene.',
+      dad:'Zlovolný strom Starého hvozdu.'},
+    {id:'aragorn',gi:9,name:'Aragorn zvaný Chodec',en:'Aragorn / Strider',race:'clovek',rlab:'Člověk',ic:'clovek',say:'A-ra-gorn',
+      kid:'Tajemný pocestný v kápi, který je ve skutečnosti velký hrdina a ochránce. Umí bojovat i léčit.',
+      dad:'Hraničář, budoucí král. Vede hobity do Roklinky, pak je součástí Společenstva.'},
+    {id:'glorfindel',gi:12,name:'Glorfindel',en:'Glorfindel',race:'elf',rlab:'Elf',ic:'elf',say:'GLOR-fin-del',
+      kid:'Zářivý elfský jezdec, který přispěchá Frodovi na pomoc a doveze ho k bezpečí.',
+      dad:'Mocný elf z Roklinky; pomůže při útěku k Brodu.'},
+    {id:'elrond',gi:13,name:'Elrond',en:'Elrond',race:'elf',rlab:'Elf',ic:'star',say:'EL-rond',
+      kid:'Moudrý a laskavý pán elfů z Roklinky. Umí léčit a pamatuje si dávné příběhy.',
+      dad:'Pán Roklinky. Uzdraví Froda a svolá Radu.'},
+    {id:'boromir',gi:14,name:'Boromir',en:'Boromir',race:'clovek',rlab:'Člověk',ic:'clovek',say:'BO-ro-mir',
+      kid:'Silný a statečný válečník z jižní země Gondor. Chce chránit svůj lid — a prsten ho svádí.',
+      dad:'Syn gondorského správce. Podlehne pokušení Prstenu u Amon Hen.'},
+    {id:'legolas',gi:14,name:'Legolas',en:'Legolas',race:'elf',rlab:'Elf',ic:'elf',say:'LE-go-las',
+      kid:'Elfí lučištník s bystrým zrakem. Je hbitý, tichý a skvěle střílí z luku.',
+      dad:'Elf z Temného hvozdu; člen Společenstva.'},
+    {id:'gimli',gi:14,name:'Gimli',en:'Gimli',race:'trpaslik',rlab:'Trpaslík',ic:'trpaslik',say:'GIM-li',
+      kid:'Statečný trpaslík se sekerou a pořádným plnovousem. Srdnatý a věrný.',
+      dad:'Trpaslík, syn Glóina; člen Společenstva.'},
+    {id:'balrog',gi:17,name:'Balrog',en:'Balrog',race:'zlo',rlab:'Démon',ic:'flame',say:'BAL-rog',
+      kid:'Obrovský dávný netvor z ohně a stínu, který spí hluboko v Morii. Strašně mocný a hrozivý.',
+      dad:'Démon z Morie. Na mostě strhne Gandalfa do hlubiny.'},
+    {id:'galadriel',gi:18,name:'Galadriel',en:'Galadriel',race:'elf',rlab:'Elf',ic:'star',say:'Ga-LAD-ri-el',
+      kid:'Krásná a mocná paní elfů ze zlatého lesa. Má kouzelné zrcadlo a velkou moudrost.',
+      dad:'Paní Lórienu. Odolá Prstenu a obdaruje Společenstvo.'}
+  ];
+  var CHARMAP={}; CHARS.forEach(function(c){CHARMAP[c.id]=c;});
+  var SHORT={frodo:'Frodo',sam:'Sam',merry:'Smíšek',pippin:'Pipin',bilbo:'Bilbo',gandalf:'Gandalf',aragorn:'Aragorn',boromir:'Boromir',legolas:'Legolas',gimli:'Gimli',sauron:'Sauron',nazgul:'Nazgûl',glum:'Glum'};
+
+  // ===== Deník postav: co prožily, po kapitolách (gi) + otázka k zamyšlení =====
+  var ARC={
+    frodo:{ahead:'Dokáže tak malý hobit tu obrovskou cestu ujít až do konce?',beats:[
+      [1,'Na oslavě dostane od Bilba kouzelný prsten a domek Dno pytle.'],
+      [2,'Od Gandalfa se dozví, jak nebezpečný prsten je — musí odejít z Kraje.'],
+      [3,'Vyráží na cestu; poprvé se před ním objeví Černý jezdec.'],
+      [4,'Utíká přes pole a houby až k řece.'],
+      [5,'Zjistí, že kamarádi o všem vědí a půjdou s ním.'],
+      [6,'Ve Starém hvozdu se snaží vysvobodit kamarády ze Staré vrby.'],
+      [7,'Odpočine si u Toma Bombadila; jeho prsten na Toma nefunguje.'],
+      [8,'V mohyle ho málem dostane duch — statečně přivolá Toma.'],
+      [9,'V hospodě mu omylem sklouzne prsten na prst a zmizí.'],
+      [10,'Rozhodne se věřit tajemnému Chodci.'],
+      [11,'Na Větrově ho Černý jezdec bodne prokletým nožem.'],
+      [12,'Zraněný unikne na elfském koni k Brodu.'],
+      [13,'Probudí se uzdravený v Roklince mezi přáteli.'],
+      [14,'Sám se nabídne, že odnese prsten do Mordoru.'],
+      [15,'Vyráží s Devíti společníky na jih.'],
+      [16,'U brány Morie ho chytí chapadlo — jen tak tak unikne.'],
+      [17,'V Morii přijde o Gandalfa.'],
+      [18,'Najde útěchu v kouzelném lese Lórien.'],
+      [19,'Nabídne prsten Galadriel; ta odolá.'],
+      [20,'Dostane lahvičku se světlem a vyplouvá po řece.'],
+      [21,'Pluje po Velké řece a cítí, že je někdo sleduje.'],
+      [22,'Rozhodne se jít dál sám — aby neohrozil přátele.']]},
+    sam:{ahead:'Dokázali byste být takový kamarád jako Sam?',beats:[
+      [2,'Přistižen pod oknem — a hned se stane Frodovým společníkem.'],
+      [3,'Vyráží s Frodem na cestu.'],
+      [6,'S ostatními projde nebezpečným Starým hvozdem.'],
+      [8,'Přežije mohylu díky Tomovi.'],
+      [11,'Na Větrově pomáhá bránit se jezdcům.'],
+      [13,'V Roklince nespustí z Froda oči.'],
+      [15,'Přidá se ke Společenstvu.'],
+      [17,'Truchlí s ostatními pro Gandalfa.'],
+      [19,'V Galadrielině zrcadle zahlédne domov.'],
+      [20,'Dostane od Galadriel semínka a provaz.'],
+      [22,'Nenechá Froda odejít samotného a jde s ním.']]},
+    gandalf:{ahead:'Co byste dělali, kdyby vám najednou zmizel někdo tak moudrý?',beats:[
+      [1,'Přiveze ohňostroj a pomůže Bilbovi odejít.'],
+      [2,'Odhalí, že Frodův prsten je ten Jeden.'],
+      [13,'Znovu se sejde s Frodem v Roklince.'],
+      [14,'Na Radě pomáhá rozhodnout o osudu prstenu.'],
+      [15,'Vede Devět společníků na jih.'],
+      [16,'Zavede je do Morie, když je hora nepustí.'],
+      [17,'Na mostě se postaví Balrogovi a padne s ním do hlubiny.']]},
+    aragorn:{ahead:'Pozná se dobrý člověk podle vzhledu, nebo podle činů?',beats:[
+      [9,'Jako tajemný Chodec pozoruje hobity v hospodě.'],
+      [10,'Svěří se, že je přítel Gandalfa, a nabídne se je vést.'],
+      [11,'Na Větrově zažene jezdce ohněm.'],
+      [12,'Dovede zraněného Froda k Brodu.'],
+      [14,'Na Radě se přidá ke Společenstvu.'],
+      [15,'Pomáhá vést výpravu na jih.'],
+      [17,'Po Gandalfově pádu vede společenstvo dál.'],
+      [18,'Zavede unavené druhy do Lórienu.'],
+      [22,'Snaží se udržet rozpadající se společenstvo pohromadě.']]},
+    merry:{ahead:'K čemu je dobré mít kamaráda, co umí dobře plánovat?',beats:[
+      [5,'Odhalí, že s kamarády celou dobu vědí o prstenu.'],
+      [6,'Ve Starém hvozdu ho spolkne Stará vrba.'],
+      [8,'Přežije mohylu.'],
+      [13,'Znovu se setká s Frodem v Roklince.'],
+      [15,'Přidá se ke Společenstvu.'],
+      [22,'Zůstává s partou, když se cesty dělí.']]},
+    pippin:{ahead:'Může i ten nejmladší a nejzvědavější být hrdina?',beats:[
+      [3,'Vyráží na cestu s Frodem a Samem.'],
+      [6,'Ve Starém hvozdu ho spolkne Stará vrba.'],
+      [8,'Přežije mohylu.'],
+      [13,'Odpočívá v Roklince.'],
+      [15,'Přidá se ke Společenstvu.'],
+      [16,'Ze zvědavosti hodí kámen do studny v Morii.'],
+      [22,'Zůstává s partou při rozdělení.']]},
+    bilbo:{ahead:'Proč je někdy tak těžké vzdát se něčeho, co máme rádi?',beats:[
+      [1,'Oslaví 111. narozeniny a pomocí prstenu zmizí.'],
+      [2,'Připomene se, že prsten kdysi našel právě on.'],
+      [13,'Znovu se šťastně setká s Frodem v Roklince.'],
+      [14,'Nabídne se, že prsten odnese — ale je už moc starý.']]},
+    bombadil:{ahead:'Proč asi prsten na Toma vůbec nefunguje?',beats:[
+      [6,'Vysvobodí hobity ze Staré vrby a odvede je domů.'],
+      [7,'Pohostí hobity; prsten na něj nemá žádnou moc.'],
+      [8,'Přispěchá do mohyly, zachrání hobity a dá jim dýky.']]},
+    glum:{ahead:'Co s tvorem udělá, když po něčem strašně touží?',beats:[
+      [2,'Vypráví se, že ho prsten kdysi úplně ovládl.'],
+      [21,'Potají plave za loďmi po Velké řece.']]},
+    sauron:{ahead:'Proč bývá zlo silnější, když se ho začneme bát?',beats:[
+      [2,'Odhalí se, že je to on, kdo prsten vyrobil a teď ho hledá.']]},
+    nazgul:{ahead:'Co dělá Černé jezdce tak děsivé?',beats:[
+      [3,'První z nich čenichá po hobitech na cestě.'],
+      [11,'Na Větrově zraní Froda prokletým nožem.'],
+      [12,'V Brodu je odplaví kouzelná vlna.']]},
+    elrond:{ahead:'Proč je dobré mít někoho moudrého, kdo poradí?',beats:[
+      [13,'Svou mocí uzdraví zraněného Froda.'],
+      [14,'Svolá velkou Radu a pomůže rozhodnout o prstenu.']]},
+    boromir:{ahead:'Může i statečný hrdina udělat chybu?',beats:[
+      [14,'Na Radě se přidá ke Společenstvu, aby chránil svůj lid.'],
+      [15,'Vyráží s výpravou na jih.'],
+      [16,'V Morii pomáhá nést mladší hobity.'],
+      [17,'Po Gandalfově pádu drží partu při sobě.'],
+      [22,'U vodopádů podlehne touze po prstenu.']]},
+    legolas:{ahead:'Jak se hodí mít v partě někoho s tak bystrým zrakem?',beats:[
+      [14,'Na Radě se přidá ke Společenstvu jako elfí lučištník.'],
+      [15,'Vyráží s výpravou na jih.'],
+      [16,'Svým zrakem hlídá cestu v temné Morii.'],
+      [18,'V Lórienu je mezi svými — elfy.']]},
+    gimli:{ahead:'Můžou být trpaslík a elf nakonec kamarádi?',beats:[
+      [14,'Na Radě se přidá ke Společenstvu se svou sekerou.'],
+      [15,'Vyráží s výpravou na jih.'],
+      [16,'V Morii truchlí nad hrobem svého příbuzného Balina.'],
+      [18,'V Lórienu ho okouzlí paní Galadriel.']]},
+    glorfindel:{ahead:'Kdy se hodí, aby přišla pomoc na poslední chvíli?',beats:[
+      [12,'Najde zraněného Froda a půjčí mu svého rychlého koně.'],
+      [13,'V Roklince je mezi Elrondovým lidem.']]},
+    galadriel:{ahead:'Dá se odolat, když nám někdo nabízí velkou moc?',beats:[
+      [18,'Přivítá unavené společenstvo ve svém zlatém lese.'],
+      [19,'Ukáže Frodovi kouzelné zrcadlo a odolá prstenu.'],
+      [20,'Obdaruje každého na cestu a rozloučí se.']]},
+    balrog:{ahead:'Proč byl Gandalf ochotný postavit se takové obludě sám?',beats:[
+      [17,'Probudí se v hlubinách Morie a utká se s Gandalfem.']]},
+    'stara-vrba':{ahead:'Může být nebezpečný i obyčejný strom?',beats:[
+      [6,'Uspí hobity a dva z nich polapí do svého kmene.']]}
+  };
+
+  // ===== data: Svět (lore) =====
+  var RACES=[
+    ['hobit','Hobiti','Malý veselý národ z Kraje. Milují jídlo, klid a kulaté dveře. Nenápadní, ale se statečným srdcem.'],
+    ['clovek','Lidé','Obyčejní lidé jako my — bojovníci, králové i hraničáři. Někdy stateční, jindy je snadno svede zlo.'],
+    ['elf','Elfové','Krásní, moudří a skoro nesmrtelní. Umí kouzla, krásně zpívají a žijí v lesích a skrytých údolích.'],
+    ['trpaslik','Trpaslíci','Podsadití horníci a kováři s plnovousy. Žijí v horách, milují zlato a kámen a jsou věrní přátelé.'],
+    ['carodej','Čarodějové','Moudří starci s holí (Gandalf, Saruman). Ve skutečnosti dávné bytosti poslané pomáhat proti zlu.'],
+    ['orc','Skřeti (orkové)','Oškliví a zlí služebníci temných pánů. Bojí se slunce a slouží tomu, kdo je nejsilnější.']
+  ];
+  var TL=[
+    ['Dávno','Ukování prstenů','Elfové vyrobili kouzelné prsteny. Sauron k nim tajně ukoval Jeden prsten, aby je všechny ovládl.'],
+    ['Velká bitva','Prsten uříznut','Lidé a elfové Saurona porazili a Jeden prsten mu usekli z ruky. Byl poražen — ale prsten se neztratil.'],
+    ['Ztracen','Prsten mizí','Prsten spadl do řeky a na dlouhá staletí zmizel. Pak ho dlouho vlastnil ubohý tvor Glum.'],
+    ['Náhoda','Bilbo ho najde','V jeskyni ho náhodou najde hobit Bilbo. Netuší, jakou vzácnost a nebezpečí nosí v kapse.'],
+    ['Teď','Frodova cesta','Bilbo prsten předá Frodovi — a náš příběh začíná. Prsten musí být zničen dřív, než ho Sauron získá.']
+  ];
+  var LORE=[
+    {ic:'ring',title:'Jeden prsten',text:'Nejmocnější prsten na světě. Kdo si ho navlékne, zmizí — jenže prsten pomalu kazí srdce a touží se vrátit ke svému pánovi. Zničit se dá jedině v ohni hory, kde byl ukován.'},
+    {ic:'eye',title:'Sauron, temný pán',text:'Zlý pán, který prsten vyrobil, aby ovládl celou Středozem. Prsten mu kdysi usekli z ruky a on ho od té doby hledá. Vídáme ho jako obrovské planoucí oko.'},
+    {ic:'wraith',title:'Černí jezdci (Nazgûl)','text':'Devět přízraků na černých koních. Kdysi to byli lidé, ale prsteny je proměnily v Sauronovy služebníky. Nemají tvář a čenichají Jeden prsten.'}
+  ];
+
+  // ===== data: kapitoly =====
+  function C(o){return o;}
+  var CH = [
+    // KNIHA PRVNÍ
+    C({book:1,n:1,title:'Dlouho očekávaný dýchánek',en:'A Long-expected Party',fear:0,
+      sum:'Starý Bilbo slaví 111. narozeniny velkou oslavou pro celý Hobitín. Uprostřed proslovu si navlékne kouzelný prsten, zmizí všem před očima a potají odejde z Kraje. Gandalf ho přemluví, aby prsten nechal Frodovi. Nikdo zatím netuší, jak je ten prsten nebezpečný.',
+      focus:['Bilbův kouzelný prsten — proč po něm tolik touží?','Gandalfův ohňostroj a veselá oslava (skvělý rozjezd)','Frodo dostává prsten do opatrování'],
+      q:['Proč Bilbo zmizel přímo uprostřed proslovu?','Co je asi na tom prstenu zvláštního?'],
+      words:[['dýchánek','oslava, večírek s pohoštěním'],['Kraj','domovina hobitů']],
+      teaser:'Velká oslava, ohňostroj — a jeden kouzelný prsten, po kterém se člověk stane neviditelným! Kdo ho asi dostane?',
+      quiz:[['Kolik je Bilbovi let?',['50','111','1000'],1],['Co se stane, když si Bilbo navlékne prsten?',['Zmizí','Usne','Vyroste'],0]]}),
+    C({book:1,n:2,title:'Stín minulosti',en:'The Shadow of the Past',fear:2,
+      sum:'Uběhne sedmnáct let. Gandalf se vrací s vážnou zprávou: Frodův prsten je Jeden prsten, který kdysi ukoval temný pán Sauron, aby ovládl celou Středozem. Frodo se musí vydat pryč a prsten odnést do bezpečí. Zahradník Sam je přistižen, jak poslouchá za oknem — a stane se Frodovým společníkem.',
+      focus:['Co doopravdy je Jeden prsten a proč je tak nebezpečný','Kdo je Sauron (Nepřítel) a kdo je Glum','Věrný Sam se přidává k Frodovi'],
+      q:['Proč nemůže prsten používat nikdo hodný?','Proč se Sam rozbrečel, když ho Gandalf přistihl?'],
+      words:[['Jeden prsten','nejmocnější a nejnebezpečnější prsten'],['Sauron','temný pán, který prsten vyrobil']],
+      fearnote:'Padne zmínka o temném pánovi a o Glumovi — tajemné a trochu hrozivé, ale ještě nic strašidelného.',
+      teaser:'Ten prsten není obyčejný — je to nejnebezpečnější věc na světě a hledá ho zlý pán Sauron. Frodo bude muset odejít z domova.',
+      quiz:[['Kdo vyrobil Jeden prsten?',['Gandalf','Sauron','Bilbo'],1],['Kdo se přidá k Frodovi jako první?',['Sam','Gandalf','Bilbo'],0]]}),
+    C({book:1,n:3,title:'Ve třech se to lépe táhne',en:'Three is Company',fear:3,
+      sum:'Frodo, Sam a mladý Pipin vyrážejí pěšky z Hobitína. Hned na cestě je málem dostihne první Černý jezdec — zahalená postava, která čenichá a hledá prsten. Zachrání je až setkání s elfy, kteří je pod noční oblohou schovají a pohostí.',
+      focus:['První Černý jezdec — odkud se vzal a co hledá?','Kouzelní elfové (Gildor) jako první pomoc','Cesta začíná být nebezpečná'],
+      q:['Proč se hobiti před jezdcem schovali, místo aby ho pozdravili?','Jak vám připadali elfové?'],
+      words:[['Černý jezdec','zahalený služebník Saurona na černém koni']],
+      fearnote:'Objeví se první Černý jezdec — čenichá a nahání husí kůži. Napínavé a trochu strašidelné, nic krvavého.',
+      teaser:'Cesta začíná! Ale po stopě už jde první Černý jezdec. Kdo hobity ochrání?',
+      quiz:[['Kdo jde s Frodem a Samem?',['Pipin','Bilbo','Glum'],0],['Kdo hobity schová před jezdcem?',['Elfové','Trpaslíci','Skřeti'],0]]}),
+    C({book:1,n:4,title:'Zkratka k houbám',en:'A Short Cut to Mushrooms',fear:2,
+      sum:'Aby se vyhnuli jezdcům, jdou hobiti napříč poli a lesíky. Cestou pomůže hodný sedlák (Maggot), který je pohostí houbami a sveze k řece Brandyvíně. Převozník je přeplaví na druhý břeh, blíž k Rádovsku.',
+      focus:['Chytré vyhýbání se jezdcům přes pole','Houby a pohostinnost — hobiti milují jídlo','Blíží se řeka a další úsek cesty'],
+      q:['Proč šli hobiti raději přes pole než po pohodlné cestě?'],
+      words:[['Brandyvína','velká řeka na okraji Kraje']],
+      fearnote:'Jezdci jsou pořád nablízku — napětí, ale i legrace s houbami.',
+      teaser:'Zkratka přes pole, plný pytel hub a tajemný jezdec v mlze. Stihnou to k řece?',
+      quiz:[['Kdo hobitům cestou pomůže a pohostí je houbami?',['Hodný sedlák','Zlý skřet','Gandalf'],0]]}),
+    C({book:1,n:5,title:'Odhalené spiknutí',en:'A Conspiracy Unmasked',fear:1,
+      sum:'V domku za řekou Frodo zjistí, že jeho kamarádi Smíšek, Pipin a Sam už dávno vědí o prstenu i o tom, že chce potají odejít — a rozhodli se jít s ním, ať se děje co se děje. Pravé přátelství: nenechají ho v tom samotného.',
+      focus:['Odhalené „spiknutí" přátel — věděli to celou dobu','Téma věrného přátelství','Smíšek a Pipin se naplno přidávají'],
+      q:['Proč chtěl jít Frodo napřed sám?','Byli byste taky takoví kamarádi?'],
+      words:[['spiknutí','tajná domluva — tady ale z lásky a přátelství']],
+      teaser:'Frodo si myslel, že má tajemství. Jenže kamarádi vědí všechno — a nikam ho nepustí samotného!',
+      quiz:[['Kdo se rozhodne jít s Frodem?',['Sam, Smíšek a Pipin','Jen Gandalf','Nikdo'],0]]}),
+    C({book:1,n:6,title:'Starý hvozd',en:'The Old Forest',fear:3,
+      sum:'Aby unikli jezdcům, vejdou hobiti do Starého hvozdu — lesa, který je živý a nemá je rád. Stromy je matou a zavedou až ke staré vrbě u řeky. Ta lstivě polapí Smíška a Pipina do svého kmene. V poslední chvíli je zachrání zpívající veselý pán lesa Tom Bombadil.',
+      focus:['Les, který je živý a nepřátelský (Stará vrba)','Záchrana Tomem Bombadilem','Kouzlo a písničky Toma Bombadila'],
+      q:['Může být les nebezpečný jen tím, že vás zavede špatným směrem?','Jak vám přišel Tom Bombadil?'],
+      words:[['hvozd','velký hluboký les']],
+      fearnote:'Zlá stará vrba spolkne hobity do kmene — napínavé a trochu strašidelné, ale hned přijde záchrana a písničky.',
+      teaser:'Les, který vás schválně ztratí, a vrba, co polyká hobity! Kdo je ten podivný veselý pán, co všechno zpívá?',
+      quiz:[['Co udělá Stará vrba?',['Polapí hobity','Dá jim jablka','Uteče'],0],['Kdo hobity zachrání?',['Tom Bombadil','Gandalf','Zlý skřet'],0]]}),
+    C({book:1,n:7,title:'V domě Toma Bombadila',en:'In the House of Tom Bombadil',fear:1,
+      sum:'Tom hobity pohostí ve svém domě u své krásné ženy Zlatěnky. Je nejstarší a záhadný — a co je zvláštní, Jeden prsten na něj vůbec nepůsobí: navlékne si ho a nezmizí, a Frodův prsten mu na dlani zmizí jako kouzlo. Hobiti načerpají sílu a odvahu.',
+      focus:['Tajemný Tom a jeho žena Zlatěnka','Prsten nemá nad Tomem žádnou moc (jediný takový)','Bezpečné, kouzelné zastavení'],
+      q:['Proč na Toma prsten asi nefunguje?'],
+      words:[['Zlatěnka','Tomova žena, paní řeky a lesa']],
+      teaser:'Divný veselý Tom si navlékne ten mocný prsten — a nic! Jak to, že na něj nefunguje?',
+      quiz:[['Co se stane, když si Tom navlékne Jeden prsten?',['Vůbec nic, nezmizí','Zmizí jako Bilbo','Změní se ve zlého'],0]]}),
+    C({book:1,n:8,title:'Mlha na Mohylových vrších',en:'Fog on the Barrow-downs',fear:4,
+      sum:'V mlze hobity polapí mohylový duch a uvězní je v dávné hrobce pod kopcem. Frodo se probudí vedle ledově studené ruky — a málem podlehne. Vzpomene si ale na Tomovu písničku, přivolá ho, a Tom je vysvobodí. Na rozloučenou dostanou staré kouzelné dýky.',
+      focus:['Mohylový duch a hrobka (napínavý vrchol první části)','Frodova statečnost — nezradí kamarády','Kouzelné dýky, které se ještě budou hodit'],
+      q:['Co Frodovi pomohlo neztratit hlavu ve tmě?'],
+      words:[['mohyla','starý hrob navršený z kamení a hlíny']],
+      fearnote:'⚠️ Nejstrašidelnější místo první části: nemrtvý duch, hrobka, ledová ruka. U citlivějšího dítěte klidně trochu zkrať a zdůrazni, že to dobře dopadne.',
+      teaser:'Mlha, starý kopec a ledová ruka ve tmě… ale i tady je někdo, kdo přijde na pomoc. Vzpomenou si hobiti na tu správnou písničku?',
+      quiz:[['Kdo hobity uvězní?',['Mohylový duch','Skřet','Vrba'],0],['Co dostanou hobiti od Toma?',['Kouzelné dýky','Koně','Zlato'],0]]}),
+    C({book:1,n:9,title:'U Skákavého poníka',en:'At the Sign of the Prancing Pony',fear:2,
+      sum:'Hobiti dorazí do lidského městečka Hůrka a do hostince U Skákavého poníka. Je tu rušno a Frodo nešťastnou náhodou při písničce spadne, navlékne si prsten a zmizí — což vzbudí pozornost. V koutě je přitom pozoruje tajemný otrhaný pocestný, kterému říkají Chodec.',
+      focus:['První lidské město a hostinec (změna prostředí)','Frodo omylem zmizí — nebezpečné!','Záhadný Chodec v koutě — přítel, nebo hrozba?'],
+      q:['Máme Chodci věřit, když vypadá tak divoce?'],
+      words:[['hostinec','dům, kde se dá najíst, napít a přespat']],
+      teaser:'Cizí město, plný hostinec a záhadný pocestný v kápi, co všechno pozoruje. Kdo to je?',
+      quiz:[['Jak se jmenuje hostinec?',['U Skákavého poníka','U Zlatého draka','U Bílého koně'],0]]}),
+    C({book:1,n:10,title:'Chodec',en:'Strider',fear:2,
+      sum:'Chodec se hobitům svěří: je to Aragorn, přítel Gandalfův, a nabídne, že je dovede do Roklinky. Máselník jim předá Gandalfův dopis, který to potvrzuje. V noci někdo přepadne prázdné postele v hostinci — jen tak tak že hobiti nespali tam, kde měli.',
+      focus:['Kdo je Chodec/Aragorn a proč mu věřit','Gandalfův dopis','Útok na prázdné postele — unikli o vlásek'],
+      q:['Podle čeho poznáme, komu se dá věřit?'],
+      words:[['Chodec','přezdívka Aragorna — hraničář, co chodí divočinou']],
+      fearnote:'Napětí a lest; noční útok na prázdné postele je hrozivý, ne krvavý.',
+      teaser:'Ten divoký pocestný je vlastně přítel! Ale v noci někdo rozseká prázdné postele. Kdo to byl?',
+      quiz:[['Kdo je doopravdy Chodec?',['Aragorn, přítel Gandalfa','Zlý skřet','Sám Sauron'],0]]}),
+    C({book:1,n:11,title:'Nůž ve tmě',en:'A Knife in the Dark',fear:4,
+      sum:'Cestou k Roklince vystoupají na starý kopec Větrov. V noci je tam přepadnou Černí jezdci a jejich vůdce probodne Frodovi rameno prokletým nožem. Aragorn je ohněm odežene, ale Frodo je vážně zraněný a rána ho pomalu táhne do stínového světa.',
+      focus:['Přepadení na Větrově (velký napínavý moment)','Frodo je zraněn morgulským nožem','Boj ohněm proti jezdcům'],
+      q:['Proč je zranění od takového nože horší než obyčejná rána?'],
+      words:[['Větrov','osamělý kopec se zbytky staré strážní věže']],
+      fearnote:'⚠️ Silný, napínavý souboj: jezdci, oheň, Frodo zraněn nožem. Hrozivé, ale bez krve. Připrav se, že tady kluci ztuhnou.',
+      teaser:'Na kopci ve tmě zaútočí Černí jezdci! Frodo je zraněný — stihnou ho zachránit?',
+      quiz:[['Kde hobity přepadnou jezdci?',['Na Větrově','V Hůrce','V Roklince'],0],['Čím Aragorn jezdce zažene?',['Ohněm','Vodou','Písničkou'],0]]}),
+    C({book:1,n:12,title:'Útěk k Brodu',en:'Flight to the Ford',fear:4,
+      sum:'Zraněného Froda najde elfský jezdec Glorfindel a posadí ho na svého rychlého koně. Následuje závod o život k řece u Roklinky. Když Černí jezdci vjedou do brodu, řeka se vzedme v mohutné vlně a odplaví je. Frodo v bezvědomí přejede na druhý břeh — do bezpečí. (Konec první knihy.)',
+      focus:['Závod o život na elfském koni','Kouzelná povodeň v brodu smete jezdce','Záchrana na prahu Roklinky'],
+      q:['Kdo asi tu vlnu v řece přivolal?'],
+      words:[['brod','mělké místo, kudy se dá přejít řeka'],['Roklinka','skryté údolí elfů']],
+      fearnote:'Napínavá honička, Frodo bojuje o život; konec je ale úlevný a bezpečný.',
+      teaser:'Divoký cval před Černými jezdci a řeka, co se vzedme jako vlna! Dostane se Frodo včas do bezpečí?',
+      quiz:[['Kdo veze Froda k brodu?',['Glorfindel','Gandalf','Bilbo'],0],['Co smete jezdce v brodu?',['Vlna vody','Oheň','Skřeti'],0]]}),
+    // KNIHA DRUHÁ
+    C({book:2,n:1,title:'Mnohá setkání',en:'Many Meetings',fear:0,
+      sum:'Frodo se probudí v Roklince, uzdravený mocí pána elfů Elronda. Čeká ho radost: zase vidí Gandalfa i starého Bilba. Roklinka je krásné bezpečné údolí plné písní a příběhů, kde si všichni na chvíli oddechnou.',
+      focus:['Roklinka a moudrý Elrond','Šťastné shledání s Gandalfem a Bilbem','Klidné nadechnutí před další cestou'],
+      q:['Proč je dobré mít v příběhu i takové bezpečné místo?'],
+      words:[['Elrond','moudrý pán elfů z Roklinky']],
+      teaser:'Frodo se probudí v kouzelném údolí elfů — a hádej, kdo tam na něj čeká!',
+      quiz:[['Kde se Frodo probudí uzdravený?',['V Roklince u elfů','Doma v Kraji','V hlubokém lese'],0]]}),
+    C({book:2,n:2,title:'Elrondova rada',en:'The Council of Elrond',fear:1,
+      sum:'Sejde se velká rada. Vyjde najevo celý příběh prstenu a to, že existuje jediný způsob, jak zbavit svět Saurona: donést prsten až do Mordoru a zničit ho v ohni, kde byl ukován. Frodo se sám nabídne, že prsten ponese. Vznikne Společenstvo Prstenu — devět společníků.',
+      focus:['Rozhodnutí zničit prsten v Mordoru','Frodova odvaha se přihlásit','Vzniká Společenstvo devíti (kdo do něj patří)'],
+      q:['Proč musí prsten zničit zrovna malý hobit, a ne někdo silný?'],
+      words:[['Společenstvo','devět společníků, co půjde s Frodem']],
+      fearnote:'Hodně povídání a vysvětlování; klidně vyprávěj vlastními slovy a zkrať.',
+      teaser:'Velká porada rozhodne: prsten se musí zničit! A vznikne devítka hrdinů, co půjdou s Frodem.',
+      quiz:[['Kolik hrdinů má Společenstvo Prstenu?',['Devět','Tři','Sto'],0],['Kam se musí prsten donést, aby se zničil?',['Do Mordoru, kde byl ukován','Do Roklinky','Do moře'],0]]}),
+    C({book:2,n:3,title:'Prsten putuje k jihu',en:'The Ring Goes South',fear:2,
+      sum:'Devět společníků vyráží z Roklinky na jih. Poznávají se navzájem — hrdý Boromir, elf Legolas, trpaslík Gimli, statečný Aragorn. Nad hlavami jim ale krouží podezřelí černí ptáci, kteří někomu donášejí, a Společenstvo se musí skrývat.',
+      focus:['Devítka vyráží — sžívání party','Špehující černí ptáci','Nutnost skrývat se'],
+      q:['Proč je těžké schovat devět poutníků najednou?'],
+      words:[['Společenstvo devíti','čtyři hobiti, dva lidé, elf, trpaslík a čaroděj']],
+      teaser:'Devět hrdinů vyráží! Jenže po obloze je špehují podezřelí černí ptáci…',
+      quiz:[['Co Společenstvo špehuje z oblohy?',['Hejno černých ptáků','Draci','Orli'],0]]}),
+    C({book:2,n:4,title:'Cesta v temnotě',en:'A Journey in the Dark',fear:4,
+      sum:'Společenstvo se pokusí přejít vysoký průsmyk hory Caradhras, ale krutá sněhová bouře je zažene zpět. Nezbývá než jít pod horami temnými Doly morijskými. U brány je ve vodě přepadne obludné chapadlo a Společenstvo jen tak tak vklouzne dovnitř — brána za nimi zapadne.',
+      focus:['Caradhras je nepustí (hora jako nepřítel)','Rozhodnutí jít skrz Morii','Chapadlo ve vodě u brány (napínavé!)'],
+      q:['Co je horší — přejít mrazivou horu, nebo jít temným podzemím?'],
+      words:[['Doly morijské','obrovské podzemní město a doly trpaslíků']],
+      fearnote:'⚠️ Mrazivá hora a strašidelné chapadlo, které chytá Froda. Napínavé; temná atmosféra podzemí.',
+      teaser:'Sněhová bouře je zažene z hory — tak půjdou temným podzemím. Jenže u brány číhá něco s chapadly ve vodě…',
+      quiz:[['Proč nepřejdou horu Caradhras?',['Sněhová bouře','Zabloudí','Nechce se jim'],0]]}),
+    C({book:2,n:5,title:'Most v Khazad-dûm',en:'The Bridge of Khazad-dûm',fear:5,
+      sum:'V temné Morii najdou hrob trpaslíka Balina a padnou do boje se skřety a jeskynním trollem. Pak se objeví Balrog — dávný ohnivý démon. Na úzkém mostě se mu Gandalf postaví se slovy „Neprojdeš!", zláme most — ale Balrog ho strhne s sebou do hlubiny. Společenstvo v slzách prchá ven.',
+      focus:['Balinův hrob, boj se skřety a trollem','Balrog — ohnivý démon','Gandalfova oběť na mostě (velký smutný okamžik)'],
+      q:['Proč Gandalf zůstal na mostě sám?','Jak se asi ostatní cítili, když Gandalf spadl?'],
+      words:[['Balrog','obrovský dávný démon z ohně a stínu']],
+      fearnote:'⚠️⚠️ Vrchol napětí i smutku: Balrog a Gandalfův pád. Silné a dojemné — počítej, že to kluky zasáhne. Klidně je pohlaď a připomeň, že příběh jde dál.',
+      teaser:'V temném podzemí čeká hrozivý ohnivý netvor. A Gandalf se mu na mostě postaví sám: „Neprojdeš!"',
+      quiz:[['Co Gandalf zvolá na mostě?',['„Neprojdeš!"','„Utíkejte!"','„Dobrou noc!"'],0],['S kým Gandalf bojuje?',['S Balrogem','Se Samem','S Bilbem'],0]]}),
+    C({book:2,n:6,title:'Lothlórien',en:'Lothlórien',fear:1,
+      sum:'Zdrcené Společenstvo vejde do kouzelného zlatého lesa Lothlórien, kde čas plyne jinak. Elfové v čele s Haldirem je obezřetně přijmou a dovedou do svého překrásného města ve stromech. Uprostřed žalu tu najdou útěchu a bezpečí.',
+      focus:['Kouzelný zlatý les Lórien','Útěcha po ztrátě Gandalfa','Elfové, kteří žijí ve stromech'],
+      q:['Pomáhá krásné a klidné místo, když je člověku smutno?'],
+      words:[['Lothlórien','kouzelný les elfů se zlatými stromy']],
+      teaser:'Po smutném podzemí přijde kouzelný zlatý les, kde elfové bydlí vysoko ve stromech.',
+      quiz:[['Jaký je les Lothlórien?',['Kouzelný a zlatý','Temný a mrtvý','Zasněžený'],0]]}),
+    C({book:2,n:7,title:'Galadrielino zrcadlo',en:'The Mirror of Galadriel',fear:2,
+      sum:'Vládne tu paní Galadriel, mocná a moudrá elfka. Ukáže Frodovi a Samovi kouzelné Zrcadlo — vodu, v níž lze zahlédnout, co bylo, co je i co teprve možná bude. Frodo Galadriel nabídne prsten, ale ona odolá pokušení vzít si ho, i když by mohla být královnou.',
+      focus:['Galadriel a její kouzelné zrcadlo','Vidiny v zrcadle (co bylo/bude)','Galadriel odolá prstenu — síla odříct si moc'],
+      q:['Chtěli byste vidět budoucnost, i kdyby byla strašidelná?'],
+      words:[['Galadriel','mocná a moudrá paní elfů z Lórienu']],
+      fearnote:'Trochu tajemné (vidiny v zrcadle), ale bezpečné.',
+      teaser:'Kouzelné zrcadlo z vody ukazuje, co teprve přijde. Podíváš se do něj, i kdyby to bylo strašidelné?',
+      quiz:[['Co ukazuje Galadrielino zrcadlo?',['Co bylo a co možná přijde','Jen počasí','Cestu domů'],0],['Vezme si Galadriel prsten, když jí ho Frodo nabídne?',['Ne, odolá pokušení','Ano, hned','Schová si ho'],0]]}),
+    C({book:2,n:8,title:'Loučení s Lórienem',en:'Farewell to Lórien',fear:0,
+      sum:'Než Společenstvo odejde, dostane od Galadriel kouzelné dary: šedé pláště, které skryjí, výživný elfský chléb lembas, lodě na řeku a pro každého něco zvláštního — Sam semínka, Frodo lahvičku se světlem hvězdy. Na elfských lodích vyplují po Velké řece.',
+      focus:['Kouzelné dary od Galadriel (pláště, lembas, Frodova lahvička)','Loučení s bezpečným Lórienem','Vyplouvají na Velkou řeku'],
+      q:['Který dárek by se vám hodil nejvíc?'],
+      words:[['lembas','elfský chléb, po kterém dlouho nevyhládnete']],
+      teaser:'Kouzelné dárky na cestu — mizící pláště, elfský chléb a lahvička plná hvězdného světla!',
+      quiz:[['Co je lembas?',['Elfský chléb, co dlouho zasytí','Kouzelný meč','Malá loďka'],0]]}),
+    C({book:2,n:9,title:'Velká řeka',en:'The Great River',fear:2,
+      sum:'Společenstvo pluje po Velké řece Anduině. V noci za nimi po vodě potají plave Glum, který touží po prstenu. Minou obrovské kamenné sochy dávných králů — Argonath — a utáboří se u vodopádů, kde se mají rozhodnout, kudy dál.',
+      focus:['Plavba po Anduině','Glum je potají sleduje','Obří sochy králů Argonath'],
+      q:['Proč asi Glum pořád jde za nimi?'],
+      words:[['Argonath','dvě obří sochy dávných králů u řeky']],
+      fearnote:'Mírné napětí (Glum, pár šípů). Bez hrůzy.',
+      teaser:'Plavba po veliké řece kolem obřích soch králů — a ve vodě za nimi tajně plave Glum!',
+      quiz:[['Kdo potají plave za Společenstvem?',['Glum','Balrog','Bilbo'],0],['Co jsou Argonath?',['Dvě obří sochy dávných králů','Vodopády','Elfské lodě'],0]]}),
+    C({book:2,n:10,title:'Rozpad Společenstva',en:'The Breaking of the Fellowship',fear:3,
+      sum:'U vodopádů podlehne Boromir touze po prstenu a pokusí se ho Frodovi vzít. Frodo pochopí, že do Mordoru musí jít sám, aby neohrozil přátele — a potají nasedne na loďku. Věrný Sam ho ale nenechá odejít samotného a vydá se s ním. Společenstvo se tím rozpadá. (Tady první díl končí.)',
+      focus:['Boromir podlehne prstenu (varovný, smutný okamžik)','Frodo se rozhodne jít sám — statečnost i obětavost','Věrný Sam jde s ním; parta se dělí'],
+      q:['Proč chtěl Frodo odejít potají a sám?','Udělali byste to jako Sam?'],
+      words:[['obětavost','když pro druhého uděláš i těžkou věc']],
+      fearnote:'Napínavé a smutné (Boromir, rozdělení party), ale bez hrůzy. Krásné téma věrnosti.',
+      teaser:'Party se rozdělí! Frodo se rozhodne jít dál sám… ale hádej, kdo ho nenechá odejít samotného.',
+      quiz:[['Kdo jde s Frodem, i když chtěl jít sám?',['Sam','Boromir','Legolas'],0]]})
+  ];
+  CH.forEach(function(c){ c.gi = c.book===1 ? c.n : 12+c.n; });
+  var GIMETA={}; CH.forEach(function(c){ GIMETA[c.gi]={lab:(c.book===1?'I':'II')+'·'+c.n, title:c.title}; });
+
+  // ===== Dětské shrnutí kapitoly „Co se v kapitole stalo" (po přečtení) =====
+  var KIDSUM={
+    1:['Ve vesnici Hobitín se chystala ta největší oslava, jakou kdo pamatoval. Starý hobit Bilbo slavil rovnou 111. narozeniny a pozval skoro celý Kraj! Byly tam plné stoly jídla a pití, hrála hudba a čaroděj Gandalf připravil nádherný ohňostroj — dokonce i draka z jisker, který s rachotem přeletěl nad hlavami hostů. Všichni se výborně bavili a smáli.',
+      'Uprostřed slavnostního proslovu ale Bilbo udělal něco nečekaného: navlékl si svůj starý kouzelný prsten — a rázem všem zmizel před očima! Byl to jeho žertík na rozloučenou. Potají se totiž rozhodl odejít z Kraje za dobrodružstvím a svůj dům i s prstenem nechal svému mladému příbuznému Frodovi. Nikdo tehdy netušil, že ten obyčejně vypadající prsten je ve skutečnosti moc a moc nebezpečný.'],
+    2:['Uběhlo mnoho let a Frodo si spokojeně žil v Bilbově domku. Jednoho dne se ale vrátil čaroděj Gandalf a tvářil se vážně. Prozradil Frodovi tajemství jeho prstenu: není to obyčejný šperk, ale Jeden prsten — nejmocnější a nejnebezpečnější věc na světě. Kdysi ho vyrobil zlý pán jménem Sauron, aby s ním ovládl celou Středozem.',
+      'Gandalf vysvětlil, že Sauron ten prsten pořád hledá a nikdy ho nesmí dostat. Frodo se proto musel co nejdřív vydat pryč z domova a odnést prsten do bezpečí. Zrovna když si to potichu povídali, přistihli za oknem Frodova zahradníka Sama, jak poslouchá. Sam se leknutím rozbrečel — ale místo trestu dostal důležitý úkol: jít s Frodem a chránit ho. A tak měl Frodo hned svého prvního věrného společníka.'],
+    3:['Frodo, Sam a jejich kamarád — mladý a zvědavý Pipin — vyrazili pěšky na cestu z Hobitína. Šli přes louky a lesíky a užívali si první den dobrodružství. Jenže hned první večer se přihodilo něco děsivého: po cestě přijel Černý jezdec. Byla to zahalená postava na černém koni, která se skláněla k zemi a čenichala, jako by po něčem pátrala. Hobiti se rychle schovali do křoví a ani nedýchali, dokud jezdec neodjel.',
+      'Bylo jasné, že ta strašidelná postava hledá právě jejich prsten. Naštěstí měli hobiti štěstí: potkali skupinu elfů, kteří putovali nočním krajem a překrásně zpívali. Elfové je vzali pod svou ochranu, pohostili je a nechali je přespat pod hvězdami. U elfů se hobiti cítili konečně bezpečně a nabrali odvahu jít dál.'],
+    4:['Protože se po cestách potulovali Černí jezdci, rozhodli se hobiti jít radši napříč poli a lesíky, aby je nikdo neviděl. Cesta přes mokřady a bažinky nebyla lehká, ale hobiti jsou vytrvalí a nevzdávají se. Potkali hodného sedláka, a ten je pohostil — a to hobiti milují ze všeho nejvíc: dostali plný talíř a k tomu chutné houby.',
+      'Sedlák byl navíc statečný a pomohl jim dostat se dál. Hobiti se totiž potřebovali přeplavit přes velikou řeku Brandyvínu. Na břehu na ně čekal převozník s pramicí a převezl je na druhou stranu. Cestou zahlédli v dálce zase jednoho Černého jezdce, a tak byli rádi, že už jsou za řekou a zase o kus blíž ke svému cíli.'],
+    5:['Za řekou měli hobiti připravený útulný domek, kde si chtěli odpočinout. Frodo si celou dobu myslel, že o jeho tajné cestě a o prstenu nikdo neví. Jenže když na to přišla řeč, jeho kamarádi Smíšek, Pipin a Sam se jen chytře usmívali — protože oni to věděli už dávno! Tajně si všímali, co se děje, a připravili si takové malé „spiknutí".',
+      'Řekli Frodovi rovnou: víme o prstenu i o tom, že chceš potají odejít — a my tě v tom nenecháme samotného. Půjdeme s tebou, ať se děje co se děje. Frodo byl dojatý. Měl kolem sebe opravdové kamarády, kteří se nebáli jít s ním i do nebezpečí. Tohle je jedna z nejhezčích věcí celého příběhu: pravé přátelství.'],
+    6:['Aby unikli jezdcům, rozhodli se hobiti projít Starým hvozdem — tajemným lesem, o kterém se vyprávěly divné věci. A byla to pravda: ten les byl skoro živý! Stromy jako by je schválně mátly a zaváděly pořád stejným směrem, ať se snažili jít kamkoli. Hobiti byli unavení a čím dál nervóznější.',
+      'Nakonec došli k obrovské staré vrbě u řeky. Ta vrba ale nebyla obyčejná — byla zlá a lstivá. Uspala Smíška a Pipina a polkla je do skuliny ve svém kmeni! Frodo se Samem si nevěděli rady. Naštěstí se zničehonic objevil veselý pán lesa Tom Bombadil, který si vesele prozpěvoval. Řekl vrbě pár slov, ta kamarády pustila, a Tom hobity odvedl k sobě domů do bezpečí.'],
+    7:['V Tomově domku bylo veselo a útulno. Přivítala je Tomova krásná žena Zlatěnka, paní řeky a lesa, a všude byly svíčky, dobré jídlo a písničky. Hobiti si tu poprvé po dlouhé době opravdu odpočinuli, najedli se do sytosti a v teple beze strachu usnuli.',
+      'Stalo se tu ale i něco moc zvláštního. Frodo Tomovi ukázal svůj kouzelný prsten a Tom si ho pro zábavu navlékl na prst — jenže vůbec nezmizel! Na kohokoli jiného ten prsten působí, ale na Toma prostě neplatí, jako by byl silnější než jeho kouzlo. Nikdo pořádně neví, kdo Tom vlastně je — je to jedna z velkých záhad příběhu. Hobiti u něj nabrali sílu i odvahu do další cesty.'],
+    8:['Když hobiti odešli od Toma, museli přejít Mohylové vrchy — kopce plné dávných hrobů. Cestou je zaskočila hustá mlha a hobiti se v ní ztratili. A pak přišlo to nejhorší: chytil je mohylový duch, zlý nemrtvý, a zavlekl je do temné hrobky pod kopcem. Bylo to jedno z nejstrašidelnějších míst celé cesty.',
+      'Frodo se probudil ve tmě a ucítil ledově studenou ruku. Mohl si zachránit vlastní kůži a utéct — ale to by musel opustit kamarády, a to on nikdy neudělal. Statečně zůstal a vzpomněl si na písničku, kterou je naučil Tom Bombadil. Zazpíval ji, a Tom skutečně přispěchal na pomoc! Hrobku otevřel, ducha zahnal a všechny vysvobodil. Na cestu si hobiti odnesli staré kouzelné dýky, které jim ještě jednou moc pomůžou.'],
+    9:['Hobiti konečně dorazili do většího místa — do lidského městečka Hůrka. Tam zašli do hostince, který se jmenoval U Skákavého poníka. Bylo tam plno lidí, hrála hudba, teplo a rušno — pro hobity zvyklé na klidný Kraj to bylo dobrodružství samo o sobě.',
+      'Jenže Frodo měl smůlu. Při jedné písničce spadl ze stolu, a jak mával rukama, prsten se mu náhodou navlékl na prst — a Frodo před celým hostincem zmizel! To vzbudilo pořádný rozruch, což vůbec nechtěl. Z rohu místnosti ho přitom celou dobu tiše pozoroval jeden záhadný otrhaný pocestný v kápi. Nikdo nevěděl, kdo to je; říkali mu jen Chodec. Byl to přítel, nebo hrozba? To se hobiti měli teprve dozvědět.'],
+    10:['Záhadný Chodec si hobity zavolal stranou a všechno jim vysvětlil. Prozradil, že se jmenuje Aragorn, je to přítel čaroděje Gandalfa a chodí divočinou a hlídá cesty před nebezpečím. Nabídl hobitům, že je bezpečně dovede až do Roklinky, do skrytého údolí elfů. Hobiti nejdřív váhali, jestli mu mají věřit — vypadal totiž dost divoce a drsně.',
+      'Pak ale dorazil dopis od Gandalfa, který Chodcovi předal hostinský Máselník. V dopise stálo, že Chodci se dá věřit — a tak se hobiti rozhodli jít s ním. A udělali dobře: v noci někdo přepadl a rozsekal jejich prázdné postele v hostinci! Kdyby v nich hobiti spali, dopadlo by to moc zle. Chodec je totiž nechal přespat jinde a zachránil jim tím život.'],
+    11:['Chodec vedl hobity divočinou k Roklince. Cestou vystoupali na starý osamělý kopec Větrov, kde kdysi dávno stávala strážní věž. V noci se tam ale stalo něco moc napínavého — z temnoty se vynořili Černí jezdci a zaútočili. Jejich vůdce se vrhl přímo na Froda a bodl ho prokletým nožem do ramene.',
+      'Aragorn se ale nezalekl. Popadl hořící větve a ohněm jezdce odehnal — těch se totiž bojí. Jezdci s vytím ustoupili zpátky do tmy. Frodo však zůstal vážně zraněný, a ta rána nebyla obyčejná: byla kouzelná a nebezpečná a Frodovi bylo čím dál hůř. Bylo jasné, že potřebuje rychle pomoc, jinak by to s ním dopadlo špatně. A tak se všichni co nejrychleji vydali dál.'],
+    12:['Frodo byl kvůli ráně slabší a slabší a cesta se změnila v závod s časem. Vtom se objevil zářivý elf jménem Glorfindel na krásném bílém koni. Vysadil zraněného Froda do sedla a jeho rychlý kůň se rozletěl jako vítr k řece u Roklinky, kde už bylo bezpečno.',
+      'Černí jezdci se ale hnali za nimi a dostihli Froda přímo u brodu — mělkého místa, kudy se dá přejít řeka. A tady se stal zázrak: řeka se najednou vzedmula v obrovské vlně, jako by ožila, a všechny jezdce s rachotem smetla a odplavila pryč! Frodo, i když byl v bezvědomí, se dostal na druhý břeh — do bezpečí Roklinky. Tady končí první část dlouhé cesty.'],
+    13:['Frodo se probudil v měkké posteli a nejdřív vůbec nevěděl, kde je. Byl v Roklince — nádherném a bezpečném údolí, kde žijí elfové. Jejich moudrý a laskavý pán Elrond ho svou mocí vyléčil z té nebezpečné rány. Frodo byl zase zdravý a plný sil.',
+      'A čekalo ho velké překvapení a radost: v Roklince potkal zase čaroděje Gandalfa a hlavně svého starého strýčka Bilba, který tu teď spokojeně žil. Bylo to šťastné shledání se všemi, koho měl rád. Roklinka byla plná písní, příběhů a klidu, a tak si tu všichni po té dlouhé a nebezpečné cestě konečně na chvíli oddechli.'],
+    14:['V Roklince se sešla velká a důležitá porada, které se říká Elrondova rada. Přišli na ni moudří lidé, elfové, trpaslíci i další a společně řešili jednu velkou otázku: co udělat s tím nebezpečným prstenem, aby ho nikdy nedostal zlý Sauron. Vyšlo najevo, že prsten nejde jen tak schovat ani obyčejně zničit.',
+      'Existuje totiž jen jediná cesta: donést prsten až daleko do Mordoru, do Sauronovy země, a hodit ho do ohně přesně tam, kde byl kdysi vyroben. Je to strašně nebezpečný úkol. A právě tehdy se malý statečný Frodo přihlásil, že ten prsten ponese. Aby na to nebyl sám, vzniklo Společenstvo Prstenu — devět společníků, kteří slíbili, že půjdou s ním a budou ho chránit.'],
+    15:['Společenstvo devíti se vydalo z bezpečné Roklinky do neznáma, směrem na jih. Byla to pestrá parta: čtyři hobiti, čaroděj Gandalf, hrdý bojovník Boromir, elfí lučištník Legolas, statečný trpaslík Gimli a jejich vůdce Aragorn. Cestou se navzájem poznávali a učili se táhnout za jeden provaz.',
+      'Dobrodružství ale nebylo bez nebezpečí. Nad krajinou najednou začali kroužit podezřelí černí ptáci, kteří létali sem a tam, jako by někoho hledali a donášeli o něm zprávy. Společenstvo se před nimi muselo krčit mezi kameny a keři, aby je ptáci neprozradili. Bylo jasné, že je někdo sleduje — a tak si museli dávat pozor na každém kroku.'],
+    16:['Společenstvo chtělo přejít přes vysokou horu Caradhras. Hora se ale zdála skoro živá a zlá — seslala na ně tak strašnou sněhovou bouři, že se v závějích skoro ztratili a museli to vzdát. Nezbývalo než zvolit jinou, temnější cestu: projít pod horami skrz obrovské podzemní doly, kterým se říká Doly morijské.',
+      'U brány do dolů se ale stalo něco děsivého. Z černé vody u vchodu se vymrštilo obludné chapadlo a chňaplo po Frodovi! Ostatní ho na poslední chvíli vytrhli a všichni honem vklouzli dovnitř. Za jejich zády se pak brána s rachotem zabouchla a zavalila kamením. Cesty zpátky už nebylo — čekala je jen dlouhá a temná pouť podzemím.'],
+    17:['Uvnitř Morie byla tma, ticho a všude jen kámen. Společenstvo tudy putovalo mnoho dní a našlo hrob dávného trpaslíka Balina. Vtom se ale ozvaly bubny a ze tmy se přihnali skřeti a obrovský jeskynní troll. Strhla se lítá bitva a společníci se jen tak tak probojovali dál k východu.',
+      'A pak přišel ten největší děs: z hlubin se vynořil Balrog — obrovský netvor z ohně a stínu. Všichni prchali přes úzký kamenný most nad bezednou propastí. Tam se Gandalf otočil, postavil se netvorovi úplně sám a mocně zvolal: „Neprojdeš!" Zlomil most, aby ostatní zachránil — ale Balrog ho v poslední chvíli strhl s sebou dolů do tmy. Přátelé v slzách utekli ven. Byla to nejsmutnější chvíle celé cesty.'],
+    18:['Po ztrátě Gandalfa byli všichni zdrcení a smutní. Museli ale jít dál, a tak došli k okraji kouzelného lesa Lothlórien. Byl to les jako z pohádky — se stříbrnými stromy a zlatými listy, kde i vzduch voněl kouzlem a čas jako by plynul pomaleji.',
+      'Elfové, kteří v lese žijí, je nejdřív opatrně a obezřetně prohlédli, protože do jejich lesa nesmí jen tak někdo. Když ale poznali, že jsou to přátelé, dovedli je do svého překrásného domova. Elfové v Lórienu totiž bydlí vysoko ve větvích stromů, na plošinkách nad zemí. Uprostřed všeho smutku tu společníci konečně našli klid, bezpečí a útěchu.'],
+    19:['V lese Lothlórien vládla paní Galadriel — krásná, moudrá a mocná elfka, jaké není rovno. Přivítala unavené společníky a starala se o ně. Jednoho večera zavedla Froda a Sama k tajemné mělké nádrži plné vody, které se říká Zrcadlo.',
+      'Když se do vody zadívali, ukázaly se jim různé obrazy — něco, co už bylo, a možná i něco, co teprve přijde. Bylo to trochu tajemné a strašidelné. Frodo pak Galadriel nabídl, že si prsten může vzít, kdyby chtěla. Galadriel by s ním mohla mít obrovskou moc — ale statečně řekla ne a pokušení odolala. Ukázala tím, že nejsilnější je ten, kdo dokáže odmítnout i to, po čem sám touží.'],
+    20:['Nastal čas rozloučit se s kouzelným lesem a jít dál. Než ale společníci odešli, dostali od paní Galadriel a elfů spoustu užitečných darů na cestu. Každý dostal šedý plášť, ve kterém je skoro není vidět, a výživný elfský chléb lembas, po kterém člověk dlouho nevyhládne.',
+      'A pak pro každého ještě něco zvláštního: Sam dostal semínka do zahrádky, jiní pěkné zbraně a Frodo malou lahvičku, ve které svítí světlo hvězdy — světýlko do těch nejtemnějších chvil. Elfové jim také věnovali lehké loďky. Společenstvo do nich nastoupilo a vydalo se po Velké řece dál na jih, vstříc dalšímu dobrodružství.'],
+    21:['Na elfských loďkách teď společníci pluli po Velké řece Anduině. Řeka je den za dnem nesla krajinou a oni si mohli aspoň trochu odpočinout od chůze. Museli být ale ve střehu — cítili, že je někdo sleduje. A skutečně: v noci za nimi po vodě potají plaval podivný vyzáblý tvor jménem Glum, který pořád toužil po prstenu a nespouštěl je z očí.',
+      'Cestou minuli něco úžasného: Argonath — dvě obrovské kamenné sochy dávných králů, které stály jako obři po obou stranách řeky a hlídaly ji. Loďky mezi nimi vypadaly maličké jako mravenci. Nakonec společníci připluli k velkým vodopádům a přistáli u břehu, aby se utábořili a rozhodli se, kudy dál.'],
+    22:['U vodopádů se stalo něco smutného. Bojovník Boromir tolik zatoužil po síle prstenu, že se ho pokusil Frodovi vzít. Ten prsten totiž dokáže zlákat i statečné hrdiny. Frodo se lekl a utekl. V tu chvíli pochopil něco moc důležitého: prsten je tak nebezpečný, že kdyby zůstal s ostatními, mohl by nakonec ublížit i vlastním kamarádům.',
+      'A tak se Frodo statečně rozhodl, že do Mordoru půjde radši sám, aby nikoho neohrozil. Potichu nasedl do loďky a chtěl odplout. Jenže věrný Sam ho prokoukl! Rozběhl se za ním rovnou do vody, i když neuměl pořádně plavat, a nenechal Froda odejít samotného. „Kam ty, tam já," řekl mu. Tady se Společenstvo Prstenu rozdělilo — a první velký díl příběhu končí. Frodo aspoň nezůstal sám.']
+  };
+
+  // ===== stav =====
+  var KEY='stredozem_v1';
+  var state={mode:'tata', read:{}};
+  try{var s=JSON.parse(localStorage.getItem(KEY)); if(s){state.mode=s.mode||'tata'; state.read=s.read||{};}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  function reachedGi(){var m=0; for(var k in state.read){if(state.read[k]&&+k>m)m=+k;} return m;}
+  function readCount(){var n=0; for(var k in state.read){if(state.read[k])n++;} return n;}
+
+  var $=function(s,r){return (r||document).querySelector(s);};
+  function el(tag,cls,html){var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e;}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  // ===== render: progress + mapa markery =====
+  function updateProgress(){
+    var rc=readCount();
+    $('#chDone').textContent=rc;
+    $('#roadFill').style.width=(rc/22*100)+'%';
+    var rg=reachedGi(), mile=0, current=null;
+    PLACES.forEach(function(p){ if(p.gi<=rg){ if(p.mile>=mile)mile=p.mile; if(!current||p.seq>current.seq)current=p; }});
+    $('#miles').textContent=mile;
+    return {rg:rg,current:current};
+  }
+
+  function buildRoute(){
+    var svg=$('#routeSvg');
+    // Táta vidí celou cestu; Kluci jen po místa, kam už dočetli (žádné spoilery dopředu)
+    var pts = state.mode==='tata' ? PLACES : PLACES.filter(function(p){return p.gi<=reachedGi();});
+    if(pts.length<2){ svg.innerHTML=''; return; }
+    var d=pts.map(function(p,i){return (i?'L':'M')+p.x+','+p.y;}).join(' ');
+    svg.innerHTML='<path d="'+d+'" fill="none" style="stroke:var(--ember)" stroke-width="2.4" '+
+      'stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.1 3.2" '+
+      'vector-effect="non-scaling-stroke" opacity="0.9"/>';
+  }
+
+  function currentPlace(){ var rg=reachedGi(),cur=null; PLACES.forEach(function(p){ if(p.gi<=rg&&(!cur||p.seq>cur.seq))cur=p; }); return cur; }
+  function renderHere(){
+    // Na mapě je jen jedna drobná značka „Tady jsme"; zbytek zastávek je na liště pod mapou.
+    var box=$('#hereLayer'); box.innerHTML='';
+    var cur=currentPlace(); if(!cur) return;
+    var m=el('div','hereM'); m.style.left=cur.x+'%'; m.style.top=cur.y+'%';
+    m.innerHTML='<span class="hm-in" title="Tady jsme: '+esc(cur.name)+'"></span>';
+    $('.hm-in',m).addEventListener('click',function(ev){ev.stopPropagation(); showPlace(cur,true);});
+    box.appendChild(m); applyHereScale();
+  }
+  // Značka je uvnitř zoomované stage — counter-scale ji drží pořád stejně malou i po přiblížení.
+  function applyHereScale(){ var inn=$('#hereLayer .hm-in'); if(inn) inn.style.transform='scale('+(1/scale)+')'; }
+  function renderStrip(){
+    var rg=reachedGi(), cur=currentPlace();
+    var strip=$('#mapstrip'); if(!strip) return; strip.innerHTML='';
+    var list = state.mode==='tata' ? PLACES : PLACES.filter(function(p){return p.gi<=rg;});
+    if(!list.length){ strip.innerHTML='<div class="strip-empty">Zatím jsme nevyrazili — po přečtení kapitoly se tu objeví zastávky.</div>'; return; }
+    list.forEach(function(p){
+      var reached=p.gi<=rg, isCur=!!(cur&&cur.id===p.id);
+      var c=el('button','mchip'+(reached?'':' future')+(isCur?' on':''));
+      c.innerHTML='<span class="mchip-n">'+p.seq+'</span>'+icon(p.ic,'mchip-ic')+'<small>'+esc(p.name)+'</small>'+(isCur?'<span class="mchip-here">Tady jsme</span>':'');
+      c.addEventListener('click',function(){ goToPlace(p); showPlace(p,reached); Array.prototype.forEach.call(strip.children,function(x){x.classList.toggle('sel',x===c);}); });
+      strip.appendChild(c);
+    });
+    var on=strip.querySelector('.mchip.on'); if(on&&on.scrollIntoView) on.scrollIntoView({inline:'center',block:'nearest'});
+  }
+
+  function showPlace(p, reached){
+    var pan=$('#placePanel'); pan.className='place-panel';
+    var txt = state.mode==='kluci' ? p.kid : (reached? p.dad : p.dad);
+    pan.innerHTML='<div class="place-head"><span class="place-ic">'+icon(p.ic)+'</span>'+
+      '<div><h3>'+esc(p.name)+'</h3><span class="en">'+esc(p.en)+' · zastávka '+p.seq+'</span></div></div>'+
+      '<p>'+esc(txt)+'</p>'+
+      (state.mode==='kluci'&&!reached?'<p class="locknote">'+icon('lock')+'Sem ještě nedošli — přečti kapitolu a odemkne se víc.</p>':'');
+  }
+
+  // ===== render: kapitoly =====
+  function flames(n){var h='<span class="lab">Strašidelnost</span>'; for(var i=0;i<5;i++){h+=icon('flame','flame'+(i<n?'':' off'));} return h;}
+
+  function renderChapters(){
+    var box=$('#chapters'); box.innerHTML='';
+    var rg=reachedGi();
+    [1,2].forEach(function(bk){
+      box.appendChild(el('div','booktitle',(bk===1?'Kniha první':'Kniha druhá')));
+      CH.filter(function(c){return c.book===bk;}).forEach(function(c){
+        var done=!!state.read[c.gi];
+        var peek = state.mode==='tata' || c.gi<=rg+1;   // kluci: vidí aktuální + příští
+        var full = state.mode==='tata' || c.gi<=rg;     // plný dětský obsah po přečtení
+        var card=el('div','ch'+(peek?'':' locked'));
+        card.setAttribute('data-gi',c.gi);
+        var head=el('div','ch-head');
+        head.innerHTML='<span class="ch-num">'+(bk===1?'I':'II')+'·'+c.n+'</span>'+
+          '<div class="ch-t"><h3>'+esc(c.title)+'</h3><span class="en">'+esc(c.en)+'</span>'+
+          '<div class="fear">'+flames(c.fear)+'</div></div>';
+        var right=el('div',null,'');
+        var rd=el('button','ch-read'+(done?' done':''), (done?icon('check')+'Přečteno':'Přečteno?'));
+        rd.addEventListener('click',function(ev){ev.stopPropagation(); state.read[c.gi]=!state.read[c.gi]; save(); rerender();});
+        var car=el('span','caret','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>');
+        right.appendChild(rd);
+        head.appendChild(right); head.appendChild(car);
+        card.appendChild(head);
+        var body=el('div','ch-body');
+        body.innerHTML = chapterBody(c, full, peek);
+        card.appendChild(body);
+        if(peek){
+          head.addEventListener('click',function(){ card.classList.toggle('open'); });
+        }
+        box.appendChild(card);
+      });
+    });
+  }
+
+  function chapterBody(c, full, peek){
+    if(state.mode==='tata'){
+      var h=illusFigure(c.gi)+'<div class="block"><h4>'+icon('star')+'Shrnutí</h4><p>'+esc(c.sum)+'</p></div>';
+      h+='<div class="block"><h4>'+icon('star')+'Na co se zaměřit</h4><ul class="bullets">'+c.focus.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
+      if(c.q)h+='<div class="block"><h4>'+icon('star')+'Otázky pro kluky</h4><ul class="bullets q-list">'+c.q.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
+      if(c.words)h+='<div class="block"><h4>'+icon('star')+'Slovíčka</h4><div class="words">'+c.words.map(function(w){return '<span class="word"><b>'+esc(w[0])+'</b> — <span>'+esc(w[1])+'</span></span>';}).join('')+'</div></div>';
+      h+='<div class="block"><div class="fearnote">'+ (c.fearnote?esc(c.fearnote):'Strašidelnost '+c.fear+'/5 — '+(c.fear<=1?'v pohodě.':c.fear<=3?'napínavé, nic hrozného.':'silnější scéna, připrav se.')) +'</div></div>';
+      return h;
+    }
+    // KLUCI
+    if(!peek){ return '<p class="locknote">'+icon('lock')+'Tuhle kapitolu jsme ještě nečetli. Nejdřív si ji přečteme s tátou!</p>'; }
+    if(!full){
+      return '<div class="kidbox"><p class="teaser">'+esc(c.teaser)+'</p></div>'+
+        '<p class="locknote">'+icon('lock')+'Až kapitolu přečteme, klikni na <b>Přečteno</b> a odemkne se shrnutí, kvíz i nové postavy.</p>';
+    }
+    var k=illusFigure(c.gi);
+    if(KIDSUM[c.gi]) k+='<div class="block"><h4>'+icon('scroll')+'Co se v kapitole stalo</h4>'+KIDSUM[c.gi].map(function(pp){return '<p class="kidrecap">'+esc(pp)+'</p>';}).join('')+'</div>';
+    if(c.quiz){ k+=quizHtml(c); }
+    else{ k+='<p class="locknote">'+icon('check')+'Přečteno! Skvělá práce, poutníku.</p>'; }
+    return k;
+  }
+
+  function quizHtml(c){
+    var h='<div class="quiz"><h4 class="block" style="margin-top:14px">'+icon('star')+' Kvíz — pamatuješ si?</h4>';
+    c.quiz.forEach(function(q,qi){
+      h+='<div class="qq" data-q="'+qi+'"><div class="qtext">'+esc(q[0])+'</div><div class="opts">';
+      q[1].forEach(function(opt,oi){ h+='<button class="opt" data-c="'+c.gi+'" data-qi="'+qi+'" data-oi="'+oi+'" data-ok="'+(oi===q[2]?1:0)+'">'+esc(opt)+'</button>'; });
+      h+='</div></div>';
+    });
+    return h+'</div>';
+  }
+
+  // delegace kliků v kvízu
+  document.addEventListener('click',function(ev){
+    var o=ev.target.closest('.opt'); if(!o||o.disabled)return;
+    var wrap=o.closest('.qq'); var btns=wrap.querySelectorAll('.opt');
+    btns.forEach(function(b){b.disabled=true; if(b.getAttribute('data-ok')==='1')b.classList.add('correct');});
+    if(o.getAttribute('data-ok')!=='1')o.classList.add('wrong');
+  });
+
+  // ===== render: postavy =====
+  function renderChars(){
+    var rg=reachedGi();
+    $('#charHint').textContent = state.mode==='kluci'
+      ? 'Postavy se odemykají, jakmile je v příběhu potkáte. Klikni a dozvíš se víc!'
+      : 'Přehled postav (v režimu Táta vidíš všechny). Klikni pro detail; u jmen je i výslovnost pro kluky.';
+    var grid=$('#charGrid'); grid.innerHTML='';
+    CHARS.forEach(function(ch){
+      var unlocked = ch.gi<=rg || state.mode==='tata';
+      var card=el('div','char r-'+ch.race+(unlocked?'':' locked'));
+      var v=charVisual(ch,unlocked);
+      card.innerHTML='<div class="medallion'+(v.pm?' pm':'')+'">'+v.h+'</div>'+
+        '<h4>'+(unlocked?esc(ch.name):'? ? ?')+'</h4><div class="race">'+esc(ch.rlab)+'</div>';
+      if(unlocked){ card.addEventListener('click',function(){ toggleChar(ch, card); }); }
+      grid.appendChild(card);
+    });
+  }
+  function arcHtml(ch){
+    var a=ARC[ch.id]; if(!a) return '';
+    var maxG = state.mode==='tata' ? 99 : reachedGi();
+    var beats=a.beats.filter(function(b){return b[0]<=maxG;});
+    var h='';
+    if(beats.length){
+      h+='<div class="arc"><h4>'+icon('scroll')+'Příběh zatím</h4><ul class="timeline arc-tl">'+
+        beats.map(function(b){var m=GIMETA[b[0]]||{lab:'',title:''}; return '<li><span class="tage">'+esc(m.lab+' · '+m.title)+'</span>'+esc(b[1])+'</li>';}).join('')+'</ul></div>';
+    } else {
+      h+='<p class="locknote">'+icon('lock')+'Tuhle postavu ještě moc neznáme — čtěte dál a její příběh se tu bude připisovat.</p>';
+    }
+    if(a.ahead) h+='<div class="ahead">'+icon('star')+'<span><b>K popovídání s klukama:</b> '+esc(a.ahead)+'</span></div>';
+    return h;
+  }
+  var openCharId=null;
+  function toggleChar(ch, card){
+    var ex=$('#charDetail'); if(ex){ex.remove();}
+    if(openCharId===ch.id){ openCharId=null; return; }
+    openCharId=ch.id;
+    var d=el('div','char-detail'); d.id='charDetail';
+    var txt = state.mode==='kluci'? ch.kid : ch.dad;
+    var pv=portrait(ch.id);
+    d.innerHTML='<div class="cd r-'+ch.race+'"><div class="medallion'+(pv?' pm':'')+'">'+(pv||icon(ch.ic))+'</div>'+
+      '<div><h3>'+esc(ch.name)+'</h3><div class="en">'+esc(ch.en)+' · '+esc(ch.rlab)+'</div>'+
+      (ch.say&&ch.say!=='—'?'<div class="say">Vyslov: <b>'+esc(ch.say)+'</b></div>':'')+
+      '<p>'+esc(txt)+'</p>'+arcHtml(ch)+'</div>'+
+      '<button class="close" aria-label="Zavřít">✕</button></div>';
+    card.after(d);
+    $('.close',d).addEventListener('click',function(e){e.stopPropagation(); d.remove(); openCharId=null;});
+    d.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  // ===== mapa: pan & zoom =====
+  var scale=1,minS=1,maxS=4,tx=0,ty=0;
+  var stage=$('#mapStage'), vp=$('#mapVp');
+  function clamp(){
+    // Šířka stage = šířka viewportu (img má width:100%), výška podle poměru mapy.
+    var vw=vp.clientWidth, vh=vp.clientHeight, stageH=stage.offsetHeight;
+    var minX=Math.min(0, vw - vw*scale), minY=Math.min(0, vh - stageH*scale);
+    if(tx>0) tx=0; else if(tx<minX) tx=minX;
+    if(ty>0) ty=0; else if(ty<minY) ty=minY;
+  }
+  function applyT(){clamp(); stage.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')'; applyHereScale();}
+  function setStageWidth(){
+    stage.style.width=vp.clientWidth+'px';
+    var h=stage.offsetHeight;
+    if(h){ vp.style.height=Math.min(h, Math.round(window.innerHeight*0.72), 580)+'px'; }
+  }
+  function zoomAt(cx,cy,ns){
+    ns=Math.max(minS,Math.min(maxS,ns));
+    var rx=(cx-tx)/scale, ry=(cy-ty)/scale;
+    tx=cx-rx*ns; ty=cy-ry*ns; scale=ns; applyT();
+  }
+  function frameJourney(){
+    var W0=vp.clientWidth, H0=stage.offsetHeight, vpW=vp.clientWidth, vpH=vp.clientHeight;
+    if(!H0){return;}
+    var fx0=0.29,fx1=0.60,fy0=0.20,fy1=0.66;      // výsek s cestou
+    var regW=(fx1-fx0)*W0, regH=(fy1-fy0)*H0;
+    var s=Math.min(vpW/regW, vpH/regH)*0.96;
+    s=Math.max(minS,Math.min(maxS,s));
+    scale=s;
+    tx=vpW/2 - ((fx0+fx1)/2)*W0*s;
+    ty=vpH/2 - ((fy0+fy1)/2)*H0*s;
+    applyT();
+  }
+  function goToPlace(p){
+    var natW=vp.clientWidth, natH=stage.offsetHeight; if(!natH)return;
+    scale=Math.min(maxS,3.4);
+    tx=vp.clientWidth/2 - (p.x/100)*natW*scale;
+    ty=vp.clientHeight/2 - (p.y/100)*natH*scale;
+    stage.classList.add('smooth'); applyT();
+  }
+  $('#zin').addEventListener('click',function(){zoomAt(vp.clientWidth/2,vp.clientHeight/2,scale*1.4);});
+  $('#zout').addEventListener('click',function(){zoomAt(vp.clientWidth/2,vp.clientHeight/2,scale/1.4);});
+  $('#zreset').addEventListener('click',function(){frameJourney();});
+  vp.addEventListener('wheel',function(e){e.preventDefault(); stage.classList.remove('smooth'); var r=vp.getBoundingClientRect(); zoomAt(e.clientX-r.left,e.clientY-r.top, scale*(e.deltaY<0?1.15:0.87));},{passive:false});
+  // drag
+  var drag=false,lx=0,ly=0,moved=0,pid=null;
+  vp.addEventListener('pointerdown',function(e){drag=true;moved=0;lx=e.clientX;ly=e.clientY;pid=e.pointerId;vp.setPointerCapture(pid);vp.classList.add('grabbing'); stage.classList.remove('smooth');});
+  vp.addEventListener('pointermove',function(e){if(!drag)return; var dx=e.clientX-lx,dy=e.clientY-ly; lx=e.clientX;ly=e.clientY; moved+=Math.abs(dx)+Math.abs(dy); tx+=dx;ty+=dy; applyT();});
+  function endDrag(){drag=false;vp.classList.remove('grabbing'); if(pid!=null){try{vp.releasePointerCapture(pid);}catch(e){}pid=null;}}
+  vp.addEventListener('pointerup',endDrag); vp.addEventListener('pointercancel',endDrag);
+  window.addEventListener('resize',function(){setStageWidth(); frameJourney();});
+
+  // ===== přepínače =====
+  $('#modeswitch').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b)return;
+    state.mode=b.getAttribute('data-mode'); save(); syncMode(); rerender();});
+  function syncMode(){
+    Array.prototype.forEach.call($('#modeswitch').children,function(b){b.classList.toggle('on',b.getAttribute('data-mode')===state.mode);});
+  }
+  $('#tabs').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b)return;
+    var v=b.getAttribute('data-view');
+    Array.prototype.forEach.call($('#tabs').children,function(x){x.classList.toggle('on',x===b);});
+    ['mapa','kapitoly','postavy','svet'].forEach(function(id){$('#view-'+id).classList.toggle('on',id===v);});
+  });
+  $('#subseg').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b)return;
+    var s=b.getAttribute('data-sub');
+    Array.prototype.forEach.call($('#subseg').children,function(x){x.classList.toggle('on',x===b);});
+    $('#sub-galerie').hidden=(s!=='galerie'); $('#sub-vztahy').hidden=(s!=='vztahy');
+  });
+
+  // ===== render: Svět =====
+  function renderWorld(){
+    var h='<div class="lore-grid">';
+    LORE.forEach(function(l){
+      h+='<div class="lore"><div class="lore-head"><span class="lore-ic">'+icon(l.ic)+'</span><h3>'+esc(l.title)+'</h3></div><p>'+esc(l.text)+'</p></div>';
+    });
+    h+='<div class="lore wide"><div class="lore-head"><span class="lore-ic">'+icon('elf')+'</span><h3>Rasy Středozemě</h3></div><div class="race-list">'+
+      RACES.map(function(r){return '<div class="race-row r-'+r[0]+'"><div class="medallion">'+icon(r[0])+'</div><div><b>'+esc(r[1])+'</b> — <span>'+esc(r[2])+'</span></div></div>';}).join('')+'</div></div>';
+    h+='<div class="lore wide"><div class="lore-head"><span class="lore-ic">'+icon('scroll')+'</span><h3>Krátká historie Prstenu</h3></div><ul class="timeline">'+
+      TL.map(function(t){return '<li><span class="tage">'+esc(t[0])+'</span><span class="tt">'+esc(t[1])+'</span> — '+esc(t[2])+'</li>';}).join('')+'</ul></div>';
+    h+='</div>';
+    $('#world').innerHTML=h;
+  }
+
+  // ===== render: Vztahy =====
+  function relNode(id, role){
+    var isRing=id==='ring';
+    var ch=CHARMAP[id];
+    var unlocked = isRing || state.mode==='tata' || (ch && ch.gi<=reachedGi());
+    var raceCls = isRing?'r-carodej':(ch?'r-'+ch.race:'');
+    if(!unlocked) return '<div class="node locked"><div class="medallion">'+icon('lock')+'</div><small>?</small></div>';
+    var nm = isRing?'Jeden prsten':(SHORT[id]||ch.name);
+    var pv = isRing?null:portrait(id);
+    var inner = pv||icon(isRing?'ring':ch.ic);
+    return '<div class="node '+raceCls+'"><div class="medallion'+(pv?' pm':'')+'">'+inner+'</div><small>'+esc(nm)+(role?'<br>'+esc(role):'')+'</small></div>';
+  }
+  function relArrow(label){
+    return '<div class="arrow"><svg viewBox="0 0 28 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h23M19 2l5 4-5 4"/></svg><em>'+esc(label)+'</em></div>';
+  }
+  function renderRelations(){
+    $('#relHint').textContent = state.mode==='kluci'
+      ? 'Jak spolu postavy souvisejí. Co jste ještě nečetli, zůstává zahalené.'
+      : 'Jak spolu postavy souvisejí (v režimu Táta vidíš vše).';
+    var h='';
+    h+='<div class="rel-block"><h3>Cesta Prstenu</h3><p class="rsub">Jak prsten putoval od temného pána až k Frodovi.</p><div class="chain">'+
+      relNode('sauron')+relArrow('vyrobil ho')+relNode('ring')+relArrow('dlouho měl')+relNode('glum')+relArrow('našel ho')+relNode('bilbo')+relArrow('předal')+relNode('frodo')+relArrow('chrání ho')+relNode('sam')+'</div></div>';
+    h+='<div class="rel-block"><h3>Kdo prsten loví</h3><p class="rsub">Sauron chce prsten zpátky — a posílá za ním své služebníky.</p><div class="chain">'+
+      relNode('nazgul')+relArrow('loví')+relNode('ring')+'</div></div>';
+    var nine=[['frodo','Hobit'],['sam','Hobit'],['merry','Hobit'],['pippin','Hobit'],['gandalf','Čaroděj'],['aragorn','Člověk'],['boromir','Člověk'],['legolas','Elf'],['gimli','Trpaslík']];
+    h+='<div class="rel-block"><h3>Společenstvo Prstenu</h3><p class="rsub">Devět společníků, kteří slíbili pomoct prsten zničit.</p><div class="nine">'+
+      nine.map(function(n){return relNode(n[0], n[1]);}).join('')+'</div><p class="ninecap">4 hobiti · 1 čaroděj · 2 lidé · 1 elf · 1 trpaslík</p></div>';
+    $('#relations').innerHTML=h;
+  }
+
+  function rerender(){ updateProgress(); buildRoute(); renderHere(); renderStrip(); renderChapters(); renderChars(); renderRelations(); }
+
+  // ===== init =====
+  function init(){
+    syncMode(); renderWorld();               // renderWorld je statické; zbytek jede přes rerender()
+    var img=$('#mapImg');
+    var done=false;
+    function ready(){ setStageWidth(); frameJourney(); rerender(); done=true; }
+    if(img.complete && img.naturalWidth) ready(); else img.addEventListener('load',ready);
+    // fallback (kdyby load nedorazil)
+    setTimeout(function(){ if(!done) ready(); },400);
+  }
+  init();
+})();
+</script>

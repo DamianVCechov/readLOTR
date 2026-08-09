@@ -1,0 +1,12 @@
+# Osobní / nesouvisející soubory — nezveřejňovat
+*.pdf
+tax-report-*.pdf
+
+# Mockupy (návrhy mapy) — jen lokální pomůcka, nepatří do repa
+mockupy.html
+mockupy.template.html
+
+# OS smetí
+Thumbs.db
+.DS_Store
+desktop.ini
