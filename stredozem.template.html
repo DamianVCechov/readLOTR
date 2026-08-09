@@ -1,12 +1,13 @@
+<meta charset="utf-8">
 <style>
   /* ===== Tokens: světlá "pergamenová" a tmavá "táborový oheň" ===== */
   :root{
-    --paper:#e6d7b3; --paper-2:#efe4c8; --panel:#f4ead2; --panel-2:#ece0c1;
+    --paper:#e8e0cc; --paper-2:#f1ead7; --panel:#f5efdf; --panel-2:#ebe3ce;
     --ink:#2b2118; --ink-2:#5c4a34; --ink-3:#8a755a;
     --line:rgba(43,33,24,.16); --line-2:rgba(43,33,24,.30);
     --gold:#a9791c; --gold-2:#c9a24b; --ember:#9d2b25; --ember-2:#c0492f;
     --elven:#3c6b57; --shadow:rgba(43,33,24,.20);
-    --radius:14px;
+    --radius:16px;
     --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Cambria,Georgia,serif;
     --display:"Trajan Pro","Cinzel","Palatino Linotype","Book Antiqua",Cambria,Georgia,serif;
     --ui:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -21,7 +22,7 @@
     }
   }
   :root[data-theme="light"]{
-    --paper:#e6d7b3; --paper-2:#efe4c8; --panel:#f4ead2; --panel-2:#ece0c1;
+    --paper:#e8e0cc; --paper-2:#f1ead7; --panel:#f5efdf; --panel-2:#ebe3ce;
     --ink:#2b2118; --ink-2:#5c4a34; --ink-3:#8a755a;
     --line:rgba(43,33,24,.16); --line-2:rgba(43,33,24,.30);
     --gold:#a9791c; --gold-2:#c9a24b; --ember:#9d2b25; --ember-2:#c0492f;
@@ -223,37 +224,50 @@
   .opt:disabled{cursor:default}
 
   /* ===== Characters ===== */
-  .charhint{font-family:var(--ui); font-size:.82rem; color:var(--ink-2); margin:0 2px 14px}
-  .char-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px}
-  .char{border:1px solid var(--line-2); border-radius:var(--radius); background:var(--panel); padding:14px;
-    text-align:center; cursor:pointer; transition:.15s; box-shadow:0 4px 16px -14px var(--shadow)}
-  .char:hover{border-color:var(--gold); transform:translateY(-2px)}
+  .charhint{font-family:var(--ui); font-size:.85rem; color:var(--ink-2); margin:0 2px 16px}
+  .char-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(146px,1fr)); gap:16px}
+  .char{border:1px solid var(--line-2); border-radius:16px; background:var(--panel); padding:9px 9px 10px;
+    text-align:center; cursor:pointer; transition:transform .18s,box-shadow .18s,border-color .18s;
+    box-shadow:0 18px 28px -24px var(--shadow)}
+  .char:hover{border-color:var(--gold); transform:translateY(-4px); box-shadow:0 26px 36px -22px var(--shadow)}
+  .char:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
+  /* velký obrazový rámeček portrétu */
+  .pframe{aspect-ratio:3/4; border-radius:12px; overflow:hidden; background:var(--panel-2); position:relative;
+    box-shadow:inset 0 0 0 1px var(--line)}
+  .pframe img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block}
+  .pframe.fallback{display:flex; align-items:center; justify-content:center; color:var(--ink-3)}
+  .pframe.fallback svg.portrait{width:100%; height:100%}
+  .pframe.fallback>svg:not(.portrait){width:38px; height:38px}
+  .char h4{margin:11px 4px 0; font-family:var(--serif); font-size:1.02rem; font-weight:600; line-height:1.16; text-wrap:balance}
+  .char .race{font-family:var(--ui); font-size:.67rem; text-transform:uppercase; letter-spacing:.08em; color:var(--gold); margin-top:3px; font-weight:600}
+  .char.locked{cursor:default; box-shadow:0 10px 20px -20px var(--shadow)}
+  .char.locked h4{color:var(--ink-3)}
+  .char.locked .race{visibility:hidden}
+
+  /* medailon — zůstává pro uzly Vztahů a rasy ve Světě */
   .medallion{width:66px; height:66px; margin:0 auto 9px; border-radius:50%; display:flex; align-items:center; justify-content:center;
     background:radial-gradient(circle at 35% 30%, var(--panel-2), color-mix(in srgb,var(--gold) 22%,var(--panel)));
     border:2px solid var(--gold-2); color:var(--gold); box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--gold) 12%,transparent)}
   .medallion svg{width:34px; height:34px}
   .medallion.pm{overflow:hidden; padding:0}
   .medallion.pm svg.portrait{width:100%; height:100%; display:block}
-  .cd .medallion{width:104px; height:104px}
-  .cd .medallion.pm svg.portrait{width:100%; height:100%}
-  .char h4{margin:0; font-family:var(--serif); font-size:.98rem; font-weight:700; line-height:1.2}
-  .char .race{font-family:var(--ui); font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); margin-top:3px}
-  .char.locked{cursor:default}
-  .char.locked .medallion{background:var(--panel-2); border-color:var(--line-2); color:var(--ink-3); box-shadow:none}
-  .char.locked h4{color:var(--ink-3)}
-  .char.locked .race{visibility:hidden}
+  .medallion.pm img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block}
   .char-detail{grid-column:1/-1}
-  .cd{border:1px solid var(--gold-2); border-radius:var(--radius); background:var(--panel);
-    padding:16px 18px; display:flex; gap:16px; align-items:flex-start; box-shadow:0 8px 24px -16px var(--shadow)}
-  .cd .medallion{margin:0; flex:none}
-  .cd h3{margin:0 0 2px; font-family:var(--display); font-size:1.25rem; letter-spacing:.01em}
-  .cd .en{font-family:var(--ui); font-size:.76rem; color:var(--ink-3)}
-  .cd .say{font-family:var(--ui); font-size:.8rem; color:var(--elven); margin:4px 0 8px}
+  .cd{border:1px solid var(--gold-2); border-radius:18px; background:var(--panel);
+    padding:18px; display:flex; gap:20px; align-items:flex-start; box-shadow:0 26px 44px -28px var(--shadow)}
+  .cd-pimg{flex:none; width:min(280px,42vw); aspect-ratio:3/4; border-radius:14px; overflow:hidden;
+    border:1px solid var(--gold-2); box-shadow:0 22px 36px -24px var(--shadow)}
+  .cd-pimg img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block}
+  .cd .medallion{width:110px; height:110px; margin:0; flex:none}
+  .cd .cdbody{flex:1; min-width:0}
+  .cd h3{margin:0 0 2px; font-family:var(--display); font-size:1.35rem; letter-spacing:.01em}
+  .cd .en{font-family:var(--ui); font-size:.78rem; color:var(--ink-3)}
+  .cd .say{font-family:var(--ui); font-size:.82rem; color:var(--elven); margin:5px 0 9px}
   .cd .say b{color:var(--ink-2); font-weight:600}
-  .cd .close{margin-left:auto; cursor:pointer; border:1px solid var(--line-2); background:var(--panel-2);
-    color:var(--ink-2); border-radius:8px; width:30px; height:30px; font-size:1rem; flex:none}
+  .cd .close{cursor:pointer; border:1px solid var(--line-2); background:var(--panel-2);
+    color:var(--ink-2); border-radius:9px; width:32px; height:32px; font-size:1rem; flex:none; align-self:flex-start}
 
-  /* race accents */
+  /* race accents (uzly Vztahů + rasy Světa) */
   .r-hobit .medallion{border-color:var(--elven); color:var(--elven)}
   .r-carodej .medallion{border-color:var(--gold-2); color:var(--gold)}
   .r-clovek .medallion{border-color:#9c7b4e; color:#9c7b4e}
@@ -326,8 +340,8 @@
   .ahead b{color:var(--ink)}
 
   /* ===== Ilustrace kapitoly ===== */
-  .illus{margin:6px 0 16px; border:1px solid var(--line-2); border-radius:12px; overflow:hidden;
-    background:#2b2542; box-shadow:0 6px 18px -12px var(--shadow)}
+  .illus{margin:6px 0 16px; border:1px solid var(--line-2); border-radius:14px; overflow:hidden;
+    background:var(--panel-2); box-shadow:0 10px 24px -16px var(--shadow)}
   .illus svg{display:block; width:100%; height:auto}
   .illus figcaption{padding:11px 15px; font-size:.92rem; color:var(--ink); line-height:1.5; background:var(--panel)}
   .illus figcaption b{color:var(--ember); font-family:var(--ui); font-size:.7rem; text-transform:uppercase;
@@ -342,8 +356,9 @@
 
   @media (max-width:560px){
     .brand p{display:none}
-    .cd{flex-wrap:wrap}
-    .char-grid{grid-template-columns:repeat(auto-fill,minmax(46%,1fr))}
+    .cd{flex-direction:column; align-items:stretch}
+    .cd-pimg{width:min(260px,62vw); align-self:center}
+    .char-grid{grid-template-columns:repeat(auto-fill,minmax(45%,1fr))}
   }
   @media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
 </style>
@@ -552,6 +567,15 @@
   function riderFig(X,Y,S){
     return '<g transform="translate('+X+','+Y+') scale('+S+')"><path d="M-22 0 Q-24 -54 0 -66 Q24 -54 22 0 Z" fill="#141118"/><path d="M0 -66 Q-16 -60 -17 -40 Q-8 -46 0 -46 Q8 -46 17 -40 Q16 -60 0 -66 Z" fill="#05050a"/><path d="M-22 0 Q0 -10 22 0 L18 8 Q0 0 -18 8 Z" fill="#0a0910"/><g fill="#c94a2e"><circle cx="-6" cy="-50" r="1.7"/><circle cx="6" cy="-50" r="1.7"/></g></g>';
   }
+  // ===== skutečné malované portréty (vložené při sestavení z Midjourney) =====
+  var PORTRAITS={
+    frodo:'__IMG_frodo__',sam:'__IMG_sam__',merry:'__IMG_merry__',pippin:'__IMG_pippin__',bilbo:'__IMG_bilbo__',
+    gandalf:'__IMG_gandalf__',aragorn:'__IMG_aragorn__',boromir:'__IMG_boromir__',legolas:'__IMG_legolas__',gimli:'__IMG_gimli__',
+    elrond:'__IMG_elrond__',glorfindel:'__IMG_glorfindel__',galadriel:'__IMG_galadriel__',glum:'__IMG_glum__',bombadil:'__IMG_bombadil__',
+    nazgul:'__IMG_nazgul__',sauron:'__IMG_sauron__',balrog:'__IMG_balrog__','stara-vrba':'__IMG_stara-vrba__'
+  };
+  function hasPortrait(id){var u=PORTRAITS[id];return !!(u&&u.slice(0,5)==='data:');}
+  function imgPortrait(id,alt){return hasPortrait(id)?'<img class="pimg" src="'+PORTRAITS[id]+'" alt="'+esc(alt||'')+'" loading="lazy">':null;}
   function charVisual(ch,unlocked){
     if(!unlocked) return {h:icon('lock'),pm:false};
     var p=portrait(ch.id);
@@ -1578,10 +1602,16 @@
     CHARS.forEach(function(ch){
       var unlocked = ch.gi<=rg || state.mode==='tata';
       var card=el('div','char r-'+ch.race+(unlocked?'':' locked'));
-      var v=charVisual(ch,unlocked);
-      card.innerHTML='<div class="medallion'+(v.pm?' pm':'')+'">'+v.h+'</div>'+
+      var frame;
+      if(!unlocked){ frame='<div class="pframe fallback">'+icon('lock')+'</div>'; }
+      else { var im=imgPortrait(ch.id,ch.name);
+        frame = im ? '<div class="pframe">'+im+'</div>'
+                   : '<div class="pframe fallback">'+(portrait(ch.id)||icon(ch.ic))+'</div>'; }
+      card.innerHTML=frame+
         '<h4>'+(unlocked?esc(ch.name):'? ? ?')+'</h4><div class="race">'+esc(ch.rlab)+'</div>';
-      if(unlocked){ card.addEventListener('click',function(){ toggleChar(ch, card); }); }
+      if(unlocked){ card.setAttribute('tabindex','0'); card.setAttribute('role','button');
+        card.addEventListener('click',function(){ toggleChar(ch, card); });
+        card.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleChar(ch, card); } }); }
       grid.appendChild(card);
     });
   }
@@ -1606,9 +1636,12 @@
     openCharId=ch.id;
     var d=el('div','char-detail'); d.id='charDetail';
     var txt = state.mode==='kluci'? ch.kid : ch.dad;
+    var im=imgPortrait(ch.id,ch.name);
     var pv=portrait(ch.id);
-    d.innerHTML='<div class="cd r-'+ch.race+'"><div class="medallion'+(pv?' pm':'')+'">'+(pv||icon(ch.ic))+'</div>'+
-      '<div><h3>'+esc(ch.name)+'</h3><div class="en">'+esc(ch.en)+' · '+esc(ch.rlab)+'</div>'+
+    var visual = im ? '<div class="cd-pimg">'+im+'</div>'
+                    : '<div class="medallion'+(pv?' pm':'')+'">'+(pv||icon(ch.ic))+'</div>';
+    d.innerHTML='<div class="cd r-'+ch.race+'">'+visual+
+      '<div class="cdbody"><h3>'+esc(ch.name)+'</h3><div class="en">'+esc(ch.en)+' · '+esc(ch.rlab)+'</div>'+
       (ch.say&&ch.say!=='—'?'<div class="say">Vyslov: <b>'+esc(ch.say)+'</b></div>':'')+
       '<p>'+esc(txt)+'</p>'+arcHtml(ch)+'</div>'+
       '<button class="close" aria-label="Zavřít">✕</button></div>';
@@ -1708,9 +1741,10 @@
     var raceCls = isRing?'r-carodej':(ch?'r-'+ch.race:'');
     if(!unlocked) return '<div class="node locked"><div class="medallion">'+icon('lock')+'</div><small>?</small></div>';
     var nm = isRing?'Jeden prsten':(SHORT[id]||ch.name);
+    var im = isRing?null:imgPortrait(id,nm);
     var pv = isRing?null:portrait(id);
-    var inner = pv||icon(isRing?'ring':ch.ic);
-    return '<div class="node '+raceCls+'"><div class="medallion'+(pv?' pm':'')+'">'+inner+'</div><small>'+esc(nm)+(role?'<br>'+esc(role):'')+'</small></div>';
+    var inner = im||pv||icon(isRing?'ring':ch.ic);
+    return '<div class="node '+raceCls+'"><div class="medallion'+((im||pv)?' pm':'')+'">'+inner+'</div><small>'+esc(nm)+(role?'<br>'+esc(role):'')+'</small></div>';
   }
   function relArrow(label){
     return '<div class="arrow"><svg viewBox="0 0 28 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h23M19 2l5 4-5 4"/></svg><em>'+esc(label)+'</em></div>';
