@@ -206,6 +206,7 @@
   .kidbox{background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 10%,var(--panel)),var(--panel));
     border:1px dashed var(--gold-2); border-radius:12px; padding:14px 16px; margin-top:10px}
   .kidbox .teaser{font-size:1.05rem}
+  .kidbox .block:first-child{margin-top:2px}
   .kidrecap{font-size:1.02rem; line-height:1.62; margin:0 0 .7em}
   .kidrecap:last-child{margin-bottom:0}
   .locknote{font-family:var(--ui); font-size:.86rem; color:var(--ink-2); display:flex; align-items:center; gap:8px; padding:6px 0}
@@ -1073,7 +1074,7 @@
       CH.filter(function(c){return c.book===bk;}).forEach(function(c){
         var done=!!state.read[c.gi];
         var peek = state.mode==='tata' || c.gi<=rg+1;   // kluci: vidí aktuální + příští
-        var full = state.mode==='tata' || c.gi<=rg;     // plný dětský obsah po přečtení
+        var full = state.mode==='tata' || done;         // plný obsah (obrázek + shrnutí) až po označení „Přečteno" u TÉTO kapitoly
         var card=el('div','ch'+(peek?'':' locked'));
         card.setAttribute('data-gi',c.gi);
         var head=el('div','ch-head');
@@ -1098,6 +1099,54 @@
     });
   }
 
+  // ===== před čtením (režim Kluci): osvěžení paměti + háček, bez spoilerů =====
+  var KIDINTRO={
+    1:['Náš příběh začíná v Kraji — v zelené a klidné zemi, kde bydlí hobiti. Jsou to malí veselí lidičkové, kteří milují dobré jídlo, pohodlí a kulaté dveře, a nejradši mají, když se zrovna nic neděje.',
+       'Jenže dnes se v Hobitíně chystá největší oslava, jakou kdo pamatuje — a starý dobrodruh Bilbo má pro hosty nachystané jedno velké překvapení. Copak to asi bude? A jakou roli v tom sehraje jeden nenápadný zlatý prstýnek?'],
+    2:['Minule slavil starý Bilbo velkolepé narozeniny, uprostřed oslavy všem naráz zmizel — a svůj kouzelný prsten nechal mladému Frodovi.',
+       'Uběhne spousta let a do Kraje se vrátí čaroděj Gandalf s vážnou tváří. Zdá se, že ten obyčejný prstýnek vůbec není tak obyčejný… Co Frodovi prozradí — a proč se najednou i mocný čaroděj bojí?'],
+    3:['Minule Gandalf Frodovi svěřil hrozné tajemství: jeho prsten je ten nejnebezpečnější na světě a hledá ho zlý pán Sauron. Frodo musí pryč z domova — a přidal se k němu věrný zahradník Sam.',
+       'Teď se poprvé vydávají na cestu. První kroky do neznáma bývají vzrušující… jenže krajem už kdosi jede a čenichá po jejich stopě. Kdo hobity ochrání, až padne tma?'],
+    4:['Minule hobity na cestě málem dostihl první Černý jezdec — a zachránili je až elfové, kteří je pod hvězdami pohostili a vzali pod svou ochranu.',
+       'Aby se jezdcům vyhnuli, zkusí hobiti jít mimo cestu, napříč poli a lesíky. Potkají někoho, kdo jim pomůže? A stihnou se dostat přes velikou řeku dřív, než je někdo dožene?'],
+    5:['Minule se hobiti prosmýkli přes pole, hodný sedlák je pohostil houbami a převozník je přeplavil přes řeku zase o kus blíž k cíli.',
+       'Za řekou na ně čeká útulný domek a odpočinek. Frodo si myslí, že o jeho tajné cestě nikdo neví — ale co když se plete? Možná ho čeká překvapení právě od těch nejbližších.'],
+    6:['Minule vyšlo najevo, že kamarádi Sam, Smíšek i Pipin o prstenu dávno vědí — a rozhodli se, že Froda do nebezpečí samotného nepustí.',
+       'Společně teď musí zmizet z dohledu, a tak zamíří do Starého hvozdu — lesa, o kterém se vyprávějí divné věci. Je ten les opravdu živý? A kdo mezi stromy číhá na hobity?'],
+    7:['Minule je v tajemném Starém hvozdu polapila zlá Stará vrba — a zachránil je až veselý zpívající pán lesa, Tom Bombadil.',
+       'Tom pozve hobity k sobě domů, kde je teplo, jídlo a bezpečno. Ale u Toma se prý dějí zvláštní věci… Co se asi stane, když se ten mocný prsten dostane do jeho rukou?'],
+    8:['Minule si hobiti odpočinuli v útulném domě Toma Bombadila — a všichni koukali, když si Tom navlékl kouzelný prsten a vůbec přitom nezmizel.',
+       'Cesta ale volá dál a vede přes staré Mohylové vrchy, zahalené hustou mlhou. Mlha umí splést cestu i schovat leccos nekalého. Vzpomenou si hobiti v nesnázích na to pravé kouzlo?'],
+    9:['Minule hobity v mlze uvěznil na Mohylových vrších zlý duch — a Frodo statečně přivolal Toma, který je všechny vysvobodil.',
+       'Teď hobiti poprvé zamíří mezi lidi, do hostince U Skákavého poníka. Bude tam plno, veselo — a možná až moc rušno. A z kouta je bude tiše pozorovat jeden záhadný cizinec v kápi. Přítel, nebo hrozba?'],
+    10:['Minule v hostinci Frodo omylem zmizel před celou hospodou — a z kouta ho celou dobu sledoval tajemný pocestný, kterému říkají Chodec.',
+        'Kdo ten Chodec vlastně je a dá se mu věřit? Vypadá dost drsně… jenže někdy se pod tím nejdivočejším zevnějškem skrývá největší přítel. A co když v noci někdo přijde, zrovna když hobiti spí?'],
+    11:['Minule se ukázalo, že Chodec je ve skutečnosti Aragorn, přítel Gandalfa — a v noci kdosi přepadl prázdné postele v hostinci, kde měli hobiti spát.',
+        'Aragorn teď vede hobity divočinou k Roklince. Cesta míří na starý osamělý kopec Větrov, kde je za tmy čeká to nejnapínavější zatím. Černí jezdci jsou blízko — udrží se hobiti ve zdraví?'],
+    12:['Minule na Větrově zaútočili Černí jezdci a Aragorn je odehnal ohněm — Frodo ale při té bitce utržil ošklivé zranění.',
+        'Teď se z cesty stává závod s časem: Frodo se potřebuje co nejrychleji dostat do bezpečí Roklinky. Přispěchá pomoc včas? A co se stane, až Černí jezdci dohoní hobity u řeky?'],
+    13:['Minule zachránil zraněného Froda rychlý elfský kůň a u brodu se řeka vzedmula v obří vlnu, která Černé jezdce smetla pryč. Tak skončila první část cesty.',
+        'Frodo se probudí na úplně novém, bezpečném místě mezi elfy. Kdo všechno tu na něj bude čekat? Po tolika nebezpečích si teď všichni na chvíli oddechnou… než přijde jedno velké rozhodnutí.'],
+    14:['Minule se Frodo probudil uzdravený v krásné elfské Roklince a šťastně se shledal s Gandalfem i se svým starým strýčkem Bilbem.',
+        'V Roklince se teď sejde velká porada nejmoudřejších. Budou řešit jednu obrovskou otázku: co udělat s tím nebezpečným prstenem? A kdo bude tak statečný, že se toho úkolu ujme?'],
+    15:['Minule padlo velké rozhodnutí: prsten se musí donést až do Mordoru a tam zničit. Frodo se sám přihlásil — a vzniklo Společenstvo Prstenu, devět společníků.',
+        'Devítka teď vyráží z bezpečné Roklinky do neznáma na jih. Nová parta, nové kraje, nová dobrodružství — ale možná je odněkud shora někdo pozoruje. Copak je na dlouhé cestě čeká?'],
+    16:['Minule se Společenstvo devíti vydalo na jih a cestou je z oblohy špehovali podezřelí černí ptáci.',
+        'Před nimi se tyčí veliké zasněžené hory. Když je hora nepustí přes vrcholky, budou muset zkusit jinou, temnější cestu — hluboko pod zem. Co asi číhá u brány do podzemí?'],
+    17:['Minule se před branou do podzemní Morie vynořilo z černé vody obludné chapadlo — Společenstvo mu jen tak tak uniklo dovnitř a brána za nimi zapadla.',
+        'V temných síních pod horou je ticho a stín. Ale něco dávného a mocného se tam probouzí… Postaví se tomu někdo do cesty? Tahle kapitola bude silná — připravte se na ni spolu.'],
+    18:['Minule se Gandalf na úzkém mostě postavil hrozivému netvorovi, aby zachránil ostatní — a zřítil se s ním do hlubiny. Bylo to smutné loučení.',
+        'Zdrcené Společenstvo teď vyjde z temného podzemí ven na světlo. Před nimi leží kouzelné místo plné zlata a klidu, kde si mohou odpočinout i zahojit smutek. Co pěkného je tam čeká?'],
+    19:['Minule našlo unavené Společenstvo útočiště v kouzelném zlatém lese Lothlórien, kde elfové bydlí vysoko ve stromech.',
+        'V tom lese žije mocná a moudrá paní elfů. Ukáže Frodovi něco zvláštního — kouzlo, které umí ukázat i věci, co teprve mohou přijít. Podíval by ses do něj, i kdyby to bylo trochu strašidelné?'],
+    20:['Minule ukázala paní Galadriel Frodovi kouzelné zrcadlo — a i když mohla ten mocný prsten získat, statečně odolala pokušení.',
+        'Teď přišel čas rozloučit se s tím krásným lesem. Elfové ale nikoho nepustí s prázdnou — pro každého mají na cestu kouzelný dárek. Copak asi hrdinové dostanou a k čemu se jim to bude hodit?'],
+    21:['Minule dostalo Společenstvo na rozloučenou kouzelné dary a vyplulo z Lórienu po Velké řece na štíhlých elfských loďkách.',
+        'Řeka je unáší dál a dál, kolem obřích soch dávných králů. Je to nádherná, ale i trochu tísnivá plavba — jako by je odněkud potají někdo sledoval. Kdo by to mohl být?'],
+    22:['Minule pluly loďky po Velké řece kolem obřích kamenných králů — a ve vodě je potají sledoval Glum.',
+        'Cesta teď dojde k místu, kde se každý bude muset těžko rozhodnout. Prsten totiž svádí a láká čím dál víc… Vydrží Společenstvo pohromadě, nebo se každý vydá svou cestou? Tahle část uzavře celou první knihu.']
+  };
+
   function chapterBody(c, full, peek){
     if(state.mode==='tata'){
       var h=illusFigure(c.gi)+'<div class="block"><h4>'+icon('star')+'Shrnutí</h4><p>'+esc(c.sum)+'</p></div>';
@@ -1110,8 +1159,14 @@
     // KLUCI
     if(!peek){ return '<p class="locknote">'+icon('lock')+'Tuhle kapitolu jsme ještě nečetli. Nejdřív si ji přečteme s tátou!</p>'; }
     if(!full){
-      return '<div class="kidbox"><p class="teaser">'+esc(c.teaser)+'</p></div>'+
-        '<p class="locknote">'+icon('lock')+'Až kapitolu přečteme, klikni na <b>Přečteno</b> a odemkne se shrnutí, kvíz i nové postavy.</p>';
+      var intro=KIDINTRO[c.gi];
+      var kb='<div class="kidbox">';
+      if(intro){
+        kb+='<div class="block"><h4>'+icon('scroll')+(c.gi===1?'Než vyrazíme na cestu':'Co bylo minule')+'</h4><p class="kidrecap">'+esc(intro[0])+'</p></div>'+
+            '<div class="block"><h4>'+icon('star')+'Co nás čeká</h4><p class="kidrecap">'+esc(intro[1])+'</p></div>';
+      } else { kb+='<p class="teaser">'+esc(c.teaser)+'</p>'; }
+      kb+='</div>';
+      return kb+'<p class="locknote">'+icon('lock')+'Až kapitolu přečteme, klikni na <b>Přečteno</b> a odemkne se shrnutí, kvíz i nové postavy.</p>';
     }
     var k=illusFigure(c.gi);
     if(KIDSUM[c.gi]) k+='<div class="block"><h4>'+icon('scroll')+'Co se v kapitole stalo</h4>'+KIDSUM[c.gi].map(function(pp){return '<p class="kidrecap">'+esc(pp)+'</p>';}).join('')+'</div>';
