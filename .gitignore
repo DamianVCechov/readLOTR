@@ -6,6 +6,9 @@ tax-report-*.pdf
 mockupy.html
 mockupy.template.html
 
+# Originál mapy ve vysokém rozlišení (10000×5455) — jen lokální zdroj; build používá assets/map.jpg
+mapa-stredozem-original.jpg
+
 # OS smetí
 Thumbs.db
 .DS_Store

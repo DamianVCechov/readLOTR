@@ -1,4 +1,11 @@
+<!doctype html>
+<html lang="cs">
+<head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Interaktivní průvodce Společenstvem Prstenu pro předčítání dětem — mapa cesty, postavy, kapitoly ve dvou režimech a svět Středozemě.">
+<title>Cesta Prstenu — průvodce Společenstvem Prstenu</title>
 <style>
   /* ===== Tokens: světlá "pergamenová" a tmavá "táborový oheň" ===== */
   :root{
@@ -70,6 +77,12 @@
     box-shadow:0 1px 4px var(--shadow)}
   .modeswitch button.on.kids{background:linear-gradient(180deg,var(--gold-2),var(--gold))}
   .modeswitch svg{width:16px;height:16px}
+  /* kulaté ikonové tlačítko (přepínač motivu) */
+  .iconbtn{width:38px; height:38px; flex:none; border-radius:999px; border:1px solid var(--line-2);
+    background:var(--panel-2); color:var(--ink-2); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    box-shadow:inset 0 1px 2px var(--shadow)}
+  .iconbtn:hover{border-color:var(--gold); color:var(--ink)}
+  .iconbtn svg{width:18px; height:18px}
 
   /* progress "cesta" */
   .road{max-width:1080px; margin:0 auto; padding:0 clamp(12px,3vw,26px) 10px}
@@ -89,7 +102,6 @@
   nav.tabs button svg{width:17px;height:17px}
   nav.tabs button:hover{border-color:var(--gold); color:var(--ink)}
   nav.tabs button.on{background:var(--ink); color:var(--paper); border-color:var(--ink)}
-  :root[data-theme="dark"] nav.tabs button.on, @media (prefers-color-scheme:dark){}
   nav.tabs button.on{background:linear-gradient(180deg,#3a2c1e,#2b2118); color:var(--paper-2)}
 
   .view{display:none; animation:fade .3s ease}
@@ -363,7 +375,8 @@
   }
   @media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
 </style>
-
+</head>
+<body>
 <div class="app">
   <header class="top">
     <div class="top-in">
@@ -378,6 +391,7 @@
         <button data-mode="tata" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v18M5 8l7-4 7 4M6 20h12" stroke-linecap="round"/></svg>Táta</button>
         <button data-mode="kluci" class="kids"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><circle cx="16" cy="9" r="2.4"/><path d="M3.5 20c.4-3 2.8-5 5.5-5s5.1 2 5.5 5M14 20c.3-2.2 1.8-3.7 3.6-3.9" stroke-linecap="round"/></svg>Kluci</button>
       </div>
+      <button class="iconbtn" id="themeToggle" type="button" title="Světlý / tmavý motiv" aria-label="Přepnout motiv"></button>
     </div>
     <div class="road">
       <div class="road-in">
@@ -389,11 +403,11 @@
   </header>
 
   <div class="wrap">
-    <nav class="tabs" id="tabs">
-      <button data-view="mapa" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>Mapa</button>
-      <button data-view="kapitoly"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5c2-1 5-1 8 1 3-2 6-2 8-1v14c-2-1-5-1-8 1-3-2-6-2-8-1z"/><path d="M12 7v13"/></svg>Kapitoly</button>
-      <button data-view="postavy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20c.6-3.6 3.2-6 6.5-6s5.9 2.4 6.5 6"/></svg>Postavy</button>
-      <button data-view="svet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>Svět</button>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Sekce">
+      <button data-view="mapa" class="on" role="tab" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>Mapa</button>
+      <button data-view="kapitoly" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5c2-1 5-1 8 1 3-2 6-2 8-1v14c-2-1-5-1-8 1-3-2-6-2-8-1z"/><path d="M12 7v13"/></svg>Kapitoly</button>
+      <button data-view="postavy" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20c.6-3.6 3.2-6 6.5-6s5.9 2.4 6.5 6"/></svg>Postavy</button>
+      <button data-view="svet" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>Svět</button>
     </nav>
 
     <!-- MAPA -->
@@ -406,9 +420,9 @@
           <div id="hereLayer"></div>
         </div>
         <div class="map-ctrls">
-          <button id="zin" title="Přiblížit">+</button>
-          <button id="zout" title="Oddálit">−</button>
-          <button id="zreset" title="Zaměřit cestu">⤢</button>
+          <button id="zin" title="Přiblížit" aria-label="Přiblížit">+</button>
+          <button id="zout" title="Oddálit" aria-label="Oddálit">−</button>
+          <button id="zreset" title="Zaměřit cestu" aria-label="Zaměřit cestu">⤢</button>
         </div>
       </div>
       <div class="mapstrip" id="mapstrip"></div>
@@ -436,7 +450,7 @@
 
     <!-- SVĚT -->
     <section class="view" id="view-svet">
-      <p class="charhint">Malá encyklopedie světa — hoď kluky do obrazu. (V režimu Kluci ukazujeme jen to, co už nemůže nic prozradit.)</p>
+      <p class="charhint">Malá encyklopedie světa — hoď kluky do obrazu. V režimu Kluci se odkrývá postupně: co by prozradilo děj, zůstává skryté, dokud k tomu nedočtete.</p>
       <div id="world"></div>
     </section>
 
@@ -472,6 +486,8 @@
     orc:'<path d="M6 10c0-3 2.7-5 6-5s6 2 6 5c0 4-3 7-6 7s-6-3-6-7z"/><path d="M9.3 10.5h.01M14.7 10.5h.01"/><path d="M10 14l2 1 2-1"/>',
     scroll:'<path d="M7 4h9a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V6"/><path d="M6 6a2 2 0 002 2h2"/><path d="M10 11h5M10 14h5"/>',
     lock:'<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/>',
+    sun:'<circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/>',
+    moon:'<path d="M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z"/>',
     check:'<path d="M4 12l5 5L20 6"/>'
   };
   function icon(name,cls){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"'+(cls?' class="'+cls+'"':'')+'>'+(IC[name]||IC.star)+'</svg>';}
@@ -484,7 +500,7 @@
     nazgul:'__IMG_nazgul__',sauron:'__IMG_sauron__',balrog:'__IMG_balrog__','stara-vrba':'__IMG_stara-vrba__'
   };
   function hasPortrait(id){var u=PORTRAITS[id];return !!(u&&u.slice(0,5)==='data:');}
-  function imgPortrait(id,alt){return hasPortrait(id)?'<img class="pimg" src="'+PORTRAITS[id]+'" alt="'+esc(alt||'')+'" loading="lazy">':null;}
+  function imgPortrait(id,alt){return hasPortrait(id)?'<img src="'+PORTRAITS[id]+'" alt="'+esc(alt||'')+'" loading="lazy">':null;}
   var ILLUS={
     1:{cap:'Bilbův velkolepý dýchánek k 111. narozeninám. Gandalfův ohňostroj září nad Hobitínem — a uprostřed slavnostního proslovu si Bilbo navlékne kouzelný prsten a všem rázem zmizí před očima!'},
     2:{cap:'Sedmnáct let po oslavě. Gandalf hodí prsten do ohně a na zlatě se rozzáří ohnivé písmo — tak Frodo pozná, že jeho prsten je ten Jeden, nejnebezpečnější na světě.'},
@@ -516,7 +532,7 @@
     if(!hasScene(gi)) return '';
     var il=ILLUS[gi]; var cap=il?il.cap:'';
     var capHtml=cap?'<figcaption><b>Klíčový moment:</b> '+esc(cap)+'</figcaption>':'';
-    return '<figure class="illus"><img class="scene-img" src="'+SCENES[gi]+'" alt="Ilustrace ke kapitole" loading="lazy">'+capHtml+'</figure>';
+    return '<figure class="illus"><img src="'+SCENES[gi]+'" alt="Malovaná ilustrace ke kapitole" loading="lazy">'+capHtml+'</figure>';
   }
 
   // ===== data: místa (pořadí = cesta) =====
@@ -763,23 +779,22 @@
     ['Teď','Frodova cesta','Bilbo prsten předá Frodovi — a náš příběh začíná. Prsten musí být zničen dřív, než ho Sauron získá.']
   ];
   var LORE=[
-    {ic:'ring',title:'Jeden prsten',text:'Nejmocnější prsten na světě. Kdo si ho navlékne, zmizí — jenže prsten pomalu kazí srdce a touží se vrátit ke svému pánovi. Zničit se dá jedině v ohni hory, kde byl ukován.'},
-    {ic:'eye',title:'Sauron, temný pán',text:'Zlý pán, který prsten vyrobil, aby ovládl celou Středozem. Prsten mu kdysi usekli z ruky a on ho od té doby hledá. Vídáme ho jako obrovské planoucí oko.'},
-    {ic:'wraith',title:'Černí jezdci (Nazgûl)','text':'Devět přízraků na černých koních. Kdysi to byli lidé, ale prsteny je proměnily v Sauronovy služebníky. Nemají tvář a čenichají Jeden prsten.'}
+    {ic:'ring',title:'Jeden prsten',min:2,text:'Nejmocnější prsten na světě. Kdo si ho navlékne, zmizí — jenže prsten pomalu kazí srdce a touží se vrátit ke svému pánovi. Zničit se dá jedině v ohni hory, kde byl ukován.'},
+    {ic:'eye',title:'Sauron, temný pán',min:2,text:'Zlý pán, který prsten vyrobil, aby ovládl celou Středozem. Prsten mu kdysi usekli z ruky a on ho od té doby hledá. Vídáme ho jako obrovské planoucí oko.'},
+    {ic:'wraith',title:'Černí jezdci (Nazgûl)',min:3,text:'Devět přízraků na černých koních. Kdysi to byli lidé, ale prsteny je proměnily v Sauronovy služebníky. Nemají tvář a čenichají Jeden prsten.'}
   ];
 
   // ===== data: kapitoly =====
-  function C(o){return o;}
   var CH = [
     // KNIHA PRVNÍ
-    C({book:1,n:1,title:'Dlouho očekávaný dýchánek',en:'A Long-expected Party',fear:0,
+    ({book:1,n:1,title:'Dlouho očekávaný dýchánek',en:'A Long-expected Party',fear:0,
       sum:'Starý Bilbo slaví 111. narozeniny velkou oslavou pro celý Hobitín. Uprostřed proslovu si navlékne kouzelný prsten, zmizí všem před očima a potají odejde z Kraje. Gandalf ho přemluví, aby prsten nechal Frodovi. Nikdo zatím netuší, jak je ten prsten nebezpečný.',
       focus:['Bilbův kouzelný prsten — proč po něm tolik touží?','Gandalfův ohňostroj a veselá oslava (skvělý rozjezd)','Frodo dostává prsten do opatrování'],
       q:['Proč Bilbo zmizel přímo uprostřed proslovu?','Co je asi na tom prstenu zvláštního?'],
       words:[['dýchánek','oslava, večírek s pohoštěním'],['Kraj','domovina hobitů']],
       teaser:'Velká oslava, ohňostroj — a jeden kouzelný prsten, po kterém se člověk stane neviditelným! Kdo ho asi dostane?',
       quiz:[['Kolik je Bilbovi let?',['50','111','1000'],1],['Co se stane, když si Bilbo navlékne prsten?',['Zmizí','Usne','Vyroste'],0]]}),
-    C({book:1,n:2,title:'Stín minulosti',en:'The Shadow of the Past',fear:2,
+    ({book:1,n:2,title:'Stín minulosti',en:'The Shadow of the Past',fear:2,
       sum:'Uběhne sedmnáct let. Gandalf se vrací s vážnou zprávou: Frodův prsten je Jeden prsten, který kdysi ukoval temný pán Sauron, aby ovládl celou Středozem. Frodo se musí vydat pryč a prsten odnést do bezpečí. Zahradník Sam je přistižen, jak poslouchá za oknem — a stane se Frodovým společníkem.',
       focus:['Co doopravdy je Jeden prsten a proč je tak nebezpečný','Kdo je Sauron (Nepřítel) a kdo je Glum','Věrný Sam se přidává k Frodovi'],
       q:['Proč nemůže prsten používat nikdo hodný?','Proč se Sam rozbrečel, když ho Gandalf přistihl?'],
@@ -787,7 +802,7 @@
       fearnote:'Padne zmínka o temném pánovi a o Glumovi — tajemné a trochu hrozivé, ale ještě nic strašidelného.',
       teaser:'Ten prsten není obyčejný — je to nejnebezpečnější věc na světě a hledá ho zlý pán Sauron. Frodo bude muset odejít z domova.',
       quiz:[['Kdo vyrobil Jeden prsten?',['Gandalf','Sauron','Bilbo'],1],['Kdo se přidá k Frodovi jako první?',['Sam','Gandalf','Bilbo'],0]]}),
-    C({book:1,n:3,title:'Ve třech se to lépe táhne',en:'Three is Company',fear:3,
+    ({book:1,n:3,title:'Ve třech se to lépe táhne',en:'Three is Company',fear:3,
       sum:'Frodo, Sam a mladý Pipin vyrážejí pěšky z Hobitína. Hned na cestě je málem dostihne první Černý jezdec — zahalená postava, která čenichá a hledá prsten. Zachrání je až setkání s elfy, kteří je pod noční oblohou schovají a pohostí.',
       focus:['První Černý jezdec — odkud se vzal a co hledá?','Kouzelní elfové (Gildor) jako první pomoc','Cesta začíná být nebezpečná'],
       q:['Proč se hobiti před jezdcem schovali, místo aby ho pozdravili?','Jak vám připadali elfové?'],
@@ -795,7 +810,7 @@
       fearnote:'Objeví se první Černý jezdec — čenichá a nahání husí kůži. Napínavé a trochu strašidelné, nic krvavého.',
       teaser:'Cesta začíná! Ale po stopě už jde první Černý jezdec. Kdo hobity ochrání?',
       quiz:[['Kdo jde s Frodem a Samem?',['Pipin','Bilbo','Glum'],0],['Kdo hobity schová před jezdcem?',['Elfové','Trpaslíci','Skřeti'],0]]}),
-    C({book:1,n:4,title:'Zkratka k houbám',en:'A Short Cut to Mushrooms',fear:2,
+    ({book:1,n:4,title:'Zkratka k houbám',en:'A Short Cut to Mushrooms',fear:2,
       sum:'Aby se vyhnuli jezdcům, jdou hobiti napříč poli a lesíky. Cestou pomůže hodný sedlák (Maggot), který je pohostí houbami a sveze k řece Brandyvíně. Převozník je přeplaví na druhý břeh, blíž k Rádovsku.',
       focus:['Chytré vyhýbání se jezdcům přes pole','Houby a pohostinnost — hobiti milují jídlo','Blíží se řeka a další úsek cesty'],
       q:['Proč šli hobiti raději přes pole než po pohodlné cestě?'],
@@ -803,14 +818,14 @@
       fearnote:'Jezdci jsou pořád nablízku — napětí, ale i legrace s houbami.',
       teaser:'Zkratka přes pole, plný pytel hub a tajemný jezdec v mlze. Stihnou to k řece?',
       quiz:[['Kdo hobitům cestou pomůže a pohostí je houbami?',['Hodný sedlák','Zlý skřet','Gandalf'],0]]}),
-    C({book:1,n:5,title:'Odhalené spiknutí',en:'A Conspiracy Unmasked',fear:1,
+    ({book:1,n:5,title:'Odhalené spiknutí',en:'A Conspiracy Unmasked',fear:1,
       sum:'V domku za řekou Frodo zjistí, že jeho kamarádi Smíšek, Pipin a Sam už dávno vědí o prstenu i o tom, že chce potají odejít — a rozhodli se jít s ním, ať se děje co se děje. Pravé přátelství: nenechají ho v tom samotného.',
       focus:['Odhalené „spiknutí" přátel — věděli to celou dobu','Téma věrného přátelství','Smíšek a Pipin se naplno přidávají'],
       q:['Proč chtěl jít Frodo napřed sám?','Byli byste taky takoví kamarádi?'],
       words:[['spiknutí','tajná domluva — tady ale z lásky a přátelství']],
       teaser:'Frodo si myslel, že má tajemství. Jenže kamarádi vědí všechno — a nikam ho nepustí samotného!',
       quiz:[['Kdo se rozhodne jít s Frodem?',['Sam, Smíšek a Pipin','Jen Gandalf','Nikdo'],0]]}),
-    C({book:1,n:6,title:'Starý hvozd',en:'The Old Forest',fear:3,
+    ({book:1,n:6,title:'Starý hvozd',en:'The Old Forest',fear:3,
       sum:'Aby unikli jezdcům, vejdou hobiti do Starého hvozdu — lesa, který je živý a nemá je rád. Stromy je matou a zavedou až ke staré vrbě u řeky. Ta lstivě polapí Smíška a Pipina do svého kmene. V poslední chvíli je zachrání zpívající veselý pán lesa Tom Bombadil.',
       focus:['Les, který je živý a nepřátelský (Stará vrba)','Záchrana Tomem Bombadilem','Kouzlo a písničky Toma Bombadila'],
       q:['Může být les nebezpečný jen tím, že vás zavede špatným směrem?','Jak vám přišel Tom Bombadil?'],
@@ -818,14 +833,14 @@
       fearnote:'Zlá stará vrba spolkne hobity do kmene — napínavé a trochu strašidelné, ale hned přijde záchrana a písničky.',
       teaser:'Les, který vás schválně ztratí, a vrba, co polyká hobity! Kdo je ten podivný veselý pán, co všechno zpívá?',
       quiz:[['Co udělá Stará vrba?',['Polapí hobity','Dá jim jablka','Uteče'],0],['Kdo hobity zachrání?',['Tom Bombadil','Gandalf','Zlý skřet'],0]]}),
-    C({book:1,n:7,title:'V domě Toma Bombadila',en:'In the House of Tom Bombadil',fear:1,
+    ({book:1,n:7,title:'V domě Toma Bombadila',en:'In the House of Tom Bombadil',fear:1,
       sum:'Tom hobity pohostí ve svém domě u své krásné ženy Zlatěnky. Je nejstarší a záhadný — a co je zvláštní, Jeden prsten na něj vůbec nepůsobí: navlékne si ho a nezmizí, a Frodův prsten mu na dlani zmizí jako kouzlo. Hobiti načerpají sílu a odvahu.',
       focus:['Tajemný Tom a jeho žena Zlatěnka','Prsten nemá nad Tomem žádnou moc (jediný takový)','Bezpečné, kouzelné zastavení'],
       q:['Proč na Toma prsten asi nefunguje?'],
       words:[['Zlatěnka','Tomova žena, paní řeky a lesa']],
       teaser:'Divný veselý Tom si navlékne ten mocný prsten — a nic! Jak to, že na něj nefunguje?',
       quiz:[['Co se stane, když si Tom navlékne Jeden prsten?',['Vůbec nic, nezmizí','Zmizí jako Bilbo','Změní se ve zlého'],0]]}),
-    C({book:1,n:8,title:'Mlha na Mohylových vrších',en:'Fog on the Barrow-downs',fear:4,
+    ({book:1,n:8,title:'Mlha na Mohylových vrších',en:'Fog on the Barrow-downs',fear:4,
       sum:'V mlze hobity polapí mohylový duch a uvězní je v dávné hrobce pod kopcem. Frodo se probudí vedle ledově studené ruky — a málem podlehne. Vzpomene si ale na Tomovu písničku, přivolá ho, a Tom je vysvobodí. Na rozloučenou dostanou staré kouzelné dýky.',
       focus:['Mohylový duch a hrobka (napínavý vrchol první části)','Frodova statečnost — nezradí kamarády','Kouzelné dýky, které se ještě budou hodit'],
       q:['Co Frodovi pomohlo neztratit hlavu ve tmě?'],
@@ -833,14 +848,14 @@
       fearnote:'⚠️ Nejstrašidelnější místo první části: nemrtvý duch, hrobka, ledová ruka. U citlivějšího dítěte klidně trochu zkrať a zdůrazni, že to dobře dopadne.',
       teaser:'Mlha, starý kopec a ledová ruka ve tmě… ale i tady je někdo, kdo přijde na pomoc. Vzpomenou si hobiti na tu správnou písničku?',
       quiz:[['Kdo hobity uvězní?',['Mohylový duch','Skřet','Vrba'],0],['Co dostanou hobiti od Toma?',['Kouzelné dýky','Koně','Zlato'],0]]}),
-    C({book:1,n:9,title:'U Skákavého poníka',en:'At the Sign of the Prancing Pony',fear:2,
+    ({book:1,n:9,title:'U Skákavého poníka',en:'At the Sign of the Prancing Pony',fear:2,
       sum:'Hobiti dorazí do lidského městečka Hůrka a do hostince U Skákavého poníka. Je tu rušno a Frodo nešťastnou náhodou při písničce spadne, navlékne si prsten a zmizí — což vzbudí pozornost. V koutě je přitom pozoruje tajemný otrhaný pocestný, kterému říkají Chodec.',
       focus:['První lidské město a hostinec (změna prostředí)','Frodo omylem zmizí — nebezpečné!','Záhadný Chodec v koutě — přítel, nebo hrozba?'],
       q:['Máme Chodci věřit, když vypadá tak divoce?'],
       words:[['hostinec','dům, kde se dá najíst, napít a přespat']],
       teaser:'Cizí město, plný hostinec a záhadný pocestný v kápi, co všechno pozoruje. Kdo to je?',
       quiz:[['Jak se jmenuje hostinec?',['U Skákavého poníka','U Zlatého draka','U Bílého koně'],0]]}),
-    C({book:1,n:10,title:'Chodec',en:'Strider',fear:2,
+    ({book:1,n:10,title:'Chodec',en:'Strider',fear:2,
       sum:'Chodec se hobitům svěří: je to Aragorn, přítel Gandalfův, a nabídne, že je dovede do Roklinky. Máselník jim předá Gandalfův dopis, který to potvrzuje. V noci někdo přepadne prázdné postele v hostinci — jen tak tak že hobiti nespali tam, kde měli.',
       focus:['Kdo je Chodec/Aragorn a proč mu věřit','Gandalfův dopis','Útok na prázdné postele — unikli o vlásek'],
       q:['Podle čeho poznáme, komu se dá věřit?'],
@@ -848,7 +863,7 @@
       fearnote:'Napětí a lest; noční útok na prázdné postele je hrozivý, ne krvavý.',
       teaser:'Ten divoký pocestný je vlastně přítel! Ale v noci někdo rozseká prázdné postele. Kdo to byl?',
       quiz:[['Kdo je doopravdy Chodec?',['Aragorn, přítel Gandalfa','Zlý skřet','Sám Sauron'],0]]}),
-    C({book:1,n:11,title:'Nůž ve tmě',en:'A Knife in the Dark',fear:4,
+    ({book:1,n:11,title:'Nůž ve tmě',en:'A Knife in the Dark',fear:4,
       sum:'Cestou k Roklince vystoupají na starý kopec Větrov. V noci je tam přepadnou Černí jezdci a jejich vůdce probodne Frodovi rameno prokletým nožem. Aragorn je ohněm odežene, ale Frodo je vážně zraněný a rána ho pomalu táhne do stínového světa.',
       focus:['Přepadení na Větrově (velký napínavý moment)','Frodo je zraněn morgulským nožem','Boj ohněm proti jezdcům'],
       q:['Proč je zranění od takového nože horší než obyčejná rána?'],
@@ -856,7 +871,7 @@
       fearnote:'⚠️ Silný, napínavý souboj: jezdci, oheň, Frodo zraněn nožem. Hrozivé, ale bez krve. Připrav se, že tady kluci ztuhnou.',
       teaser:'Na kopci ve tmě zaútočí Černí jezdci! Frodo je zraněný — stihnou ho zachránit?',
       quiz:[['Kde hobity přepadnou jezdci?',['Na Větrově','V Hůrce','V Roklince'],0],['Čím Aragorn jezdce zažene?',['Ohněm','Vodou','Písničkou'],0]]}),
-    C({book:1,n:12,title:'Útěk k Brodu',en:'Flight to the Ford',fear:4,
+    ({book:1,n:12,title:'Útěk k Brodu',en:'Flight to the Ford',fear:4,
       sum:'Zraněného Froda najde elfský jezdec Glorfindel a posadí ho na svého rychlého koně. Následuje závod o život k řece u Roklinky. Když Černí jezdci vjedou do brodu, řeka se vzedme v mohutné vlně a odplaví je. Frodo v bezvědomí přejede na druhý břeh — do bezpečí. (Konec první knihy.)',
       focus:['Závod o život na elfském koni','Kouzelná povodeň v brodu smete jezdce','Záchrana na prahu Roklinky'],
       q:['Kdo asi tu vlnu v řece přivolal?'],
@@ -865,14 +880,14 @@
       teaser:'Divoký cval před Černými jezdci a řeka, co se vzedme jako vlna! Dostane se Frodo včas do bezpečí?',
       quiz:[['Kdo veze Froda k brodu?',['Glorfindel','Gandalf','Bilbo'],0],['Co smete jezdce v brodu?',['Vlna vody','Oheň','Skřeti'],0]]}),
     // KNIHA DRUHÁ
-    C({book:2,n:1,title:'Mnohá setkání',en:'Many Meetings',fear:0,
+    ({book:2,n:1,title:'Mnohá setkání',en:'Many Meetings',fear:0,
       sum:'Frodo se probudí v Roklince, uzdravený mocí pána elfů Elronda. Čeká ho radost: zase vidí Gandalfa i starého Bilba. Roklinka je krásné bezpečné údolí plné písní a příběhů, kde si všichni na chvíli oddechnou.',
       focus:['Roklinka a moudrý Elrond','Šťastné shledání s Gandalfem a Bilbem','Klidné nadechnutí před další cestou'],
       q:['Proč je dobré mít v příběhu i takové bezpečné místo?'],
       words:[['Elrond','moudrý pán elfů z Roklinky']],
       teaser:'Frodo se probudí v kouzelném údolí elfů — a hádej, kdo tam na něj čeká!',
       quiz:[['Kde se Frodo probudí uzdravený?',['V Roklince u elfů','Doma v Kraji','V hlubokém lese'],0]]}),
-    C({book:2,n:2,title:'Elrondova rada',en:'The Council of Elrond',fear:1,
+    ({book:2,n:2,title:'Elrondova rada',en:'The Council of Elrond',fear:1,
       sum:'Sejde se velká rada. Vyjde najevo celý příběh prstenu a to, že existuje jediný způsob, jak zbavit svět Saurona: donést prsten až do Mordoru a zničit ho v ohni, kde byl ukován. Frodo se sám nabídne, že prsten ponese. Vznikne Společenstvo Prstenu — devět společníků.',
       focus:['Rozhodnutí zničit prsten v Mordoru','Frodova odvaha se přihlásit','Vzniká Společenstvo devíti (kdo do něj patří)'],
       q:['Proč musí prsten zničit zrovna malý hobit, a ne někdo silný?'],
@@ -880,14 +895,14 @@
       fearnote:'Hodně povídání a vysvětlování; klidně vyprávěj vlastními slovy a zkrať.',
       teaser:'Velká porada rozhodne: prsten se musí zničit! A vznikne devítka hrdinů, co půjdou s Frodem.',
       quiz:[['Kolik hrdinů má Společenstvo Prstenu?',['Devět','Tři','Sto'],0],['Kam se musí prsten donést, aby se zničil?',['Do Mordoru, kde byl ukován','Do Roklinky','Do moře'],0]]}),
-    C({book:2,n:3,title:'Prsten putuje k jihu',en:'The Ring Goes South',fear:2,
+    ({book:2,n:3,title:'Prsten putuje k jihu',en:'The Ring Goes South',fear:2,
       sum:'Devět společníků vyráží z Roklinky na jih. Poznávají se navzájem — hrdý Boromir, elf Legolas, trpaslík Gimli, statečný Aragorn. Nad hlavami jim ale krouží podezřelí černí ptáci, kteří někomu donášejí, a Společenstvo se musí skrývat.',
       focus:['Devítka vyráží — sžívání party','Špehující černí ptáci','Nutnost skrývat se'],
       q:['Proč je těžké schovat devět poutníků najednou?'],
       words:[['Společenstvo devíti','čtyři hobiti, dva lidé, elf, trpaslík a čaroděj']],
       teaser:'Devět hrdinů vyráží! Jenže po obloze je špehují podezřelí černí ptáci…',
       quiz:[['Co Společenstvo špehuje z oblohy?',['Hejno černých ptáků','Draci','Orli'],0]]}),
-    C({book:2,n:4,title:'Cesta v temnotě',en:'A Journey in the Dark',fear:4,
+    ({book:2,n:4,title:'Cesta v temnotě',en:'A Journey in the Dark',fear:4,
       sum:'Společenstvo se pokusí přejít vysoký průsmyk hory Caradhras, ale krutá sněhová bouře je zažene zpět. Nezbývá než jít pod horami temnými Doly morijskými. U brány je ve vodě přepadne obludné chapadlo a Společenstvo jen tak tak vklouzne dovnitř — brána za nimi zapadne.',
       focus:['Caradhras je nepustí (hora jako nepřítel)','Rozhodnutí jít skrz Morii','Chapadlo ve vodě u brány (napínavé!)'],
       q:['Co je horší — přejít mrazivou horu, nebo jít temným podzemím?'],
@@ -895,7 +910,7 @@
       fearnote:'⚠️ Mrazivá hora a strašidelné chapadlo, které chytá Froda. Napínavé; temná atmosféra podzemí.',
       teaser:'Sněhová bouře je zažene z hory — tak půjdou temným podzemím. Jenže u brány číhá něco s chapadly ve vodě…',
       quiz:[['Proč nepřejdou horu Caradhras?',['Sněhová bouře','Zabloudí','Nechce se jim'],0]]}),
-    C({book:2,n:5,title:'Most v Khazad-dûm',en:'The Bridge of Khazad-dûm',fear:5,
+    ({book:2,n:5,title:'Most v Khazad-dûm',en:'The Bridge of Khazad-dûm',fear:5,
       sum:'V temné Morii najdou hrob trpaslíka Balina a padnou do boje se skřety a jeskynním trollem. Pak se objeví Balrog — dávný ohnivý démon. Na úzkém mostě se mu Gandalf postaví se slovy „Neprojdeš!", zláme most — ale Balrog ho strhne s sebou do hlubiny. Společenstvo v slzách prchá ven.',
       focus:['Balinův hrob, boj se skřety a trollem','Balrog — ohnivý démon','Gandalfova oběť na mostě (velký smutný okamžik)'],
       q:['Proč Gandalf zůstal na mostě sám?','Jak se asi ostatní cítili, když Gandalf spadl?'],
@@ -903,14 +918,14 @@
       fearnote:'⚠️⚠️ Vrchol napětí i smutku: Balrog a Gandalfův pád. Silné a dojemné — počítej, že to kluky zasáhne. Klidně je pohlaď a připomeň, že příběh jde dál.',
       teaser:'V temném podzemí čeká hrozivý ohnivý netvor. A Gandalf se mu na mostě postaví sám: „Neprojdeš!"',
       quiz:[['Co Gandalf zvolá na mostě?',['„Neprojdeš!"','„Utíkejte!"','„Dobrou noc!"'],0],['S kým Gandalf bojuje?',['S Balrogem','Se Samem','S Bilbem'],0]]}),
-    C({book:2,n:6,title:'Lothlórien',en:'Lothlórien',fear:1,
+    ({book:2,n:6,title:'Lothlórien',en:'Lothlórien',fear:1,
       sum:'Zdrcené Společenstvo vejde do kouzelného zlatého lesa Lothlórien, kde čas plyne jinak. Elfové v čele s Haldirem je obezřetně přijmou a dovedou do svého překrásného města ve stromech. Uprostřed žalu tu najdou útěchu a bezpečí.',
       focus:['Kouzelný zlatý les Lórien','Útěcha po ztrátě Gandalfa','Elfové, kteří žijí ve stromech'],
       q:['Pomáhá krásné a klidné místo, když je člověku smutno?'],
       words:[['Lothlórien','kouzelný les elfů se zlatými stromy']],
       teaser:'Po smutném podzemí přijde kouzelný zlatý les, kde elfové bydlí vysoko ve stromech.',
       quiz:[['Jaký je les Lothlórien?',['Kouzelný a zlatý','Temný a mrtvý','Zasněžený'],0]]}),
-    C({book:2,n:7,title:'Galadrielino zrcadlo',en:'The Mirror of Galadriel',fear:2,
+    ({book:2,n:7,title:'Galadrielino zrcadlo',en:'The Mirror of Galadriel',fear:2,
       sum:'Vládne tu paní Galadriel, mocná a moudrá elfka. Ukáže Frodovi a Samovi kouzelné Zrcadlo — vodu, v níž lze zahlédnout, co bylo, co je i co teprve možná bude. Frodo Galadriel nabídne prsten, ale ona odolá pokušení vzít si ho, i když by mohla být královnou.',
       focus:['Galadriel a její kouzelné zrcadlo','Vidiny v zrcadle (co bylo/bude)','Galadriel odolá prstenu — síla odříct si moc'],
       q:['Chtěli byste vidět budoucnost, i kdyby byla strašidelná?'],
@@ -918,14 +933,14 @@
       fearnote:'Trochu tajemné (vidiny v zrcadle), ale bezpečné.',
       teaser:'Kouzelné zrcadlo z vody ukazuje, co teprve přijde. Podíváš se do něj, i kdyby to bylo strašidelné?',
       quiz:[['Co ukazuje Galadrielino zrcadlo?',['Co bylo a co možná přijde','Jen počasí','Cestu domů'],0],['Vezme si Galadriel prsten, když jí ho Frodo nabídne?',['Ne, odolá pokušení','Ano, hned','Schová si ho'],0]]}),
-    C({book:2,n:8,title:'Loučení s Lórienem',en:'Farewell to Lórien',fear:0,
+    ({book:2,n:8,title:'Loučení s Lórienem',en:'Farewell to Lórien',fear:0,
       sum:'Než Společenstvo odejde, dostane od Galadriel kouzelné dary: šedé pláště, které skryjí, výživný elfský chléb lembas, lodě na řeku a pro každého něco zvláštního — Sam semínka, Frodo lahvičku se světlem hvězdy. Na elfských lodích vyplují po Velké řece.',
       focus:['Kouzelné dary od Galadriel (pláště, lembas, Frodova lahvička)','Loučení s bezpečným Lórienem','Vyplouvají na Velkou řeku'],
       q:['Který dárek by se vám hodil nejvíc?'],
       words:[['lembas','elfský chléb, po kterém dlouho nevyhládnete']],
       teaser:'Kouzelné dárky na cestu — mizící pláště, elfský chléb a lahvička plná hvězdného světla!',
       quiz:[['Co je lembas?',['Elfský chléb, co dlouho zasytí','Kouzelný meč','Malá loďka'],0]]}),
-    C({book:2,n:9,title:'Velká řeka',en:'The Great River',fear:2,
+    ({book:2,n:9,title:'Velká řeka',en:'The Great River',fear:2,
       sum:'Společenstvo pluje po Velké řece Anduině. V noci za nimi po vodě potají plave Glum, který touží po prstenu. Minou obrovské kamenné sochy dávných králů — Argonath — a utáboří se u vodopádů, kde se mají rozhodnout, kudy dál.',
       focus:['Plavba po Anduině','Glum je potají sleduje','Obří sochy králů Argonath'],
       q:['Proč asi Glum pořád jde za nimi?'],
@@ -933,7 +948,7 @@
       fearnote:'Mírné napětí (Glum, pár šípů). Bez hrůzy.',
       teaser:'Plavba po veliké řece kolem obřích soch králů — a ve vodě za nimi tajně plave Glum!',
       quiz:[['Kdo potají plave za Společenstvem?',['Glum','Balrog','Bilbo'],0],['Co jsou Argonath?',['Dvě obří sochy dávných králů','Vodopády','Elfské lodě'],0]]}),
-    C({book:2,n:10,title:'Rozpad Společenstva',en:'The Breaking of the Fellowship',fear:3,
+    ({book:2,n:10,title:'Rozpad Společenstva',en:'The Breaking of the Fellowship',fear:3,
       sum:'U vodopádů podlehne Boromir touze po prstenu a pokusí se ho Frodovi vzít. Frodo pochopí, že do Mordoru musí jít sám, aby neohrozil přátele — a potají nasedne na loďku. Věrný Sam ho ale nenechá odejít samotného a vydá se s ním. Společenstvo se tím rozpadá. (Tady první díl končí.)',
       focus:['Boromir podlehne prstenu (varovný, smutný okamžik)','Frodo se rozhodne jít sám — statečnost i obětavost','Věrný Sam jde s ním; parta se dělí'],
       q:['Proč chtěl Frodo odejít potají a sám?','Udělali byste to jako Sam?'],
@@ -995,8 +1010,8 @@
 
   // ===== stav =====
   var KEY='stredozem_v1';
-  var state={mode:'tata', read:{}};
-  try{var s=JSON.parse(localStorage.getItem(KEY)); if(s){state.mode=s.mode||'tata'; state.read=s.read||{};}}catch(e){}
+  var state={mode:'tata', theme:null, read:{}};
+  try{var s=JSON.parse(localStorage.getItem(KEY)); if(s){state.mode=s.mode||'tata'; state.theme=s.theme||null; state.read=s.read||{};}}catch(e){}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
   function reachedGi(){var m=0; for(var k in state.read){if(state.read[k]&&+k>m)m=+k;} return m;}
   function readCount(){var n=0; for(var k in state.read){if(state.read[k])n++;} return n;}
@@ -1010,10 +1025,9 @@
     var rc=readCount();
     $('#chDone').textContent=rc;
     $('#roadFill').style.width=(rc/22*100)+'%';
-    var rg=reachedGi(), mile=0, current=null;
-    PLACES.forEach(function(p){ if(p.gi<=rg){ if(p.mile>=mile)mile=p.mile; if(!current||p.seq>current.seq)current=p; }});
+    var rg=reachedGi(), mile=0;
+    PLACES.forEach(function(p){ if(p.gi<=rg && p.mile>mile) mile=p.mile; });
     $('#miles').textContent=mile;
-    return {rg:rg,current:current};
   }
 
   function buildRoute(){
@@ -1056,7 +1070,7 @@
 
   function showPlace(p, reached){
     var pan=$('#placePanel'); pan.className='place-panel';
-    var txt = state.mode==='kluci' ? p.kid : (reached? p.dad : p.dad);
+    var txt = state.mode==='kluci' ? p.kid : p.dad;
     pan.innerHTML='<div class="place-head"><span class="place-ic">'+icon(p.ic)+'</span>'+
       '<div><h3>'+esc(p.name)+'</h3><span class="en">'+esc(p.en)+' · zastávka '+p.seq+'</span></div></div>'+
       '<p>'+esc(txt)+'</p>'+
@@ -1147,12 +1161,15 @@
         'Cesta teď dojde k místu, kde se každý bude muset těžko rozhodnout. Prsten totiž svádí a láká čím dál víc… Vydrží Společenstvo pohromadě, nebo se každý vydá svou cestou? Tahle část uzavře celou první knihu.']
   };
 
+  // malý helper: blok s ikonovým nadpisem (sjednocuje opakovaný vzor v render vrstvě)
+  function blk(ic,title,inner){ return '<div class="block"><h4>'+icon(ic)+esc(title)+'</h4>'+inner+'</div>'; }
+
   function chapterBody(c, full, peek){
     if(state.mode==='tata'){
-      var h=illusFigure(c.gi)+'<div class="block"><h4>'+icon('star')+'Shrnutí</h4><p>'+esc(c.sum)+'</p></div>';
-      h+='<div class="block"><h4>'+icon('star')+'Na co se zaměřit</h4><ul class="bullets">'+c.focus.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
-      if(c.q)h+='<div class="block"><h4>'+icon('star')+'Otázky pro kluky</h4><ul class="bullets q-list">'+c.q.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
-      if(c.words)h+='<div class="block"><h4>'+icon('star')+'Slovíčka</h4><div class="words">'+c.words.map(function(w){return '<span class="word"><b>'+esc(w[0])+'</b> — <span>'+esc(w[1])+'</span></span>';}).join('')+'</div></div>';
+      var h=illusFigure(c.gi)+blk('star','Shrnutí','<p>'+esc(c.sum)+'</p>');
+      h+=blk('star','Na co se zaměřit','<ul class="bullets">'+c.focus.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>');
+      if(c.q)h+=blk('star','Otázky pro kluky','<ul class="bullets q-list">'+c.q.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>');
+      if(c.words)h+=blk('star','Slovíčka','<div class="words">'+c.words.map(function(w){return '<span class="word"><b>'+esc(w[0])+'</b> — <span>'+esc(w[1])+'</span></span>';}).join('')+'</div>');
       h+='<div class="block"><div class="fearnote">'+ (c.fearnote?esc(c.fearnote):'Strašidelnost '+c.fear+'/5 — '+(c.fear<=1?'v pohodě.':c.fear<=3?'napínavé, nic hrozného.':'silnější scéna, připrav se.')) +'</div></div>';
       return h;
     }
@@ -1162,21 +1179,21 @@
       var intro=KIDINTRO[c.gi];
       var kb='<div class="kidbox">';
       if(intro){
-        kb+='<div class="block"><h4>'+icon('scroll')+(c.gi===1?'Než vyrazíme na cestu':'Co bylo minule')+'</h4><p class="kidrecap">'+esc(intro[0])+'</p></div>'+
-            '<div class="block"><h4>'+icon('star')+'Co nás čeká</h4><p class="kidrecap">'+esc(intro[1])+'</p></div>';
+        kb+=blk('scroll',(c.gi===1?'Než vyrazíme na cestu':'Co bylo minule'),'<p class="kidrecap">'+esc(intro[0])+'</p>')+
+            blk('star','Co nás čeká','<p class="kidrecap">'+esc(intro[1])+'</p>');
       } else { kb+='<p class="teaser">'+esc(c.teaser)+'</p>'; }
       kb+='</div>';
       return kb+'<p class="locknote">'+icon('lock')+'Až kapitolu přečteme, klikni na <b>Přečteno</b> a odemkne se shrnutí, kvíz i nové postavy.</p>';
     }
     var k=illusFigure(c.gi);
-    if(KIDSUM[c.gi]) k+='<div class="block"><h4>'+icon('scroll')+'Co se v kapitole stalo</h4>'+KIDSUM[c.gi].map(function(pp){return '<p class="kidrecap">'+esc(pp)+'</p>';}).join('')+'</div>';
+    if(KIDSUM[c.gi]) k+=blk('scroll','Co se v kapitole stalo',KIDSUM[c.gi].map(function(pp){return '<p class="kidrecap">'+esc(pp)+'</p>';}).join(''));
     if(c.quiz){ k+=quizHtml(c); }
     else{ k+='<p class="locknote">'+icon('check')+'Přečteno! Skvělá práce, poutníku.</p>'; }
     return k;
   }
 
   function quizHtml(c){
-    var h='<div class="quiz"><h4 class="block" style="margin-top:14px">'+icon('star')+' Kvíz — pamatuješ si?</h4>';
+    var h='<div class="quiz"><h4 class="block">'+icon('star')+' Kvíz — pamatuješ si?</h4>';
     c.quiz.forEach(function(q,qi){
       h+='<div class="qq" data-q="'+qi+'"><div class="qtext">'+esc(q[0])+'</div><div class="opts">';
       q[1].forEach(function(opt,oi){ h+='<button class="opt" data-c="'+c.gi+'" data-qi="'+qi+'" data-oi="'+oi+'" data-ok="'+(oi===q[2]?1:0)+'">'+esc(opt)+'</button>'; });
@@ -1305,12 +1322,24 @@
   // ===== přepínače =====
   $('#modeswitch').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b)return;
     state.mode=b.getAttribute('data-mode'); save(); syncMode(); rerender();});
+
+  // světlý/tmavý motiv — ruční přepínač; bez volby se řídí systémem (prefers-color-scheme)
+  function effectiveTheme(){ return state.theme || (window.matchMedia && matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light'); }
+  function applyTheme(){
+    var root=document.documentElement;
+    if(state.theme) root.setAttribute('data-theme',state.theme); else root.removeAttribute('data-theme');
+    var btn=$('#themeToggle'); if(!btn) return;
+    var eff=effectiveTheme();
+    btn.innerHTML=icon(eff==='dark'?'sun':'moon');
+    btn.setAttribute('aria-label', eff==='dark'?'Přepnout na světlý motiv':'Přepnout na tmavý motiv');
+  }
+  $('#themeToggle').addEventListener('click',function(){ state.theme=effectiveTheme()==='dark'?'light':'dark'; save(); applyTheme(); });
   function syncMode(){
     Array.prototype.forEach.call($('#modeswitch').children,function(b){b.classList.toggle('on',b.getAttribute('data-mode')===state.mode);});
   }
   $('#tabs').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b)return;
     var v=b.getAttribute('data-view');
-    Array.prototype.forEach.call($('#tabs').children,function(x){x.classList.toggle('on',x===b);});
+    Array.prototype.forEach.call($('#tabs').children,function(x){x.classList.toggle('on',x===b); x.setAttribute('aria-selected', x===b?'true':'false');});
     ['mapa','kapitoly','postavy','svet'].forEach(function(id){$('#view-'+id).classList.toggle('on',id===v);});
   });
   $('#subseg').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b)return;
@@ -1321,14 +1350,19 @@
 
   // ===== render: Svět =====
   function renderWorld(){
+    // V režimu Kluci odkrýváme jen to, co už děj neprozradí: lore podle min-gi, historii Prstenu až od 2. kapitoly.
+    var isDad=state.mode==='tata', rg=reachedGi();
+    var lore = isDad ? LORE : LORE.filter(function(l){return (l.min||0)<=rg;});
     var h='<div class="lore-grid">';
-    LORE.forEach(function(l){
+    lore.forEach(function(l){
       h+='<div class="lore"><div class="lore-head"><span class="lore-ic">'+icon(l.ic)+'</span><h3>'+esc(l.title)+'</h3></div><p>'+esc(l.text)+'</p></div>';
     });
     h+='<div class="lore wide"><div class="lore-head"><span class="lore-ic">'+icon('elf')+'</span><h3>Rasy Středozemě</h3></div><div class="race-list">'+
       RACES.map(function(r){return '<div class="race-row r-'+r[0]+'"><div class="medallion">'+icon(r[0])+'</div><div><b>'+esc(r[1])+'</b> — <span>'+esc(r[2])+'</span></div></div>';}).join('')+'</div></div>';
-    h+='<div class="lore wide"><div class="lore-head"><span class="lore-ic">'+icon('scroll')+'</span><h3>Krátká historie Prstenu</h3></div><ul class="timeline">'+
-      TL.map(function(t){return '<li><span class="tage">'+esc(t[0])+'</span><span class="tt">'+esc(t[1])+'</span> — '+esc(t[2])+'</li>';}).join('')+'</ul></div>';
+    if(isDad || rg>=2){
+      h+='<div class="lore wide"><div class="lore-head"><span class="lore-ic">'+icon('scroll')+'</span><h3>Krátká historie Prstenu</h3></div><ul class="timeline">'+
+        TL.map(function(t){return '<li><span class="tage">'+esc(t[0])+'</span><span class="tt">'+esc(t[1])+'</span> — '+esc(t[2])+'</li>';}).join('')+'</ul></div>';
+    }
     h+='</div>';
     $('#world').innerHTML=h;
   }
@@ -1363,11 +1397,11 @@
     $('#relations').innerHTML=h;
   }
 
-  function rerender(){ updateProgress(); buildRoute(); renderHere(); renderStrip(); renderChapters(); renderChars(); renderRelations(); }
+  function rerender(){ updateProgress(); buildRoute(); renderHere(); renderStrip(); renderChapters(); renderChars(); renderRelations(); renderWorld(); }
 
   // ===== init =====
   function init(){
-    syncMode(); renderWorld();               // renderWorld je statické; zbytek jede přes rerender()
+    applyTheme(); syncMode();                // motiv + přepínač režimu; obsah (včetně Světa) jede přes rerender()
     var img=$('#mapImg');
     var done=false;
     function ready(){ setStageWidth(); frameJourney(); rerender(); done=true; }
@@ -1378,3 +1412,5 @@
   init();
 })();
 </script>
+</body>
+</html>
