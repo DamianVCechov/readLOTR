@@ -83,8 +83,12 @@
     box-shadow:inset 0 1px 2px var(--shadow)}
   .iconbtn:hover{border-color:var(--gold); color:var(--ink)}
   .iconbtn svg{width:18px; height:18px}
-  .langbtn{width:auto; padding:0 11px; gap:6px}
-  .langbtn .lang-code{font-family:var(--ui); font-weight:700; font-size:.72rem; letter-spacing:.04em}
+  .langsel{display:inline-flex; gap:5px; align-items:center}
+  .flagbtn{height:21px; padding:0; border-radius:5px; overflow:hidden; cursor:pointer; flex:none;
+    border:1px solid var(--line-2); background:var(--panel-2); display:inline-block; opacity:.5; transition:opacity .15s,box-shadow .15s,border-color .15s}
+  .flagbtn:hover{opacity:.85; border-color:var(--gold)}
+  .flagbtn.on{opacity:1; border-color:var(--gold-2); box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 40%,transparent)}
+  .flagbtn svg{display:block; height:21px; width:auto}
 
   /* progress "cesta" */
   .road{max-width:1080px; margin:0 auto; padding:0 clamp(12px,3vw,26px) 10px}
@@ -394,7 +398,7 @@
         <button data-mode="kluci" class="kids"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><circle cx="16" cy="9" r="2.4"/><path d="M3.5 20c.4-3 2.8-5 5.5-5s5.1 2 5.5 5M14 20c.3-2.2 1.8-3.7 3.6-3.9" stroke-linecap="round"/></svg><span data-i18n="mode_kids">Kluci</span></button>
       </div>
       <button class="iconbtn" id="themeToggle" type="button" title="Světlý / tmavý motiv" aria-label="Přepnout motiv"></button>
-      <button class="iconbtn langbtn" id="langToggle" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg><span class="lang-code">CS</span></button>
+      <div class="langsel" id="langsel"></div>
     </div>
     <div class="road">
       <div class="road-in">
@@ -1471,19 +1475,27 @@
   }
   $('#themeToggle').addEventListener('click',function(){ state.theme=effectiveTheme()==='dark'?'light':'dark'; save(); applyTheme(); });
 
-  // language — manual toggle (en/cs for now; with more languages this becomes a menu)
+  // language — flag selector (data-driven; add a language by extending LANGS). Inline SVG flags so they render everywhere (incl. Windows, where emoji flags don't).
+  var LANGS=[
+    {code:'en', label:'English', flag:'<svg viewBox="0 0 60 30" preserveAspectRatio="none"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="3.5"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>'},
+    {code:'cs', label:'Čeština', flag:'<svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="3" height="2" fill="#fff"/><rect y="1" width="3" height="1" fill="#d7141a"/><path d="M0,0 L1.5,1 L0,2 Z" fill="#11457e"/></svg>'}
+  ];
+  function buildLangSel(){
+    var box=$('#langsel'); if(!box) return;
+    box.innerHTML=LANGS.map(function(l){ return '<button class="flagbtn" type="button" data-lang="'+l.code+'" title="'+esc(l.label)+'" aria-label="'+esc(l.label)+'">'+l.flag+'</button>'; }).join('');
+    box.addEventListener('click',function(e){ var b=e.target.closest('.flagbtn'); if(!b)return; state.lang=b.getAttribute('data-lang'); save(); applyLang(); rerender(); });
+  }
   function applyLang(){
     document.documentElement.lang = state.lang;
     document.title = T('brand_title');
     document.querySelectorAll('[data-i18n]').forEach(function(e){ e.textContent = T(e.getAttribute('data-i18n')); });
     document.querySelectorAll('[data-i18n-html]').forEach(function(e){ e.innerHTML = T(e.getAttribute('data-i18n-html')); });
     document.querySelectorAll('[data-i18n-title]').forEach(function(e){ var s=T(e.getAttribute('data-i18n-title')); e.title=s; e.setAttribute('aria-label',s); });
-    var lb=$('#langToggle'); if(lb){ var code=lb.querySelector('.lang-code'); if(code) code.textContent=(state.lang==='en'?'CS':'EN'); lb.title=T('lang_switch'); lb.setAttribute('aria-label',T('lang_switch')); }
+    document.querySelectorAll('#langsel .flagbtn').forEach(function(b){ var on=b.getAttribute('data-lang')===state.lang; b.classList.toggle('on',on); if(on) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current'); });
     var pp=$('#placePanel'); if(pp && pp.classList.contains('empty')) pp.textContent=T('place_empty');
     var mi=$('#mapImg'); if(mi) mi.alt=T('map_alt');
     applyTheme();
   }
-  $('#langToggle').addEventListener('click',function(){ state.lang = state.lang==='en'?'cs':'en'; save(); applyLang(); rerender(); });
   function syncMode(){
     Array.prototype.forEach.call($('#modeswitch').children,function(b){b.classList.toggle('on',b.getAttribute('data-mode')===state.mode);});
   }
@@ -1549,7 +1561,7 @@
 
   // ===== init =====
   function init(){
-    applyLang(); syncMode();                 // language + theme + mode; content goes through rerender()
+    buildLangSel(); applyLang(); syncMode(); // language + theme + mode; content goes through rerender()
     var img=$('#mapImg');
     var done=false;
     function ready(){ setStageWidth(); frameJourney(); rerender(); done=true; }
